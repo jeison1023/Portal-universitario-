@@ -1,13 +1,177 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>universidad</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Portal Universitario</title>
+
+    <!-- ✅ RUTA CORREGIDA -->
+    <link rel="stylesheet" href="./public/style.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="login-body">
+
+    <!-- Fondo animado -->
+    <div class="bg-animation">
+        <div class="bg-circle circle-1"></div>
+        <div class="bg-circle circle-2"></div>
+        <div class="bg-circle circle-3"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo-universidad">
+                    <i class="fas fa-university"></i>
+                </div>
+                <h1>Portal <span class="highlight">Universitario</span></h1>
+                <p>Accede a tu información académica</p>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <div class="input-group icon-left">
+                    <i class="fas fa-user"></i>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        placeholder="Código estudiantil o usuario"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+                
+                <div class="input-group icon-left">
+                    <i class="fas fa-lock"></i>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        placeholder="Contraseña"
+                        autocomplete="current-password"
+                        required
+                    >
+                    <button type="button" class="show-password" onclick="togglePassword()">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <span class="checkmark"></span>
+                        Recordarme
+                    </label>
+                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="btn-primary full-width login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Iniciar Sesión</span>
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>o</span>
+            </div>
+
+            <div class="demo-section">
+                <p><strong>👨‍🎓 Usuarios de Prueba:</strong></p>
+                <div class="demo-users">
+                    <button class="demo-btn" onclick="quickLogin('estudiante001')">
+                        <i class="fas fa-user-graduate"></i>
+                        estudiante001
+                    </button>
+                    <button class="demo-btn" onclick="quickLogin('estudiante002')">
+                        <i class="fas fa-user-graduate"></i>
+                        estudiante002
+                    </button>
+                </div>
+                <small>Contraseña: <code>123456</code></small>
+            </div>
+
+            <div class="login-footer">
+                <p>¿Nuevo usuario? <a href="#">Regístrate aquí</a></p>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="loading-spinner">
+                <i class="fas fa-university fa-spin"></i>
+                <p>Validando credenciales...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+            
+            if (!username || !password) {
+                alert('Completa todos los campos');
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                let users = [];
+                try {
+                    // ✅ RUTA CORREGIDA
+                    const response = await fetch('./data/usuarios.json');
+                    if (response.ok) {
+                        users = await response.json();
+                    }
+                } catch (e) {
+                    console.log('No se pudo cargar usuarios.json');
+                }
+
+                const user = users.find(u => 
+                    u.username.toLowerCase() === username.toLowerCase() && 
+                    u.password === password
+                );
+
+                if (user) {
+                    localStorage.setItem('user', JSON.stringify(user));
+
+                    setTimeout(() => {
+                        // ✅ RUTA CORREGIDA
+                        window.location.href = './pages/dashboard.html';
+                    }, 1000);
+
+                } else {
+                    alert('Usuario o contraseña incorrectos');
+                }
+
+            } catch (error) {
+                console.error(error);
+                alert('Error en login');
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        function quickLogin(username) {
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = '123456';
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+        }
+
+        function togglePassword() {
+            const input = document.getElementById('password');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = show ? 'flex' : 'none';
+        }
+    </script>
+
+</body>
 </html>

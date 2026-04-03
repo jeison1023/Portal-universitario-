@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Portal Universitario</title>
+
+    <!-- ✅ RUTA CORREGIDA -->
+    <link rel="stylesheet" href="../public/style.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Portal UN</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <!-- ✅ RUTAS CORREGIDAS -->
+            <a href="./dashboard.html" class="nav-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="./materias.html" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span>Materias</span>
+            </a>
+
+            <a href="./calificaciones.html" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Calificaciones</span>
+            </a>
+
+            <a href="./solicitudes.html" class="nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Solicitudes</span>
+            </a>
+
+            <a href="./perfil.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Perfil</span>
+            </a>
+
+            <a href="#" onclick="logout()" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar Sesión</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+                <h1>Dashboard</h1>
+            </div>
+
+            <div class="header-right">
+                <span id="userName" class="user-name"></span>
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fas fa-book"></i></div>
+                <div class="stat-info">
+                    <h3 id="totalMaterias">6</h3>
+                    <p>Materias Matriculadas</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fas fa-star"></i></div>
+                <div class="stat-info">
+                    <h3 id="promedio">4.2</h3>
+                    <p>Promedio General</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange"><i class="fas fa-file-invoice"></i></div>
+                <div class="stat-info">
+                    <h3 id="solicitudes">3</h3>
+                    <p>Solicitudes Pendientes</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Próximas Clases</h3>
+
+                <div class="classes-list">
+                    <div class="class-item">
+                        <div class="class-info">
+                            <strong>Matemáticas I</strong>
+                            <span>08:00 - 10:00</span>
+                        </div>
+                        <div class="class-status online">En Línea</div>
+                    </div>
+
+                    <div class="class-item">
+                        <div class="class-info">
+                            <strong>Programación Web</strong>
+                            <span>10:30 - 12:30</span>
+                        </div>
+                        <div class="class-status presencial">Presencial</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Notificaciones</h3>
+                <ul class="notifications">
+                    <li><i class="fas fa-check-circle green"></i> Nueva calificación disponible en Matemáticas</li>
+                    <li><i class="fas fa-exclamation-triangle orange"></i> Pago de matrícula vence en 3 días</li>
+                    <li><i class="fas fa-star blue"></i> ¡Excelente trabajo en el examen de Física!</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- ✅ SCRIPT CORREGIDO -->
+    <script src="../public/main.js"></script>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (!user) {
+            // ✅ REDIRECCIÓN CORREGIDA
+            window.location.href = '../index.html';
+        } else {
+            document.getElementById('userName').textContent = user.nombre || user.username;
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = '../index.html';
+        }
+    </script>
+
+</body>
+</html>

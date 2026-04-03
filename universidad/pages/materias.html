@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materias - Portal Universitario</title>
+
+    <!-- ✅ RUTA CORREGIDA -->
+    <link rel="stylesheet" href="../public/style.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Portal UN</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <!-- ✅ RUTAS CORREGIDAS -->
+            <a href="./dashboard.html" class="nav-item">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+
+            <a href="./materias.html" class="nav-item active">
+                <i class="fas fa-book"></i> Materias
+            </a>
+
+            <a href="./calificaciones.html" class="nav-item">
+                <i class="fas fa-chart-line"></i> Calificaciones
+            </a>
+
+            <a href="./solicitudes.html" class="nav-item">
+                <i class="fas fa-file-alt"></i> Solicitudes
+            </a>
+
+            <a href="./perfil.html" class="nav-item">
+                <i class="fas fa-user"></i> Perfil
+            </a>
+
+            <a href="#" onclick="logout()" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+                <h1>Mis Materias</h1>
+            </div>
+
+            <div class="header-right">
+                <span id="userName" class="user-name"></span>
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-content">
+            <div class="table-container">
+
+                <div class="table-header">
+                    <h2>Materias Matriculadas - Semestre 2024-I</h2>
+
+                    <div class="table-actions">
+                        <button class="btn-secondary">
+                            <i class="fas fa-download"></i> Exportar
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="materias-table">
+
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Materia</th>
+                                <th>Docente</th>
+                                <th>Horario</th>
+                                <th>Aula</th>
+                                <th>Créditos</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>MAT101</td>
+                                <td>Matemáticas I</td>
+                                <td>Dr. Juan Pérez</td>
+                                <td>Lun/Mié 08:00-10:00</td>
+                                <td>A-201</td>
+                                <td>4</td>
+                                <td><span class="status activo">Activa</span></td>
+                                <td>
+                                    <button class="btn-sm blue"><i class="fas fa-eye"></i></button>
+                                    <button class="btn-sm green"><i class="fas fa-book"></i></button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>PROG201</td>
+                                <td>Programación Web</td>
+                                <td>Mtra. María Gómez</td>
+                                <td>Mar/Jue 10:30-12:30</td>
+                                <td>Lab-105</td>
+                                <td>4</td>
+                                <td><span class="status activo">Activa</span></td>
+                                <td>
+                                    <button class="btn-sm blue"><i class="fas fa-eye"></i></button>
+                                    <button class="btn-sm green"><i class="fas fa-book"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ✅ JS CORREGIDO -->
+    <script src="../public/main.js"></script>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (!user) {
+            window.location.href = '../index.html';
+        } else {
+            document.getElementById('userName').textContent = user.nombre || user.username;
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = '../index.html';
+        }
+    </script>
+
+</body>
+</html>

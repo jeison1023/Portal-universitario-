@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "username": "estudiante001",
+    "password": "123456",
+    "nombre": "Juan Pérez López",
+    "codigo": "2024001",
+    "carrera": "Ingeniería de Sistemas",
+    "semestre": 3,
+    "email": "juan.perez@universidad.edu",
+    "materias": 6,
+    "promedio": 4.25,
+    "solicitudesPendientes": 2
+  },
+  {
+    "id": 2,
+    "username": "estudiante002",
+    "password": "123456",
+    "nombre": "María Gómez Ruiz",
+    "codigo": "2024002",
+    "carrera": "Administración de Empresas",
+    "semestre": 4,
+    "email": "maria.gomez@universidad.edu",
+    "materias": 5,
+    "promedio": 4.1,
+    "solicitudesPendientes": 1
+  }
+]

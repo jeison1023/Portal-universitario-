@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Portal Universitario</title>
+
+    <!-- ✅ RUTA CORREGIDA -->
+    <link rel="stylesheet" href="../public/style.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Portal UN</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="./dashboard.html" class="nav-item">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+
+            <a href="./materias.html" class="nav-item">
+                <i class="fas fa-book"></i> Materias
+            </a>
+
+            <a href="./calificaciones.html" class="nav-item">
+                <i class="fas fa-chart-line"></i> Calificaciones
+            </a>
+
+            <a href="./solicitudes.html" class="nav-item">
+                <i class="fas fa-file-alt"></i> Solicitudes
+            </a>
+
+            <a href="./perfil.html" class="nav-item active">
+                <i class="fas fa-user"></i> Perfil
+            </a>
+
+            <a href="#" onclick="logout()" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Contenido -->
+    <main class="main-content">
+        <header class="header">
+            <h1>Mi Perfil</h1>
+        </header>
+
+        <div class="page-content">
+            <div class="card">
+
+                <h3>Información del Usuario</h3>
+
+                <div class="profile-info">
+                    <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+                    <p><strong>Usuario:</strong> <span id="usuario"></span></p>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ✅ JS CORREGIDO -->
+    <script src="../public/main.js"></script>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (!user) {
+            window.location.href = '../index.html';
+        } else {
+            document.getElementById('nombre').textContent = user.nombre || "Sin nombre";
+            document.getElementById('usuario').textContent = user.username;
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = '../index.html';
+        }
+    </script>
+
+</body>
+</html>
