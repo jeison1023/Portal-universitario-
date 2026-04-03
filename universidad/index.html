@@ -71,7 +71,6 @@
 
             showLoading(true);
 
-            // ✅ ACEPTA CUALQUIER USUARIO
             const user = {
                 username: username || "usuario",
                 nombre: username || "Usuario"
@@ -80,7 +79,8 @@
             localStorage.setItem('user', JSON.stringify(user));
 
             setTimeout(() => {
-                window.location.href = 'pages/dashboard.html';
+                // ✅ CORREGIDO AQUÍ
+                window.location.href = 'dashboard.html';
             }, 800);
         });
 
@@ -91,5 +91,4 @@
     </script>
 
 </body>
-</html>
 </html>

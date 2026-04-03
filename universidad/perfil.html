@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil - Portal Universitario</title>
 
-    <!-- ✅ RUTA CORREGIDA -->
-    <link rel="stylesheet" href="../public/style.css">
+    <!-- ✅ CORREGIDO -->
+    <link rel="stylesheet" href="./public/style.css">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -20,23 +20,23 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a href="./dashboard.html" class="nav-item">
+            <a href="dashboard.html" class="nav-item">
                 <i class="fas fa-tachometer-alt"></i> Dashboard
             </a>
 
-            <a href="./materias.html" class="nav-item">
+            <a href="materias.html" class="nav-item">
                 <i class="fas fa-book"></i> Materias
             </a>
 
-            <a href="./calificaciones.html" class="nav-item">
+            <a href="calificaciones.html" class="nav-item">
                 <i class="fas fa-chart-line"></i> Calificaciones
             </a>
 
-            <a href="./solicitudes.html" class="nav-item">
+            <a href="solicitudes.html" class="nav-item">
                 <i class="fas fa-file-alt"></i> Solicitudes
             </a>
 
-            <a href="./perfil.html" class="nav-item active">
+            <a href="perfil.html" class="nav-item active">
                 <i class="fas fa-user"></i> Perfil
             </a>
 
@@ -66,14 +66,14 @@
         </div>
     </main>
 
-    <!-- ✅ JS CORREGIDO -->
-    <script src="../public/main.js"></script>
+    <!-- ✅ CORREGIDO -->
+    <script src="./public/main.js"></script>
 
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
 
         if (!user) {
-            window.location.href = '../index.html';
+            window.location.href = 'index.html';
         } else {
             document.getElementById('nombre').textContent = user.nombre || "Sin nombre";
             document.getElementById('usuario').textContent = user.username;
@@ -81,7 +81,7 @@
 
         function logout() {
             localStorage.removeItem('user');
-            window.location.href = '../index.html';
+            window.location.href = './index.html';
         }
     </script>
 

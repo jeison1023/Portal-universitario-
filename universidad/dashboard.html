@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Portal Universitario</title>
 
-    <!-- ✅ RUTA CORREGIDA -->
-    <link rel="stylesheet" href="../public/style.css">
+    <!-- ✅ CORREGIDO -->
+    <link rel="stylesheet" href="./public/style.css">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -20,28 +20,27 @@
         </div>
 
         <nav class="sidebar-nav">
-            <!-- ✅ RUTAS CORREGIDAS -->
-            <a href="./dashboard.html" class="nav-item active">
+            <a href="dashboard.html" class="nav-item active">
                 <i class="fas fa-tachometer-alt"></i>
                 <span>Dashboard</span>
             </a>
 
-            <a href="./materias.html" class="nav-item">
+            <a href="materias.html" class="nav-item">
                 <i class="fas fa-book"></i>
                 <span>Materias</span>
             </a>
 
-            <a href="./calificaciones.html" class="nav-item">
+            <a href="calificaciones.html" class="nav-item">
                 <i class="fas fa-chart-line"></i>
                 <span>Calificaciones</span>
             </a>
 
-            <a href="./solicitudes.html" class="nav-item">
+            <a href="solicitudes.html" class="nav-item">
                 <i class="fas fa-file-alt"></i>
                 <span>Solicitudes</span>
             </a>
 
-            <a href="./perfil.html" class="nav-item">
+            <a href="perfil.html" class="nav-item">
                 <i class="fas fa-user"></i>
                 <span>Perfil</span>
             </a>
@@ -129,22 +128,21 @@
         </div>
     </main>
 
-    <!-- ✅ SCRIPT CORREGIDO -->
-    <script src="../public/main.js"></script>
+    <!-- ✅ CORREGIDO -->
+    <script src="./public/main.js"></script>
 
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
 
         if (!user) {
-            // ✅ REDIRECCIÓN CORREGIDA
-            window.location.href = '../index.html';
+            window.location.href = 'index.html';
         } else {
             document.getElementById('userName').textContent = user.nombre || user.username;
         }
 
         function logout() {
             localStorage.removeItem('user');
-            window.location.href = '../index.html';
+            window.location.href = 'index.html';
         }
     </script>
 

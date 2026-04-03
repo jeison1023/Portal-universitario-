@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitudes - Portal Universitario</title>
 
-    <!-- ✅ RUTA CORREGIDA -->
-    <link rel="stylesheet" href="../public/style.css">
+    <!-- ✅ CORREGIDO -->
+    <link rel="stylesheet" href="./public/style.css">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
             <i class="fas fa-graduation-cap"></i>
@@ -120,21 +119,21 @@
         </div>
     </div>
 
-    <!-- ✅ JS CORREGIDO -->
-    <script src="../public/main.js"></script>
+    <!-- ✅ CORREGIDO -->
+    <script src="./public/main.js"></script>
 
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
 
         if (!user) {
-            window.location.href = '../index.html';
+            window.location.href = 'index.html';
         } else {
             document.getElementById('userName').textContent = user.nombre || user.username;
         }
 
         function logout() {
             localStorage.removeItem('user');
-            window.location.href = '../index.html';
+            window.location.href = 'index.html';
         }
 
         function openModal(id) {
