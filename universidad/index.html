@@ -23,12 +23,31 @@
                 <p>Accede a tu información académica</p>
             </div>
 
-            <!-- ✅ FORMULARIO SIMPLIFICADO -->
             <form id="loginForm" class="login-form">
+
+                <div class="input-group icon-left">
+                    <i class="fas fa-user"></i>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        placeholder="Usuario"
+                        required
+                    >
+                </div>
+                
+                <div class="input-group icon-left">
+                    <i class="fas fa-lock"></i>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        placeholder="Contraseña"
+                        required
+                    >
+                </div>
 
                 <button type="submit" class="btn-primary full-width login-btn">
                     <i class="fas fa-sign-in-alt"></i>
-                    <span>Entrar al Sistema</span>
+                    <span>Iniciar Sesión</span>
                 </button>
 
             </form>
@@ -48,18 +67,20 @@
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
+            const username = document.getElementById('username').value.trim();
+
             showLoading(true);
 
-            // ✅ ACCESO DIRECTO
+            // ✅ ACEPTA CUALQUIER USUARIO
             const user = {
-                username: "admin",
-                nombre: "Usuario"
+                username: username || "usuario",
+                nombre: username || "Usuario"
             };
 
             localStorage.setItem('user', JSON.stringify(user));
 
             setTimeout(() => {
-                window.location.href = './pages/dashboard.html';
+                window.location.href = 'pages/dashboard.html';
             }, 800);
         });
 
@@ -70,4 +91,5 @@
     </script>
 
 </body>
+</html>
 </html>
