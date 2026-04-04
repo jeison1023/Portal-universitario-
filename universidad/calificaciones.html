@@ -3,139 +3,150 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Consulta de calificaciones del estudiante">
+
   <title>Calificaciones | Portal Universitario</title>
 
+  <!-- CSS -->
   <link rel="stylesheet" href="/public/style.css">
+
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
+
   <div id="sidebar"></div>
 
   <main class="main-content">
     <div id="header"></div>
 
-    <div class="page-content">
-      
-      <!-- HEADER AVANZADO -->
-      <div class="page-header">
+    <section class="page-content">
+
+      <!-- HEADER -->
+      <section class="page-header">
         <div class="header-content">
           <div class="header-icon">
             <i class="fas fa-chart-line"></i>
           </div>
+
           <div>
             <h1>Calificaciones</h1>
-            <p>Tus calificaciones por periodo académico</p>
+            <p>Tus resultados académicos por periodo</p>
           </div>
         </div>
-        
+
         <div class="header-actions">
-          <button class="btn btn-secondary" onclick="exportarCalificaciones()">
-            <i class="fas fa-download"></i> Exportar PDF
+          <button class="btn btn-secondary" id="btnExportarPDF" type="button">
+            <i class="fas fa-download"></i> Exportar
           </button>
-          <button class="btn btn-secondary" onclick="imprimirCalificaciones()">
+
+          <button class="btn btn-secondary" id="btnImprimir" type="button">
             <i class="fas fa-print"></i> Imprimir
           </button>
         </div>
-      </div>
+      </section>
 
-      <!-- ESTADÍSTICAS PRINCIPALES -->
-      <div class="stats-grid" id="statsContainer">
-        <!-- Se llenan dinámicamente -->
-      </div>
+      <!-- STATS -->
+      <section class="stats-grid" id="statsContainer">
+        <!-- JS dinámico -->
+      </section>
 
-      <!-- FILTROS AVANZADOS -->
-      <div class="filters-card">
+      <!-- FILTROS -->
+      <section class="filters-card">
         <div class="filters-row">
+
           <div class="filter-group">
-            <label><i class="fas fa-calendar-alt"></i> Periodo:</label>
-            <select id="filtroPeriodo" onchange="filtrarCalificaciones()">
-              <option value="">Todos los periodos</option>
+            <label for="filtroPeriodo">Periodo</label>
+            <select id="filtroPeriodo">
+              <option value="">Todos</option>
             </select>
           </div>
-          
+
           <div class="filter-group">
-            <label><i class="fas fa-filter"></i> Estado:</label>
-            <select id="filtroEstado" onchange="filtrarCalificaciones()">
+            <label for="filtroEstado">Estado</label>
+            <select id="filtroEstado">
               <option value="">Todos</option>
               <option value="Aprobada">Aprobada</option>
               <option value="Reprobada">Reprobada</option>
               <option value="En curso">En curso</option>
             </select>
           </div>
-          
-          <div class="filter-group">
-            <label><i class="fas fa-search"></i></label>
-            <input type="text" id="buscarMateria" placeholder="Buscar materia..." onkeyup="filtrarCalificaciones()">
-          </div>
-          
-          <button class="btn btn-primary" id="limpiarFiltros" onclick="limpiarFiltrosCalificaciones()">
-            <i class="fas fa-times"></i> Limpiar
-          </button>
-        </div>
-      </div>
 
-      <!-- TABLA PRINCIPAL -->
-      <div class="table-container">
-        <div class="table-header">
-          <h2><i class="fas fa-table"></i> Detalle de Calificaciones</h2>
-          <div class="table-actions">
-            <span id="totalMaterias" class="stat-small"></span>
-            <span id="promedioActual" class="stat-small"></span>
+          <div class="filter-group">
+            <label for="buscarMateria">Buscar</label>
+            <input 
+              type="text" 
+              id="buscarMateria" 
+              placeholder="Nombre de la materia..."
+            >
           </div>
+
+          <button class="btn btn-primary" id="btnLimpiarFiltros" type="button">
+            <i class="fas fa-times"></i>
+          </button>
+
         </div>
+      </section>
+
+      <!-- TABLA -->
+      <section class="table-container">
+
+        <header class="table-header">
+          <h2><i class="fas fa-table"></i> Detalle</h2>
+
+          <div class="table-actions">
+            <span id="totalMaterias" class="stat-small">0 materias</span>
+            <span id="promedioActual" class="stat-small">Promedio: 0.0</span>
+          </div>
+        </header>
 
         <div class="table-responsive">
           <table class="calificaciones-table">
             <thead>
               <tr>
-                <th data-sort="materia">
-                  <i class="fas fa-book"></i> Materia
-                </th>
-                <th data-sort="nota1">
-                  <i class="fas fa-pen"></i> Nota 1
-                </th>
-                <th data-sort="nota2">
-                  <i class="fas fa-pen"></i> Nota 2
-                </th>
-                <th data-sort="parcial">
-                  <i class="fas fa-calculator"></i> Parcial
-                </th>
-                <th data-sort="final">
-                  <i class="fas fa-star"></i> Final
-                </th>
-                <th data-sort="promedio">
-                  <i class="fas fa-chart-bar"></i> Promedio
-                </th>
-                <th data-sort="estado">
-                  <i class="fas fa-circle-check"></i> Estado
-                </th>
+                <th>Materia</th>
+                <th>Nota 1</th>
+                <th>Nota 2</th>
+                <th>Parcial</th>
+                <th>Final</th>
+                <th>Promedio</th>
+                <th>Estado</th>
                 <th>Acciones</th>
               </tr>
             </thead>
+
             <tbody id="tabla-calificaciones">
-              <!-- Datos dinámicos -->
+              <tr>
+                <td colspan="8" class="empty-state">
+                  Cargando calificaciones...
+                </td>
+              </tr>
             </tbody>
+
           </table>
         </div>
-      </div>
+      </section>
 
-      <!-- GRÁFICO RESUMEN -->
-      <div class="chart-container">
-        <div class="card">
-          <div class="card-header">
-            <h3><i class="fas fa-chart-pie"></i> Resumen Gráfico</h3>
-          </div>
+      <!-- GRÁFICO -->
+      <section class="chart-container">
+        <article class="card">
+
+          <header class="card-header">
+            <h3><i class="fas fa-chart-pie"></i> Rendimiento</h3>
+          </header>
+
           <div id="graficoResumen" class="chart-placeholder">
-            <!-- Canvas para gráfico -->
             <canvas id="chartCanvas"></canvas>
           </div>
-        </div>
-      </div>
 
-    </div>
+        </article>
+      </section>
+
+    </section>
   </main>
 
-  <script type="module" src="/public/main.js"></script>
+  <script type="module" src="/public/main.js" defer></script>
+
 </body>
 </html>

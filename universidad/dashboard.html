@@ -3,104 +3,140 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard del Portal Universitario">
+
   <title>Dashboard | Portal Universitario</title>
 
+  <!-- CSS -->
   <link rel="stylesheet" href="/public/style.css">
+
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
-  <!-- Sidebar dinámico -->
+
+  <!-- SIDEBAR -->
   <div id="sidebar"></div>
 
+  <!-- MAIN -->
   <main class="main-content">
-    <!-- Header dinámico -->
+
+    <!-- HEADER -->
     <div id="header"></div>
 
-    <div class="page-content">
-      
-      <!-- WELCOME HEADER -->
-      <div class="welcome-section">
+    <section class="page-content">
+
+      <!-- WELCOME -->
+      <section class="welcome-section" aria-label="Bienvenida del usuario">
         <div class="welcome-content">
+
           <div class="welcome-greeting">
             <h1>¡Bienvenido de vuelta!</h1>
-            <p id="welcomeUser">Estudiante</p>
+            <p id="welcomeUser">Cargando...</p>
           </div>
+
           <div class="welcome-stats">
             <div class="stat-quick">
-              <span id="quickPromedio">-</span>
+              <span id="quickPromedio">--</span>
               <small>Promedio actual</small>
             </div>
+
             <div class="stat-quick">
-              <span id="quickCreditos">-</span>
+              <span id="quickCreditos">--</span>
               <small>Créditos semestre</small>
             </div>
           </div>
+
         </div>
-      </div>
+      </section>
 
-      <!-- STATS PRINCIPALES -->
-      <div id="statsContainer" class="dashboard-stats-grid"></div>
+      <!-- STATS -->
+      <section 
+        id="statsContainer" 
+        class="dashboard-stats-grid"
+        aria-label="Estadísticas del estudiante"
+      >
+        <!-- JS INYECTA -->
+      </section>
 
-      <!-- DASHBOARD GRID PRINCIPAL -->
-      <div class="dashboard-grid">
-        
-        <!-- PRÓXIMAS CLASES -->
-        <div class="card full-height">
-          <div class="card-header">
+      <!-- GRID -->
+      <section class="dashboard-grid">
+
+        <!-- CLASES -->
+        <article class="card full-height">
+          <header class="card-header">
             <h3><i class="fas fa-clock"></i> Próximas Clases</h3>
             <a href="materias.html" class="view-more">Ver todas →</a>
+          </header>
+
+          <div id="classesContainer" class="classes-list">
+            <p class="empty-state">No hay clases cargadas</p>
           </div>
-          <div id="classesContainer" class="classes-list"></div>
-        </div>
+        </article>
 
         <!-- NOTIFICACIONES -->
-        <div class="card full-height">
-          <div class="card-header">
+        <article class="card full-height">
+          <header class="card-header">
             <h3><i class="fas fa-bell"></i> Notificaciones</h3>
-            <span id="notifCount" class="notif-badge">5</span>
-          </div>
-          <ul id="notificationsContainer" class="notifications-list"></ul>
-        </div>
+            <span id="notifCount" class="notif-badge">0</span>
+          </header>
 
-        <!-- RENDIMIENTO RECIENTE -->
-        <div class="card">
-          <div class="card-header">
+          <ul id="notificationsContainer" class="notifications-list">
+            <li class="empty-state">Sin notificaciones</li>
+          </ul>
+        </article>
+
+        <!-- RENDIMIENTO -->
+        <article class="card">
+          <header class="card-header">
             <h3><i class="fas fa-chart-line"></i> Rendimiento Reciente</h3>
-          </div>
-          <div id="performanceChart" class="chart-container-small"></div>
-        </div>
+          </header>
 
-        <!-- ACCIONES RÁPIDAS -->
-        <div class="card">
-          <div class="card-header">
-            <h3><i class="fas fa-bolt"></i> Acciones Rápidas</h3>
+          <div id="performanceChart" class="chart-container-small">
+            <p class="empty-state">Cargando gráfico...</p>
           </div>
+        </article>
+
+        <!-- ACCIONES -->
+        <article class="card">
+          <header class="card-header">
+            <h3><i class="fas fa-bolt"></i> Acciones Rápidas</h3>
+          </header>
+
           <div class="quick-actions-grid">
+
             <a href="calificaciones.html" class="quick-action">
               <i class="fas fa-chart-bar"></i>
-              <span>Ver Calificaciones</span>
+              <span>Calificaciones</span>
             </a>
+
             <a href="materias.html" class="quick-action">
               <i class="fas fa-book-open"></i>
-              <span>Mis Materias</span>
+              <span>Materias</span>
             </a>
+
             <a href="historial-academico.html" class="quick-action">
               <i class="fas fa-history"></i>
               <span>Historial</span>
             </a>
+
             <a href="solicitudes.html" class="quick-action">
               <i class="fas fa-file-invoice"></i>
-              <span>Nueva Solicitud</span>
+              <span>Solicitudes</span>
             </a>
+
           </div>
-        </div>
+        </article>
 
-      </div>
+      </section>
 
-    </div>
+    </section>
+
   </main>
 
-  <script type="module" src="/public/main.js"></script>
+  <!-- JS -->
+  <script type="module" src="/public/main.js" defer></script>
+
 </body>
 </html>

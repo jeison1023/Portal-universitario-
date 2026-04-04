@@ -3,154 +3,178 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gestión de materias del estudiante">
+
   <title>Materias | Portal Universitario</title>
 
+  <!-- CSS -->
   <link rel="stylesheet" href="/public/style.css">
+
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
+
   <div id="sidebar"></div>
 
   <main class="main-content">
     <div id="header"></div>
 
-    <div class="page-content">
-      
-      <!-- PAGE HEADER PRO -->
-      <div class="page-header">
+    <section class="page-content">
+
+      <!-- HEADER -->
+      <section class="page-header">
         <div class="header-content">
           <div class="header-icon blue">
             <i class="fas fa-book-open"></i>
           </div>
+
           <div>
             <h1>Mis Materias</h1>
-            <p>Semestre 2024-I • <span id="totalMateriasDash">-</span> materias</p>
+            <p>Semestre 2024-I • <span id="totalMateriasDash">0</span> materias</p>
           </div>
         </div>
-        <div class="header-actions">
-          <button class="btn btn-primary" onclick="nuevaMatricula()">
-            <i class="fas fa-plus"></i> Matricular Materia
-          </button>
-          <button class="btn btn-secondary" onclick="exportarMaterias()">
-            <i class="fas fa-download"></i> Exportar PDF
-          </button>
-        </div>
-      </div>
 
-      <!-- STATS MATERIAS -->
-      <div class="materias-stats">
-        <div class="stat-card small">
-          <div class="stat-icon green">
-            <i class="fas fa-check-circle"></i>
-          </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" id="btnNuevaMateria" type="button">
+            <i class="fas fa-plus"></i> Matricular
+          </button>
+
+          <button class="btn btn-secondary" id="btnExportar" type="button">
+            <i class="fas fa-download"></i> Exportar
+          </button>
+        </div>
+      </section>
+
+      <!-- STATS -->
+      <section class="materias-stats">
+
+        <article class="stat-card small">
+          <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
           <div>
             <h3 id="materiasAprobadas">0</h3>
             <p>Aprobadas</p>
           </div>
-        </div>
-        <div class="stat-card small">
-          <div class="stat-icon orange">
-            <i class="fas fa-clock"></i>
-          </div>
+        </article>
+
+        <article class="stat-card small">
+          <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
           <div>
             <h3 id="materiasCurso">0</h3>
-            <p>En Curso</p>
+            <p>En curso</p>
           </div>
-        </div>
-        <div class="stat-card small">
-          <div class="stat-icon blue">
-            <i class="fas fa-bookmark"></i>
-          </div>
+        </article>
+
+        <article class="stat-card small">
+          <div class="stat-icon blue"><i class="fas fa-bookmark"></i></div>
           <div>
             <h3 id="creditosTotal">0</h3>
-            <p>Créditos Total</p>
+            <p>Créditos</p>
           </div>
-        </div>
-      </div>
+        </article>
 
-      <!-- FILTROS AVANZADOS -->
-      <div class="filters-card">
+      </section>
+
+      <!-- FILTROS -->
+      <section class="filters-card">
         <div class="filters-row">
+
           <div class="filter-group">
-            <label><i class="fas fa-filter"></i> Filtro:</label>
+            <label for="filtroEstadoMateria">Estado</label>
             <select id="filtroEstadoMateria">
-              <option value="">Todas las materias</option>
+              <option value="">Todas</option>
               <option value="activa">Activas</option>
               <option value="finalizada">Finalizadas</option>
               <option value="reprobada">Reprobadas</option>
             </select>
           </div>
+
           <div class="filter-group">
-            <label><i class="fas fa-calendar"></i> Periodo:</label>
+            <label for="filtroPeriodoMateria">Periodo</label>
             <select id="filtroPeriodoMateria">
-              <option value="">Todos los periodos</option>
+              <option value="">Todos</option>
               <option value="2024-I">2024-I</option>
               <option value="2023-II">2023-II</option>
             </select>
           </div>
-          <div class="filter-group">
-            <label><i class="fas fa-search"></i></label>
-            <input type="text" id="buscarMateria" placeholder="Buscar por nombre o código...">
-          </div>
-          <button class="btn btn-primary" onclick="limpiarFiltrosMaterias()">
-            <i class="fas fa-times"></i> Limpiar
-          </button>
-        </div>
-      </div>
 
-      <!-- TABLA PRINCIPAL -->
-      <div class="table-container">
-        <div class="table-header">
-          <h2><i class="fas fa-list"></i> Detalle de Materias</h2>
+          <div class="filter-group">
+            <label for="buscarMateria">Buscar</label>
+            <input type="text" id="buscarMateria" placeholder="Nombre o código...">
+          </div>
+
+          <button class="btn btn-primary" id="btnLimpiarFiltros" type="button">
+            <i class="fas fa-times"></i>
+          </button>
+
+        </div>
+      </section>
+
+      <!-- TABLA -->
+      <section class="table-container">
+
+        <header class="table-header">
+          <h2><i class="fas fa-list"></i> Materias</h2>
+
           <div class="table-actions">
             <span id="materiasActivas" class="stat-small">0 activas</span>
-            <button id="toggleView" class="btn btn-secondary">
-              <i class="fas fa-th"></i> Vista Tarjetas
+
+            <button id="toggleView" class="btn btn-secondary" type="button">
+              <i class="fas fa-th"></i> Cambiar Vista
             </button>
           </div>
-        </div>
+        </header>
 
-        <!-- TABLA MODE -->
+        <!-- TABLA -->
         <div class="table-responsive table-mode active" id="tableMode">
           <table class="materias-table">
             <thead>
               <tr>
-                <th data-sort="codigo"><i class="fas fa-hashtag"></i> Código</th>
-                <th data-sort="nombre"><i class="fas fa-book"></i> Materia</th>
-                <th data-sort="docente"><i class="fas fa-chalkboard-teacher"></i> Docente</th>
-                <th data-sort="horario"><i class="fas fa-clock"></i> Horario</th>
-                <th data-sort="aula"><i class="fas fa-school"></i> Aula</th>
-                <th data-sort="creditos"><i class="fas fa-coins"></i> Créditos</th>
-                <th data-sort="estado"><i class="fas fa-circle-info"></i> Estado</th>
-                <th><i class="fas fa-ellipsis-v"></i> Acciones</th>
+                <th>Código</th>
+                <th>Materia</th>
+                <th>Docente</th>
+                <th>Horario</th>
+                <th>Aula</th>
+                <th>Créditos</th>
+                <th>Estado</th>
+                <th>Acciones</th>
               </tr>
             </thead>
-            <tbody id="tabla-materias"></tbody>
+            <tbody id="tabla-materias">
+              <tr>
+                <td colspan="8" class="empty-state">Cargando materias...</td>
+              </tr>
+            </tbody>
           </table>
         </div>
 
-        <!-- CARDS MODE -->
+        <!-- CARDS -->
         <div class="cards-mode" id="cardsMode">
           <div id="materias-cards-container" class="materias-cards-grid">
-            <!-- Cards dinámicas -->
+            <p class="empty-state">Sin datos</p>
           </div>
         </div>
-      </div>
 
-      <!-- HORARIO SEMANAL -->
-      <div class="horario-section">
-        <div class="card">
-          <div class="card-header">
+      </section>
+
+      <!-- HORARIO -->
+      <section class="horario-section">
+        <article class="card">
+          <header class="card-header">
             <h3><i class="fas fa-calendar-week"></i> Horario Semanal</h3>
-          </div>
-          <div id="horarioSemanal" class="horario-grid"></div>
-        </div>
-      </div>
+          </header>
 
-    </div>
+          <div id="horarioSemanal" class="horario-grid">
+            <p class="empty-state">Cargando horario...</p>
+          </div>
+        </article>
+      </section>
+
+    </section>
   </main>
 
-  <script type="module" src="/public/main.js"></script>
+  <script type="module" src="/public/main.js" defer></script>
+
 </body>
 </html>

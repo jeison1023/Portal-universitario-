@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Historial Académico | Portal Universitario</title>
 
   <link rel="stylesheet" href="/public/style.css">
@@ -10,175 +11,136 @@
 </head>
 
 <body>
+
   <div id="sidebar"></div>
 
   <main class="main-content">
     <div id="header"></div>
 
-    <div class="page-content">
-      
-      <!-- Header del Historial -->
-      <div class="page-header">
+    <section class="page-content">
+
+      <!-- HEADER -->
+      <section class="page-header">
         <div>
           <h1><i class="fas fa-chart-bar"></i> Historial Académico</h1>
-          <p>Tu rendimiento académico completo por periodos</p>
+          <p>Rendimiento académico por periodos</p>
         </div>
+
         <div class="header-actions">
-          <button class="btn btn-primary" onclick="exportarHistorial()">
-            <i class="fas fa-download"></i> Exportar PDF
+          <button id="btnExportarHistorial" class="btn btn-primary" type="button">
+            <i class="fas fa-download"></i> Exportar
           </button>
-          <button class="btn btn-secondary" onclick="imprimirHistorial()">
+
+          <button id="btnImprimirHistorial" class="btn btn-secondary" type="button">
             <i class="fas fa-print"></i> Imprimir
           </button>
         </div>
-      </div>
+      </section>
 
-      <!-- Filtros -->
-      <div class="card filters-card">
-        <div class="filters">
-          <select id="filtroPeriodo" onchange="filtrarHistorial()">
-            <option value="">Todos los periodos</option>
-            <option value="2024-I">2024-I</option>
-            <option value="2024-II">2024-II</option>
-            <option value="2023-II">2023-II</option>
-            <option value="2023-I">2023-I</option>
-          </select>
-          <select id="filtroEstado" onchange="filtrarHistorial()">
-            <option value="">Todos los estados</option>
-            <option value="Aprobada">Aprobada</option>
-            <option value="Reprobada">Reprobada</option>
-            <option value="En curso">En curso</option>
-          </select>
-          <input type="text" id="buscarMateria" placeholder="Buscar materia..." onkeyup="filtrarHistorial()">
-          <button class="btn btn-outline" onclick="limpiarFiltros()">
-            <i class="fas fa-times"></i> Limpiar
+      <!-- FILTROS -->
+      <section class="filters-card card">
+        <div class="filters-row">
+
+          <div class="filter-group">
+            <label for="filtroPeriodo">Periodo</label>
+            <select id="filtroPeriodo">
+              <option value="">Todos</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filtroEstado">Estado</label>
+            <select id="filtroEstado">
+              <option value="">Todos</option>
+              <option value="Aprobada">Aprobada</option>
+              <option value="Reprobada">Reprobada</option>
+              <option value="En curso">En curso</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="buscarMateria">Buscar</label>
+            <input 
+              type="text" 
+              id="buscarMateria" 
+              placeholder="Nombre de materia..."
+            >
+          </div>
+
+          <button id="btnLimpiarHistorial" class="btn btn-outline" type="button">
+            <i class="fas fa-times"></i>
           </button>
-        </div>
-      </div>
 
-      <!-- Estadísticas Generales -->
-      <div class="stats-grid">
+        </div>
+      </section>
+
+      <!-- STATS -->
+      <section class="stats-grid">
+
         <div class="stat-card">
           <div class="stat-icon">
             <i class="fas fa-trophy"></i>
           </div>
           <div class="stat-info">
-            <h3 id="promedioGeneral">8.45</h3>
+            <h3 id="promedioGeneral">-</h3>
             <p>Promedio General</p>
           </div>
         </div>
+
         <div class="stat-card">
           <div class="stat-icon">
             <i class="fas fa-check-circle"></i>
           </div>
           <div class="stat-info">
-            <h3 id="creditosAprobados">156</h3>
+            <h3 id="creditosAprobados">-</h3>
             <p>Créditos Aprobados</p>
           </div>
         </div>
+
         <div class="stat-card">
           <div class="stat-icon">
             <i class="fas fa-book"></i>
           </div>
           <div class="stat-info">
-            <h3 id="materiasAprobadas">42</h3>
+            <h3 id="materiasAprobadas">-</h3>
             <p>Materias Aprobadas</p>
           </div>
         </div>
+
         <div class="stat-card">
           <div class="stat-icon">
             <i class="fas fa-exclamation-triangle"></i>
           </div>
           <div class="stat-info">
-            <h3 id="materiasReprobadas">3</h3>
+            <h3 id="materiasReprobadas">-</h3>
             <p>Materias Reprobadas</p>
           </div>
         </div>
-      </div>
 
-      <!-- Historial por Periodos -->
-      <div class="card">
-        <div class="card-header">
-          <h3><i class="fas fa-calendar-alt"></i> Historial por Periodos</h3>
-        </div>
-        
+      </section>
+
+      <!-- HISTORIAL -->
+      <section class="card">
+
+        <header class="card-header">
+          <h3><i class="fas fa-calendar-alt"></i> Periodos Académicos</h3>
+        </header>
+
         <div id="historialContainer">
-          <!-- Periodo 2024-I -->
-          <div class="periodo-section" data-periodo="2024-I">
-            <div class="periodo-header">
-              <h4>2024-I <span class="periodo-promedio">8.5</span></h4>
-              <div class="periodo-status aprobado">
-                <i class="fas fa-check-circle"></i> Aprobado
-              </div>
-            </div>
-            <div class="materias-list">
-              <div class="materia-item aprobada" data-estado="Aprobada">
-                <div class="materia-info">
-                  <strong>Matemáticas Avanzadas I</strong>
-                  <span class="creditos">4 cr</span>
-                </div>
-                <div class="materia-calificacion">9.2</div>
-              </div>
-              <div class="materia-item aprobada" data-estado="Aprobada">
-                <div class="materia-info">
-                  <strong>Programación Orientada a Objetos</strong>
-                  <span class="creditos">4 cr</span>
-                </div>
-                <div class="materia-calificacion">8.7</div>
-              </div>
-              <div class="materia-item en-curso" data-estado="En curso">
-                <div class="materia-info">
-                  <strong>Bases de Datos II</strong>
-                  <span class="creditos">3 cr</span>
-                </div>
-                <div class="materia-calificacion parcial">Parcial: 8.0</div>
-              </div>
-            </div>
+
+          <!-- Estado inicial -->
+          <div class="empty-state">
+            Cargando historial académico...
           </div>
 
-          <!-- Periodo 2023-II -->
-          <div class="periodo-section" data-periodo="2023-II">
-            <div class="periodo-header">
-              <h4>2023-II <span class="periodo-promedio">8.3</span></h4>
-              <div class="periodo-status aprobado">
-                <i class="fas fa-check-circle"></i> Aprobado
-              </div>
-            </div>
-            <div class="materias-list">
-              <div class="materia-item aprobada" data-estado="Aprobada">
-                <div class="materia-info">
-                  <strong>Redes de Computadores</strong>
-                  <span class="creditos">4 cr</span>
-                </div>
-                <div class="materia-calificacion">8.9</div>
-              </div>
-              <div class="materia-item reprobada" data-estado="Reprobada">
-                <div class="materia-info">
-                  <strong>Física III</strong>
-                  <span class="creditos">4 cr</span>
-                </div>
-                <div class="materia-calificacion">2.8</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Más periodos... -->
-          <div class="periodo-section" data-periodo="2023-I">
-            <div class="periodo-header">
-              <h4>2023-I <span class="periodo-promedio">8.6</span></h4>
-              <div class="periodo-status aprobado">
-                <i class="fas fa-check-circle"></i> Aprobado
-              </div>
-            </div>
-            <div class="materias-list">
-              <!-- Materias del periodo -->
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
+
+      </section>
+
+    </section>
   </main>
 
-  <script type="module" src="/public/main.js"></script>
+  <script type="module" src="/public/main.js" defer></script>
+
 </body>
 </html>
