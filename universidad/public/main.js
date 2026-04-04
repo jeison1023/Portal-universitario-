@@ -1,5 +1,5 @@
 // ============================================================================
-// PORTAL UNIVERSITARIO - MAIN PRO
+// PORTAL UNIVERSITARIO - MAIN PRO (BACKEND READY)
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', initApp);
@@ -18,6 +18,7 @@ function initApp() {
 
 function initAuth() {
     let user = null;
+    let token = localStorage.getItem('token');
 
     try {
         user = JSON.parse(localStorage.getItem('user'));
@@ -26,11 +27,13 @@ function initAuth() {
         logout();
     }
 
-    if (!user && !window.location.pathname.includes('index.html')) {
-        window.location.href = 'index.html';
+    // 🔥 PROTECCIÓN REAL
+    if ((!user || !token) && !window.location.pathname.includes('index.html')) {
+        window.location.href = '/index.html';
         return;
     }
 
+    // Mostrar nombre
     const userNameElements = document.querySelectorAll('#userName');
     userNameElements.forEach(el => {
         el.textContent = user?.nombre || user?.username || 'Usuario';
@@ -39,11 +42,12 @@ function initAuth() {
 
 function logout() {
     localStorage.removeItem('user');
-    window.location.href = '/index.html';
+    localStorage.removeItem('token'); // 🔥 importante
+    window.location.href = 'index.html';
 }
 
 // ============================================================================
-// LAYOUT (SIDEBAR + HEADER)
+// LAYOUT
 // ============================================================================
 
 function renderLayout() {
@@ -101,7 +105,7 @@ function renderHeader() {
 
 function initEvents() {
 
-    // Sidebar toggle
+    // Sidebar
     document.addEventListener('click', (e) => {
         if (e.target.closest('.menu-toggle')) {
             document.body.classList.toggle('sidebar-collapsed');
@@ -129,7 +133,6 @@ function initEvents() {
             document.querySelector('.modal')?.classList.remove('active');
         }
     });
-
 }
 
 // ============================================================================

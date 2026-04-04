@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión | Portal Universitario</title>
+    <title>Login | Portal Universitario</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="/public/style.css">
 
-    <!-- Icons -->
+    <!-- ICONOS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Font -->
+    <!-- FUENTE -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -70,9 +70,9 @@
 
     </div>
 
-    <!-- SCRIPT -->
+    <!-- SCRIPT LOGIN REAL -->
     <script>
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const username = document.getElementById('username').value.trim();
@@ -85,18 +85,33 @@
 
         showLoading(true);
 
-        // 🔥 LOGIN SIMULADO
-        const user = {
-            username: username,
-            nombre: username
-        };
+        try {
+            const res = await fetch('http://localhost:3000/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
 
-        localStorage.setItem('user', JSON.stringify(user));
+            const data = await res.json();
 
-        setTimeout(() => {
-            // ✅ REDIRECCIÓN CORRECTA (IMPORTANTE)
-            window.location.href = '/dashboard.html';
-        }, 800);
+            if (!res.ok) {
+                throw new Error(data.message || 'Error al iniciar sesión');
+            }
+
+            // 🔥 GUARDAR TOKEN Y USUARIO
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+
+            // 🚀 REDIRECCIÓN
+            window.location.href = 'dashboard.html';
+
+        } catch (error) {
+            alert(error.message);
+        } finally {
+            showLoading(false);
+        }
     });
 
     function showLoading(show) {
