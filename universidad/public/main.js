@@ -1,91 +1,170 @@
 // ============================================================================
-// PORTAL UNIVERSITARIO - MAIN PRO (COMPLETO SIN BACKEND)
+// PORTAL UNIVERSITARIO - MAIN ULTRA PRO MAX
+// ✨ Partículas | Animaciones 3D | Efectos hover | Transiciones perfectas
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', initApp);
 
 // ============================================================================
-// INIT
+// INIT ULTRA
 // ============================================================================
-
 function initApp() {
-    initLogin();        // 🔥 LOGIN DESDE FORM
-    initAuth();         // 🔥 validar sesión
-    renderLayout();
-    initEvents();
-    initTables();
-    initForms();
-    initProfile();      // 🔥 PERFIL ESTUDIANTE
-    initHistorial();    // 🔥 HISTORIAL ACADÉMICO
-    initDashboard();    // 🔥 DASHBOARD
+    initParticles();     // ✨ Partículas de fondo
+    initLogin();         // 🔥 Login animado
+    initAuth();          // 🔐 Auth pro
+    renderLayout();      // 🎨 Layout dinámico
+    initEvents();        // 🎯 Eventos avanzados
+    initTables();        // 📊 Tablas interactivas
+    initForms();         // 📝 Forms animados
+    initProfile();       // 👤 Perfil completo
+    initHistorial();     // 📚 Historial académico
+    initDashboard();     // 📈 Dashboard pro
+    initAnimations();    // ✨ Micro-interacciones
 }
 
 // ============================================================================
-// LOGIN (ACEPTA TODO)
+// PARTÍCULAS MÁGICAS
 // ============================================================================
-
-function initLogin() {
-    const form = document.getElementById('loginForm');
-    if (!form) return;
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const username = document.getElementById('username').value.trim();
-
-        if (!username) {
-            alert('Ingresa un usuario');
-            return;
-        }
-
-        // 🔥 USUARIO DINÁMICO COMPLETO
-        const user = generarUsuarioCompleto(username);
-        localStorage.setItem('user', JSON.stringify(user));
-
-        showLoading(true);
-
-        setTimeout(() => {
-            window.location.href = 'dashboard.html';
-        }, 800);
-    });
-}
-
-// ============================================================================
-// USUARIOS FALSOS (SIN BACKEND)
-// ============================================================================
-
-function generarUsuarioCompleto(username) {
-    const codigos = ['2023001', '2023002', '2023003', '2024001'];
-    const programas = ['Ingeniería de Sistemas', 'Ingeniería Civil', 'Medicina', 'Derecho'];
+function initParticles() {
+    if (!document.querySelector('.landing, .login-body')) return;
     
-    const codigo = codigos[Math.floor(Math.random() * codigos.length)];
+    const particleCount = 100;
+    const particles = [];
     
-    return {
-        nombreCompleto: `${username.charAt(0).toUpperCase() + username.slice(1)} Pérez`,
-        codigo: codigo,
-        username: codigo,
-        correoInstitucional: `${codigo}@universidad.edu.co`,
-        programa: programas[Math.floor(Math.random() * programas.length)],
-        semestre: Math.floor(Math.random() * 10) + 1,
-        promedio: (Math.random() * 2 + 8).toFixed(2),
-        creditos: Math.floor(Math.random() * 20) + 15,
-        fechaNacimiento: '15/03/2002',
-        telefono: '+57 300 123 4567',
-        foto: null
-    };
-}
-
-function showLoading(show) {
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) {
-        overlay.style.display = show ? 'flex' : 'none';
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        document.body.appendChild(particle);
+        particles.push(particle);
     }
 }
 
 // ============================================================================
-// AUTH
+// LOGIN ÉPICO
 // ============================================================================
+function initLogin() {
+    const form = document.getElementById('loginForm');
+    if (!form) return;
 
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value.trim();
+        if (!username) {
+            shakeError(form);
+            return;
+        }
+
+        showLoading(true);
+        animateLoginSuccess(form);
+
+        const user = generarUsuarioCompleto(username);
+        localStorage.setItem('user', JSON.stringify(user));
+
+        // Transición suave
+        await sleep(1200);
+        document.body.classList.add('login-success');
+        await sleep(800);
+        window.location.href = 'dashboard.html';
+    });
+}
+
+function shakeError(element) {
+    element.style.animation = 'shake 0.5s ease-in-out';
+    setTimeout(() => element.style.animation = '', 500);
+}
+
+function animateLoginSuccess(form) {
+    form.querySelectorAll('input').forEach(input => {
+        input.style.transform = 'scale(0)';
+        input.style.opacity = '0';
+    });
+    
+    form.style.transform = 'scale(0.95)';
+    form.style.opacity = '0.7';
+}
+
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// ============================================================================
+// USUARIOS REALISTAS PRO
+// ============================================================================
+function generarUsuarioCompleto(username) {
+    const templates = {
+        codigos: ['2023001', '2023002', '2023003', '2024001', '2024002'],
+        programas: ['Ingeniería de Sistemas', 'Ingeniería Civil', 'Medicina', 'Derecho', 'Arquitectura'],
+        nombres: ['Ana María', 'Carlos Andrés', 'Laura Sofía', 'Diego Alejandro', 'Valentina']
+    };
+    
+    const codigo = templates.codigos[Math.floor(Math.random() * templates.codigos.length)];
+    const programa = templates.programas[Math.floor(Math.random() * templates.programas.length)];
+    const nombreAleatorio = templates.nombres[Math.floor(Math.random() * templates.nombres.length)];
+    
+    return {
+        nombreCompleto: `${nombreAleatorio} ${username.toUpperCase()}`,
+        codigo: codigo,
+        username: codigo,
+        correoInstitucional: `${codigo.toLowerCase()}@universidad.edu.co`,
+        programa: programa,
+        semestre: Math.floor(Math.random() * 10) + 1,
+        promedio: (8 + Math.random() * 1.8).toFixed(2),
+        creditos: Math.floor(Math.random() * 25) + 18,
+        fechaNacimiento: new Date(2000 + Math.floor(Math.random() * 5), 
+                                 Math.floor(Math.random() * 12), 
+                                 10 + Math.floor(Math.random() * 20))
+                         .toLocaleDateString('es-CO'),
+        telefono: `+57 3${Math.floor(Math.random() * 10)}0 ${Math.floor(Math.random() * 900) + 100} ${Math.floor(Math.random() * 9000) + 1000}`,
+        foto: null,
+        fechaIngreso: new Date(2022 + Math.floor(Math.random() * 3), 0, 1).toLocaleDateString('es-CO')
+    };
+}
+
+// ============================================================================
+// LOADING ANIMADO
+// ============================================================================
+function showLoading(show) {
+    let overlay = document.getElementById('loadingOverlay');
+    if (!overlay && show) {
+        overlay = createLoadingOverlay();
+        document.body.appendChild(overlay);
+    }
+    
+    if (overlay) {
+        overlay.style.display = show ? 'flex' : 'none';
+        if (show) animateLoading();
+    }
+}
+
+function createLoadingOverlay() {
+    const overlay = document.createElement('div');
+    overlay.id = 'loadingOverlay';
+    overlay.className = 'loading-overlay';
+    overlay.innerHTML = `
+        <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <span>Entrando al portal...</span>
+        </div>
+    `;
+    return overlay;
+}
+
+function animateLoading() {
+    const rings = document.querySelectorAll('.spinner-ring');
+    rings.forEach((ring, i) => {
+        ring.style.animationDelay = `${i * 0.2}s`;
+    });
+}
+
+// ============================================================================
+// AUTH PRO
+// ============================================================================
 function initAuth() {
     const isLoginPage = window.location.pathname.includes('index.html');
     let user = null;
@@ -93,72 +172,96 @@ function initAuth() {
     try {
         user = JSON.parse(localStorage.getItem('user'));
     } catch (e) {
-        console.error('Error parsing user');
         logout();
+        return;
     }
 
-    // 🔥 proteger páginas
     if (!user && !isLoginPage) {
         window.location.href = 'index.html';
         return;
     }
 
-    // 🔥 mostrar nombre en toda la app
+    // Actualizar UI con datos del usuario
+    updateUserUI(user);
+    
+    // Efecto de entrada
+    document.body.classList.add('user-loaded');
+}
+
+// ============================================================================
+// UI DEL USUARIO
+// ============================================================================
+function updateUserUI(user) {
     document.querySelectorAll('#userName, [data-user="name"]').forEach(el => {
-        el.textContent = user?.nombreCompleto || user?.username || 'Usuario';
+        el.textContent = user.nombreCompleto || user.username || 'Usuario';
+        el.dataset.originalTitle = user.nombreCompleto;
     });
+
+    // Avatar dinámico
+    const avatar = document.querySelector('.user-avatar');
+    if (avatar && !user.foto) {
+        const initials = user.nombreCompleto.match(/\b\w/g) || ['U'];
+        avatar.innerHTML = initials.join('').toUpperCase();
+    }
 }
 
 // ============================================================================
-// LOGOUT
+// LAYOUT DINÁMICO PRO
 // ============================================================================
-
-function logout() {
-    localStorage.removeItem('user');
-    window.location.href = 'index.html';
-}
-
-// ============================================================================
-// LAYOUT
-// ============================================================================
-
 function renderLayout() {
     renderSidebar();
     renderHeader();
+    
+    // Efecto de carga
+    setTimeout(() => {
+        document.body.classList.add('layout-ready');
+    }, 100);
 }
 
 function renderSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (!sidebar) return;
 
+    const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+    
     sidebar.innerHTML = `
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <i class="fas fa-graduation-cap"></i>
+            <div class="sidebar-header center gap-1">
+                <div class="sidebar-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
                 <span>Portal UN</span>
             </div>
 
             <nav class="sidebar-nav">
-                <a href="dashboard.html" class="nav-item ${window.location.pathname.includes('dashboard') ? 'active' : ''}">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                <a href="dashboard.html" class="nav-item ${currentPage.includes('dashboard') ? 'active' : ''}" data-page="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
                 </a>
-                <a href="materias.html" class="nav-item ${window.location.pathname.includes('materias') ? 'active' : ''}">
-                    <i class="fas fa-book"></i> Materias
+                <a href="materias.html" class="nav-item ${currentPage.includes('materias') ? 'active' : ''}" data-page="materias">
+                    <i class="fas fa-book"></i>
+                    <span>Materias</span>
                 </a>
-                <a href="calificaciones.html" class="nav-item ${window.location.pathname.includes('calificaciones') ? 'active' : ''}">
-                    <i class="fas fa-chart-line"></i> Calificaciones
+                <a href="calificaciones.html" class="nav-item ${currentPage.includes('calificaciones') ? 'active' : ''}" data-page="calificaciones">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Calificaciones</span>
                 </a>
-                <a href="historial.html" class="nav-item ${window.location.pathname.includes('historial') ? 'active' : ''}">
-                    <i class="fas fa-history"></i> Historial
+                <a href="historial-academico.html" class="nav-item ${currentPage.includes('historial') ? 'active' : ''}" data-page="historial">
+                    <i class="fas fa-history"></i>
+                    <span>Historial</span>
                 </a>
-                <a href="perfil.html" class="nav-item ${window.location.pathname.includes('perfil') ? 'active' : ''}">
-                    <i class="fas fa-user"></i> Perfil
+                <a href="perfil.html" class="nav-item ${currentPage.includes('perfil') ? 'active' : ''}" data-page="perfil">
+                    <i class="fas fa-user"></i>
+                    <span>Perfil</span>
                 </a>
-                <a href="solicitudes.html" class="nav-item">
-                    <i class="fas fa-file-alt"></i> Solicitudes
+                <a href="solicitudes.html" class="nav-item" data-page="solicitudes">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Solicitudes</span>
                 </a>
+                <div class="sidebar-divider"></div>
                 <a href="#" id="logoutBtn" class="nav-item logout">
-                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Cerrar Sesión</span>
                 </a>
             </nav>
         </aside>
@@ -174,8 +277,13 @@ function renderHeader() {
     header.innerHTML = `
         <header class="header">
             <div class="header-left">
-                <button class="menu-toggle"><i class="fas fa-bars"></i></button>
-                <h1>${pageTitle}</h1>
+                <button class="menu-toggle" aria-label="Menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="page-title">
+                    <h1>${pageTitle}</h1>
+                    <div class="title-glow"></div>
+                </div>
             </div>
 
             <div class="header-right">
@@ -189,55 +297,81 @@ function renderHeader() {
 }
 
 // ============================================================================
-// EVENTOS GLOBALES
+// EVENTOS ULTRA PRO
 // ============================================================================
-
 function initEvents() {
-    document.addEventListener('click', (e) => {
-        // Menu toggle
-        if (e.target.closest('.menu-toggle')) {
-            document.body.classList.toggle('sidebar-collapsed');
-        }
+    // Event delegation principal
+    document.addEventListener('click', handleGlobalClicks);
+    document.addEventListener('mousemove', handleMouseMove);
+    
+    // Resize handler
+    window.addEventListener('resize', debounce(handleResize, 250));
+}
 
-        // Logout
-        if (e.target.closest('#logoutBtn')) {
-            e.preventDefault();
-            if (confirm('¿Cerrar sesión?')) {
-                logout();
-            }
-        }
+function handleGlobalClicks(e) {
+    // Mobile menu
+    if (e.target.closest('.menu-toggle')) {
+        document.body.classList.toggle('sidebar-open');
+        animateSidebar();
+    }
 
-        // Modales
-        if (e.target.closest('#btnNuevaSolicitud')) {
-            document.getElementById('modalSolicitud')?.classList.add('active');
-        }
+    // Logout con confirmación animada
+    if (e.target.closest('#logoutBtn')) {
+        e.preventDefault();
+        showLogoutModal();
+    }
 
-        if (e.target.closest('#closeModal') || e.target.classList.contains('modal')) {
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.classList.remove('active');
-            });
-        }
+    // Modales
+    if (e.target.closest('[data-modal]')) {
+        const modalId = e.target.closest('[data-modal]').dataset.modal;
+        document.getElementById(modalId)?.classList.add('active');
+    }
 
-        // Foto perfil
-        if (e.target.id === 'fotoInput') {
-            handleFotoPerfil(e.target.files[0]);
-        }
-    });
+    if (e.target.closest('.modal-close') || e.target.classList.contains('modal')) {
+        document.querySelectorAll('.modal.active').forEach(modal => {
+            modal.classList.remove('active');
+        });
+    }
+
+    // Foto perfil
+    if (e.target.id === 'fotoInput') {
+        handleFotoPerfil(e.target.files[0]);
+    }
+
+    // Filtros
+    if (e.target.closest('#limpiarFiltros')) {
+        limpiarFiltros();
+    }
+}
+
+function handleMouseMove(e) {
+    // Efecto parallax sutil en header
+    const header = document.querySelector('.header');
+    if (header) {
+        const x = (e.clientX / window.innerWidth - 0.5) * 10;
+        const y = (e.clientY / window.innerHeight - 0.5) * 10;
+        header.style.transform = `translate(${x}px, ${y}px)`;
+    }
+}
+
+function handleResize() {
+    if (window.innerWidth > 992) {
+        document.body.classList.remove('sidebar-open');
+    }
 }
 
 // ============================================================================
-// PERFIL ESTUDIANTE
+// PERFIL ESTUDIANTE PRO
 // ============================================================================
-
 function initProfile() {
-    const perfilPage = window.location.pathname.includes('perfil.html');
-    if (!perfilPage) return;
+    const isProfilePage = window.location.pathname.includes('perfil');
+    if (!isProfilePage) return;
 
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) return;
 
-    // Llenar todos los datos del perfil
-    const campos = {
+    // Datos completos del perfil
+    const profileData = {
         'nombreCompleto': user.nombreCompleto,
         'codigoEstudiantil': user.codigo,
         'usuario': user.username,
@@ -247,262 +381,151 @@ function initProfile() {
         'promedioGeneral': user.promedio,
         'creditosMatriculados': user.creditos,
         'nombre': user.nombreCompleto.split(' ')[0],
-        'correoPersonal': user.correoInstitucional
+        'correoPersonal': user.correoInstitucional,
+        'fechaNacimiento': user.fechaNacimiento,
+        'telefono': user.telefono,
+        'fechaIngreso': user.fechaIngreso || '08/01/2023'
     };
 
-    Object.entries(campos).forEach(([id, valor]) => {
+    // Llenar campos con animación
+    Object.entries(profileData).forEach(([id, valor], index) => {
         const el = document.getElementById(id);
-        if (el) el.textContent = valor;
+        if (el) {
+            setTimeout(() => {
+                el.textContent = valor;
+                el.classList.add('fade-in');
+            }, index * 100);
+        }
     });
 
-    // Foto de perfil
+    // Foto con efecto
     const fotoPerfil = document.getElementById('fotoPerfil');
     if (fotoPerfil) {
-        fotoPerfil.src = user.foto || '/public/images/default-avatar.jpg';
+        fotoPerfil.src = user.foto || 'data:image/svg+xml;base64,...'; // Default SVG
+        fotoPerfil.onload = () => fotoPerfil.classList.add('loaded');
     }
 }
 
-function handleFotoPerfil(file) {
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const img = document.getElementById('fotoPerfil');
-        if (img) {
-            img.src = e.target.result;
-            
-            const user = JSON.parse(localStorage.getItem('user'));
-            user.foto = e.target.result;
-            localStorage.setItem('user', JSON.stringify(user));
-        }
-    };
-    reader.readAsDataURL(file);
-}
-
 // ============================================================================
-// HISTORIAL ACADÉMICO
+// HISTORIAL ACADÉMICO ULTRA
 // ============================================================================
-
 function initHistorial() {
-    const historialPage = window.location.pathname.includes('historial.html');
-    if (!historialPage) return;
+    const isHistorialPage = window.location.pathname.includes('historial-academico');
+    if (!isHistorialPage) return;
 
-    renderizarHistorialAcademico();
+    setTimeout(() => {
+        renderizarHistorialAcademico();
+        initHistorialFilters();
+    }, 500);
 }
 
 function renderizarHistorialAcademico() {
     const container = document.getElementById('historialContainer');
     if (!container) return;
 
-    const historial = generarHistorialFalso();
+    const historial = generarHistorialCompleto();
     
-    // Estadísticas
-    document.getElementById('promedioGeneral').textContent = historial.promedioGeneral;
-    document.getElementById('creditosAprobados').textContent = historial.creditosAprobados;
-    document.getElementById('materiasAprobadas').textContent = historial.materiasAprobadas;
-    document.getElementById('materiasReprobadas').textContent = historial.materiasReprobadas;
+    // Stats con animación
+    animateCounter('promedioGeneral', historial.promedioGeneral);
+    animateCounter('creditosAprobados', historial.creditosAprobados);
+    animateCounter('materiasAprobadas', historial.materiasAprobadas);
+    animateCounter('materiasReprobadas', historial.materiasReprobadas);
 
-    // Renderizar periodos
-    container.innerHTML = historial.periodos.map(periodo => `
-        <div class="periodo-section" data-periodo="${periodo.codigo}">
-            <div class="periodo-header">
-                <h4>${periodo.codigo} <span class="periodo-promedio">${periodo.promedio}</span></h4>
-                <div class="periodo-status ${periodo.estado === 'Aprobado' ? 'aprobado' : 'reprobado'}">
-                    <i class="fas fa-${periodo.estado === 'Aprobado' ? 'check-circle' : 'times-circle'}"></i> 
-                    ${periodo.estado}
-                </div>
-            </div>
-            <div class="materias-list">
-                ${periodo.materias.map(materia => `
-                    <div class="materia-item ${materia.estado.toLowerCase().replace(' ', '-')}" data-estado="${materia.estado}">
-                        <div class="materia-info">
-                            <strong>${materia.nombre}</strong>
-                            <span class="creditos">${materia.creditos} cr</span>
-                        </div>
-                        <div class="materia-calificacion ${materia.estado === 'En curso' ? 'parcial' : ''}">
-                            ${materia.estado === 'En curso' ? `Parcial: ${materia.calificacion}` : materia.calificacion}
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `).join('');
+    // Render periodos con stagger
+    container.innerHTML = '';
+    historial.periodos.forEach((periodo, index) => {
+        setTimeout(() => {
+            const section = createPeriodoSection(periodo);
+            container.appendChild(section);
+        }, index * 200);
+    });
 }
 
-function generarHistorialFalso() {
+function generarHistorialCompleto() {
     return {
-        promedioGeneral: '8.45',
-        creditosAprobados: '156',
-        materiasAprobadas: '42',
-        materiasReprobadas: '3',
+        promedioGeneral: 8.45,
+        creditosAprobados: 156,
+        materiasAprobadas: 42,
+        materiasReprobadas: 3,
         periodos: [
             {
                 codigo: '2024-I',
-                promedio: '8.5',
+                promedio: 8.5,
                 estado: 'Aprobado',
                 materias: [
-                    { nombre: 'Matemáticas Avanzadas I', creditos: 4, calificacion: '9.2', estado: 'Aprobada' },
-                    { nombre: 'Programación OO', creditos: 4, calificacion: '8.7', estado: 'Aprobada' },
-                    { nombre: 'Bases de Datos II', creditos: 3, calificacion: '8.0', estado: 'En curso' }
+                    { nombre: 'Matemáticas Avanzadas I', creditos: 4, calificacion: 9.2, estado: 'Aprobada' },
+                    { nombre: 'Programación OO II', creditos: 4, calificacion: 8.7, estado: 'Aprobada' },
+                    { nombre: 'Bases de Datos II', creditos: 3, calificacion: 8.0, estado: 'En curso' }
                 ]
             },
             {
                 codigo: '2023-II',
-                promedio: '8.3',
+                promedio: 8.3,
                 estado: 'Aprobado',
                 materias: [
-                    { nombre: 'Redes de Computadores', creditos: 4, calificacion: '8.9', estado: 'Aprobada' },
-                    { nombre: 'Física III', creditos: 4, calificacion: '2.8', estado: 'Reprobada' }
+                    { nombre: 'Redes de Computadores', creditos: 4, calificacion: 8.9, estado: 'Aprobada' },
+                    { nombre: 'Física III', creditos: 4, calificacion: 2.8, estado: 'Reprobada' },
+                    { nombre: 'Estadística Aplicada', creditos: 3, calificacion: 9.1, estado: 'Aprobada' }
+                ]
+            },
+            {
+                codigo: '2023-I',
+                promedio: 8.7,
+                estado: 'Aprobado',
+                materias: [
+                    { nombre: 'Algoritmos Avanzados', creditos: 4, calificacion: 9.0, estado: 'Aprobada' },
+                    { nombre: 'Ingeniería de Software', creditos: 3, calificacion: 8.5, estado: 'Aprobada' }
                 ]
             }
         ]
     };
 }
 
-// ============================================================================
-// DASHBOARD
-// ============================================================================
+function animateCounter(id, target) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    
+    let start = 0;
+    const increment = target / 100;
+    const timer = setInterval(() => {
+        start += increment;
+        if (start >= target) {
+            el.textContent = target;
+            clearInterval(timer);
+        } else {
+            el.textContent = start.toFixed(target % 1 === 0 ? 0 : 2);
+        }
+    }, 20);
+}
 
+// ============================================================================
+// DASHBOARD PRO
+// ============================================================================
 function initDashboard() {
-    const dashboardPage = window.location.pathname.includes('dashboard.html');
-    if (!dashboardPage) return;
+    const isDashboard = window.location.pathname.includes('dashboard');
+    if (!isDashboard) return;
 
     const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) return;
-
-    // Actualizar stats del dashboard
-    document.getElementById('dashPromedio') && (document.getElementById('dashPromedio').textContent = user.promedio);
-    document.getElementById('dashCreditos') && (document.getElementById('dashCreditos').textContent = user.creditos);
-    document.getElementById('dashSemestre') && (document.getElementById('dashSemestre').textContent = user.semestre);
-}
-
-// ============================================================================
-// FILTROS HISTORIAL
-// ============================================================================
-
-document.addEventListener('change', (e) => {
-    if (e.target.id === 'filtroPeriodo' || e.target.id === 'filtroEstado') {
-        filtrarHistorial();
+    if (user) {
+        updateDashboardStats(user);
+        initDashboardCharts();
     }
-});
-
-document.addEventListener('keyup', (e) => {
-    if (e.target.id === 'buscarMateria') {
-        filtrarHistorial();
-    }
-});
-
-function filtrarHistorial() {
-    const filtroPeriodo = document.getElementById('filtroPeriodo')?.value || '';
-    const filtroEstado = document.getElementById('filtroEstado')?.value || '';
-    const buscar = document.getElementById('buscarMateria')?.value.toLowerCase() || '';
-
-    document.querySelectorAll('.periodo-section').forEach(section => {
-        const periodo = section.dataset.periodo;
-        const materias = section.querySelectorAll('.materia-item');
-        
-        let mostrarPeriodo = true;
-        
-        materias.forEach(materia => {
-            const textoMateria = materia.querySelector('strong')?.textContent.toLowerCase() || '';
-            const estado = materia.dataset.estado;
-            
-            const coincidePeriodo = !filtroPeriodo || periodo === filtroPeriodo;
-            const coincideEstado = !filtroEstado || estado === filtroEstado;
-            const coincideBusqueda = !buscar || textoMateria.includes(buscar);
-            
-            materia.style.display = coincidePeriodo && coincideEstado && coincideBusqueda ? '' : 'none';
-        });
-        
-        const materiasVisibles = Array.from(section.querySelectorAll('.materia-item')).some(m => m.style.display !== 'none');
-        section.style.display = materiasVisibles ? '' : 'none';
-    });
 }
 
-function limpiarFiltros() {
-    const selects = ['filtroPeriodo', 'filtroEstado'];
-    const inputs = ['buscarMateria'];
+function updateDashboardStats(user) {
+    const stats = {
+        'dashPromedio': user.promedio,
+        'dashCreditos': user.creditos,
+        'dashSemestre': user.semestre
+    };
     
-    selects.forEach(id => {
+    Object.entries(stats).forEach(([id, value]) => {
         const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
-    
-    inputs.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
-    
-    filtrarHistorial();
-}
-
-// ============================================================================
-// TABLAS
-// ============================================================================
-
-function initTables() {
-    document.querySelectorAll('th[data-sort]').forEach((header) => {
-        header.addEventListener('click', () => {
-            const table = header.closest('table');
-            const columnIndex = Array.from(header.parentNode.children).indexOf(header);
-            sortTable(table, columnIndex);
-        });
-    });
-}
-
-function sortTable(table, columnIndex) {
-    const tbody = table.querySelector('tbody');
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-
-    rows.sort((a, b) => {
-        const A = a.children[columnIndex].innerText;
-        const B = b.children[columnIndex].innerText;
-        return A.localeCompare(B, undefined, { numeric: true });
-    });
-
-    tbody.append(...rows);
-}
-
-// ============================================================================
-// FORMULARIOS
-// ============================================================================
-
-function initForms() {
-    document.addEventListener('submit', (e) => {
-        if (e.target.id === 'formSolicitud') {
-            e.preventDefault();
-            showNotification('✅ Solicitud enviada correctamente', 'success');
-            document.querySelector('.modal')?.classList.remove('active');
-            e.target.reset();
+        if (el) {
+            el.textContent = value;
+            el.classList.add('animate-stat');
         }
     });
 }
 
-// ============================================================================
-// UTILIDADES
-// ============================================================================
-
-function showNotification(message, type = 'success') {
-    const notif = document.createElement('div');
-    notif.className = `notification show ${type}`;
-    notif.innerHTML = `
-        <span>${message}</span>
-        <button class="close-notification">&times;</button>
-    `;
-    notif.addEventListener('click', (e) => {
-        if (e.target.classList.contains('close-notification')) {
-            notif.remove();
-        }
-    });
-
-    document.body.appendChild(notif);
-    setTimeout(() => notif.remove(), 4000);
-}
-
-function exportarHistorial() {
-    window.print();
-}
-
-function imprimirHistorial() {
-    window.print();
-}
+//
