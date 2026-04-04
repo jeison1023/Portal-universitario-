@@ -1,5 +1,5 @@
 // ============================================================================
-// PORTAL UNIVERSITARIO - MAIN PRO (AUTO LOGIN CONTROLADO)
+// PORTAL UNIVERSITARIO - MAIN PRO (LOGIN FORM + SIN BACKEND)
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', initApp);
@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', initApp);
 // ============================================================================
 
 function initApp() {
-    autoLogin();     // 🔥 manejar login automático
-    initAuth();      // 🔥 validar sesión
+    initLogin();   // 🔥 LOGIN DESDE FORM
+    initAuth();    // 🔥 validar sesión
     renderLayout();
     initEvents();
     initTables();
@@ -18,33 +18,44 @@ function initApp() {
 }
 
 // ============================================================================
-// AUTO LOGIN (SOLO EN INDEX)
+// LOGIN (ACEPTA TODO)
 // ============================================================================
 
-function autoLogin() {
-    const isLoginPage = window.location.pathname.includes('index.html');
+function initLogin() {
+    const form = document.getElementById('loginForm');
+    if (!form) return;
 
-    if (!isLoginPage) return;
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-    const existingUser = localStorage.getItem('user');
+        const username = document.getElementById('username').value.trim();
 
-    // 🔥 si ya hay usuario → ir directo
-    if (existingUser) {
-        window.location.href = 'dashboard.html';
-        return;
+        if (!username) {
+            alert('Ingresa un usuario');
+            return;
+        }
+
+        // 🔥 usuario dinámico
+        const user = {
+            nombre: username,
+            username: username
+        };
+
+        localStorage.setItem('user', JSON.stringify(user));
+
+        showLoading(true);
+
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 800);
+    });
+}
+
+function showLoading(show) {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+        overlay.style.display = show ? 'flex' : 'none';
     }
-
-    // 🔥 crear usuario automático
-    const user = {
-        nombre: "Luis",
-        username: "luis"
-    };
-
-    localStorage.setItem('user', JSON.stringify(user));
-
-    setTimeout(() => {
-        window.location.href = 'dashboard.html';
-    }, 1000);
 }
 
 // ============================================================================
@@ -81,7 +92,6 @@ function initAuth() {
 
 function logout() {
     localStorage.removeItem('user');
-
     window.location.href = 'index.html';
 }
 
@@ -94,7 +104,6 @@ function renderLayout() {
     renderHeader();
 }
 
-// Sidebar dinámico
 function renderSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (!sidebar) return;
@@ -118,7 +127,6 @@ function renderSidebar() {
     `;
 }
 
-// Header dinámico
 function renderHeader() {
     const header = document.getElementById('header');
     if (!header) return;
@@ -148,23 +156,19 @@ function initEvents() {
 
     document.addEventListener('click', (e) => {
 
-        // Sidebar
         if (e.target.closest('.menu-toggle')) {
             document.body.classList.toggle('sidebar-collapsed');
         }
 
-        // Logout
         if (e.target.closest('#logoutBtn')) {
             e.preventDefault();
             logout();
         }
 
-        // Modal abrir
         if (e.target.closest('#btnNuevaSolicitud')) {
             document.getElementById('modalSolicitud')?.classList.add('active');
         }
 
-        // Modal cerrar
         if (e.target.closest('#closeModal') || e.target.classList.contains('modal')) {
             document.querySelector('.modal')?.classList.remove('active');
         }

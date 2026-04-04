@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso | Portal Universitario</title>
+    <title>Login | Portal Universitario</title>
 
     <link rel="stylesheet" href="/public/style.css">
 
@@ -21,12 +21,42 @@
             <div class="login-header">
                 <i class="fas fa-university"></i>
                 <h2>Portal Universitario</h2>
-                <p>Accediendo automáticamente...</p>
+                <p>Ingresa al sistema</p>
             </div>
+
+            <!-- FORM -->
+            <form id="loginForm" class="login-form">
+
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        placeholder="Usuario"
+                        required
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        placeholder="Contraseña"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="btn-primary full-width">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Iniciar Sesión
+                </button>
+
+            </form>
 
         </div>
 
-        <div class="loading-overlay">
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
             <div class="loading-spinner">
                 <i class="fas fa-university fa-spin"></i>
                 <p>Entrando...</p>
@@ -35,7 +65,7 @@
 
     </div>
 
-    <!-- 🔥 SOLO IMPORTAMOS JS -->
+    <!-- 🔥 SOLO MAIN -->
     <script src="/public/main.js"></script>
 
 </body>
