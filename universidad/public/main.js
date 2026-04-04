@@ -27,7 +27,7 @@ function initAuth() {
     }
 
     if (!user && !window.location.pathname.includes('index.html')) {
-        window.location.href = '/universidad/index.html';
+        window.location.href = 'index.html';
         return;
     }
 
@@ -63,11 +63,11 @@ function renderSidebar() {
             </div>
 
             <nav class="sidebar-nav">
-                <a href="/universidad/dashboard.html" class="nav-item">Principal</a>
-                <a href="/universidad/materias.html" class="nav-item">Materias</a>
-                <a href="/universidad/calificaciones.html" class="nav-item">Calificaciones</a>
-                <a href="/universidad/solicitudes.html" class="nav-item">Solicitudes</a>
-                <a href="/universidad/perfil.html" class="nav-item">Perfil</a>
+                <a href="dashboard.html" class="nav-item">Principal</a>
+                <a href="materias.html" class="nav-item">Materias</a>
+                <a href="calificaciones.html" class="nav-item">Calificaciones</a>
+                <a href="solicitudes.html" class="nav-item">Solicitudes</a>
+                <a href="perfil.html" class="nav-item">Perfil</a>
                 <a href="#" id="logoutBtn" class="nav-item logout">Cerrar Sesión</a>
             </nav>
         </aside>
