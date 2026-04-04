@@ -1,121 +1,135 @@
 // ============================================================================
-// PORTAL UNIVERSITARIO - MAIN.JS (CORREGIDO PARA RENDER)
+// PORTAL UNIVERSITARIO - MAIN PRO
 // ============================================================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    initApp();
-});
-
-// ============================================================================
-// INIT
-// ============================================================================
+document.addEventListener('DOMContentLoaded', initApp);
 
 function initApp() {
-    initSidebar();
-    initModals();
+    initAuth();
+    renderLayout();
+    initEvents();
     initTables();
-    initStats();
     initForms();
-    loadUserData();
 }
 
 // ============================================================================
-// AUTENTICACIÓN Y USUARIO
+// AUTH
 // ============================================================================
 
-function loadUserData() {
-    const user = JSON.parse(localStorage.getItem('user'));
+function initAuth() {
+    let user = null;
 
-    if (!user) {
-        // ✅ CORRECCIÓN: redirección relativa
-        const current = window.location.pathname;
+    try {
+        user = JSON.parse(localStorage.getItem('user'));
+    } catch (e) {
+        console.error('Error parsing user');
+        logout();
+    }
 
-        if (!current.includes('index.html')) {
-            window.location.href = '../index.html';
-        }
+    if (!user && !window.location.pathname.includes('index.html')) {
+        window.location.href = '/universidad/index.html';
         return;
     }
 
     const userNameElements = document.querySelectorAll('#userName');
-
     userNameElements.forEach(el => {
-        el.textContent = user.nombre || user.username;
-    });
-
-    updateDashboardStats(user);
-}
-
-function updateDashboardStats(user) {
-    if (!user) return;
-
-    const stats = {
-        totalMaterias: user.materias?.length || 6,
-        promedio: user.promedio || 4.2,
-        solicitudes: user.solicitudesPendientes || 3
-    };
-
-    const statElements = {
-        totalMaterias: document.getElementById('totalMaterias'),
-        promedio: document.getElementById('promedio'),
-        solicitudes: document.getElementById('solicitudes')
-    };
-
-    Object.keys(statElements).forEach(key => {
-        if (statElements[key]) {
-            statElements[key].textContent = stats[key];
-        }
+        el.textContent = user?.nombre || user?.username || 'Usuario';
     });
 }
 
 function logout() {
-    if (confirm('¿Cerrar sesión?')) {
-        localStorage.removeItem('user');
-
-        // ✅ CORRECCIÓN
-        window.location.href = '../index.html';
-    }
+    localStorage.removeItem('user');
+    window.location.href = '/index.html';
 }
 
 // ============================================================================
-// SIDEBAR
+// LAYOUT (SIDEBAR + HEADER)
 // ============================================================================
 
-function initSidebar() {
-    const menuToggle = document.querySelector('.menu-toggle');
+function renderLayout() {
+    renderSidebar();
+    renderHeader();
+}
 
-    if (!menuToggle) return;
+function renderSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
 
-    menuToggle.addEventListener('click', () => {
-        document.body.classList.toggle('sidebar-collapsed');
+    sidebar.innerHTML = `
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Portal UN</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="/universidad/dashboard.html" class="nav-item">Principal</a>
+                <a href="/universidad/materias.html" class="nav-item">Materias</a>
+                <a href="/universidad/calificaciones.html" class="nav-item">Calificaciones</a>
+                <a href="/universidad/solicitudes.html" class="nav-item">Solicitudes</a>
+                <a href="/universidad/perfil.html" class="nav-item">Perfil</a>
+                <a href="#" id="logoutBtn" class="nav-item logout">Cerrar Sesión</a>
+            </nav>
+        </aside>
+    `;
+}
+
+function renderHeader() {
+    const header = document.getElementById('header');
+    if (!header) return;
+
+    header.innerHTML = `
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+                <h1>${document.title}</h1>
+            </div>
+
+            <div class="header-right">
+                <span id="userName" class="user-name"></span>
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </header>
+    `;
+}
+
+// ============================================================================
+// EVENTOS
+// ============================================================================
+
+function initEvents() {
+
+    // Sidebar toggle
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.menu-toggle')) {
+            document.body.classList.toggle('sidebar-collapsed');
+        }
     });
-}
 
-// ============================================================================
-// MODALES
-// ============================================================================
-
-function initModals() {
-    const modals = document.querySelectorAll('.modal');
-
-    modals.forEach(modal => {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal(modal);
-            }
-        });
+    // Logout
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('#logoutBtn')) {
+            e.preventDefault();
+            logout();
+        }
     });
-}
 
-function openModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.style.display = 'flex';
-}
+    // Modal open
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('#btnNuevaSolicitud')) {
+            document.getElementById('modalSolicitud')?.classList.add('active');
+        }
+    });
 
-function closeModal(modal) {
-    if (typeof modal === 'string') {
-        modal = document.getElementById(modal);
-    }
-    if (modal) modal.style.display = 'none';
+    // Modal close
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('#closeModal') || e.target.classList.contains('modal')) {
+            document.querySelector('.modal')?.classList.remove('active');
+        }
+    });
+
 }
 
 // ============================================================================
@@ -123,13 +137,10 @@ function closeModal(modal) {
 // ============================================================================
 
 function initTables() {
-    const tables = document.querySelectorAll('table');
-
-    tables.forEach(table => {
-        const headers = table.querySelectorAll('th');
-
-        headers.forEach((header, index) => {
-            header.addEventListener('click', () => sortTable(table, index));
+    document.querySelectorAll('th').forEach((header, index) => {
+        header.addEventListener('click', () => {
+            const table = header.closest('table');
+            sortTable(table, index);
         });
     });
 }
@@ -138,34 +149,13 @@ function sortTable(table, columnIndex) {
     const tbody = table.querySelector('tbody');
     const rows = Array.from(tbody.querySelectorAll('tr'));
 
-    rows.reverse();
+    rows.sort((a, b) => {
+        const A = a.children[columnIndex].innerText;
+        const B = b.children[columnIndex].innerText;
+        return A.localeCompare(B, undefined, { numeric: true });
+    });
+
     tbody.append(...rows);
-}
-
-// ============================================================================
-// STATS
-// ============================================================================
-
-function initStats() {
-    const statNumbers = document.querySelectorAll('[id*="total"], [id*="promedio"], [id*="solicitudes"]');
-
-    statNumbers.forEach(el => animateCounter(el));
-}
-
-function animateCounter(element) {
-    const target = parseFloat(element.textContent);
-    let current = 0;
-
-    const timer = setInterval(() => {
-        current += target / 20;
-
-        if (current >= target) {
-            current = target;
-            clearInterval(timer);
-        }
-
-        element.textContent = current.toFixed(1);
-    }, 30);
 }
 
 // ============================================================================
@@ -173,51 +163,31 @@ function animateCounter(element) {
 // ============================================================================
 
 function initForms() {
-    const forms = document.querySelectorAll('form');
+    document.addEventListener('submit', (e) => {
+        if (e.target.id === 'formSolicitud') {
+            e.preventDefault();
 
-    forms.forEach(form => {
-        form.addEventListener('submit', handleFormSubmit);
-    });
-}
+            showNotification('Solicitud enviada correctamente', 'success');
 
-function handleFormSubmit(e) {
-    e.preventDefault();
-
-    alert('Solicitud enviada correctamente');
-
-    const modal = e.target.closest('.modal');
-    if (modal) closeModal(modal);
-
-    e.target.reset();
-}
-
-// ============================================================================
-// UTILIDADES
-// ============================================================================
-
-async function loadDemoData() {
-    try {
-        // ✅ CORRECCIÓN RUTA
-        const response = await fetch('../data/usuarios.json');
-
-        if (response.ok) {
-            return await response.json();
+            document.querySelector('.modal')?.classList.remove('active');
+            e.target.reset();
         }
-
-    } catch (error) {
-        console.log('Error cargando usuarios');
-    }
-
-    return [];
+    });
 }
 
 // ============================================================================
-// SERVICE WORKER (DESACTIVADO EN RENDER SI NO EXISTE)
+// NOTIFICACIONES
 // ============================================================================
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-            .catch(() => {});
-    });
+function showNotification(message, type = 'success') {
+    const notif = document.createElement('div');
+    notif.className = `notification show ${type}`;
+    notif.innerHTML = `
+        <span>${message}</span>
+        <button class="close-notification">&times;</button>
+    `;
+
+    document.body.appendChild(notif);
+
+    setTimeout(() => notif.remove(), 3000);
 }

@@ -3,29 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Portal Universitario</title>
+    <title>Iniciar Sesión | Portal Universitario</title>
 
-    <link rel="stylesheet" href="./public/style.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/universidad/public/style.css">
 
+    <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body class="login-body">
 
     <div class="login-container">
+
         <div class="login-card">
 
+            <!-- HEADER -->
             <div class="login-header">
-                <div class="logo-universidad">
-                    <i class="fas fa-university"></i>
-                </div>
-                <h1>Portal <span class="highlight">Universitario</span></h1>
-                <p>Accede a tu información académica</p>
+                <i class="fas fa-university"></i>
+                <h2>Portal Universitario</h2>
+                <p>Accede a tu sistema académico</p>
             </div>
 
+            <!-- FORM -->
             <form id="loginForm" class="login-form">
 
-                <div class="input-group icon-left">
+                <div class="input-group">
                     <i class="fas fa-user"></i>
                     <input 
                         type="text" 
@@ -35,7 +41,7 @@
                     >
                 </div>
                 
-                <div class="input-group icon-left">
+                <div class="input-group">
                     <i class="fas fa-lock"></i>
                     <input 
                         type="password" 
@@ -45,49 +51,58 @@
                     >
                 </div>
 
-                <button type="submit" class="btn-primary full-width login-btn">
+                <button type="submit" class="btn-primary full-width">
                     <i class="fas fa-sign-in-alt"></i>
-                    <span>Iniciar Sesión</span>
+                    Iniciar Sesión
                 </button>
 
             </form>
 
         </div>
 
-        <!-- Loading -->
+        <!-- LOADING -->
         <div id="loadingOverlay" class="loading-overlay" style="display: none;">
             <div class="loading-spinner">
                 <i class="fas fa-university fa-spin"></i>
                 <p>Entrando...</p>
             </div>
         </div>
+
     </div>
 
+    <!-- SCRIPT -->
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
 
-            const username = document.getElementById('username').value.trim();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
 
-            showLoading(true);
-
-            const user = {
-                username: username || "usuario",
-                nombre: username || "Usuario"
-            };
-
-            localStorage.setItem('user', JSON.stringify(user));
-
-            setTimeout(() => {
-                // ✅ CORREGIDO AQUÍ
-                window.location.href = 'dashboard.html';
-            }, 800);
-        });
-
-        function showLoading(show) {
-            const overlay = document.getElementById('loadingOverlay');
-            overlay.style.display = show ? 'flex' : 'none';
+        if (!username || !password) {
+            alert('Completa todos los campos');
+            return;
         }
+
+        showLoading(true);
+
+        // 🔥 LOGIN SIMULADO
+        const user = {
+            username: username,
+            nombre: username
+        };
+
+        localStorage.setItem('user', JSON.stringify(user));
+
+        setTimeout(() => {
+            // ✅ REDIRECCIÓN CORRECTA (IMPORTANTE)
+            window.location.href = '/universidad/dashboard.html';
+        }, 800);
+    });
+
+    function showLoading(show) {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.style.display = show ? 'flex' : 'none';
+    }
     </script>
 
 </body>
