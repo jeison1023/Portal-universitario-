@@ -10,51 +10,178 @@
 </head>
 
 <body>
-
   <div id="sidebar"></div>
 
   <main class="main-content">
-
     <div id="header"></div>
 
     <div class="page-content">
-
-      <div class="solicitudes-header">
-        <h2>Mis Solicitudes</h2>
-
-        <button id="btnNuevaSolicitud" class="btn-primary">
-          <i class="fas fa-plus"></i> Nueva Solicitud
-        </button>
+      
+      <!-- HEADER PRO -->
+      <div class="page-header">
+        <div class="header-content">
+          <div class="header-icon orange">
+            <i class="fas fa-file-invoice"></i>
+          </div>
+          <div>
+            <h1>Mis Solicitudes</h1>
+            <p>Historial completo de tus trámites</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="btnNuevaSolicitud" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nueva Solicitud
+          </button>
+          <div class="stats-inline">
+            <span id="totalSolicitudes">-</span>
+            <span id="solicitudesPendientes">-</span>
+          </div>
+        </div>
       </div>
 
+      <!-- FILTROS AVANZADOS -->
+      <div class="filters-card">
+        <div class="filters-row">
+          <div class="filter-group">
+            <label><i class="fas fa-filter"></i> Estado:</label>
+            <select id="filtroEstadoSolicitud">
+              <option value="">Todos los estados</option>
+              <option value="pendiente">Pendientes</option>
+              <option value="aprobada">Aprobadas</option>
+              <option value="rechazada">Rechazadas</option>
+              <option value="cancelada">Canceladas</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label><i class="fas fa-calendar"></i> Tipo:</label>
+            <select id="filtroTipoSolicitud">
+              <option value="">Todos los tipos</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label><i class="fas fa-calendar-week"></i> Fecha:</label>
+            <select id="filtroFechaSolicitud">
+              <option value="">Todas las fechas</option>
+              <option value="ultima-semana">Última semana</option>
+              <option value="ultimo-mes">Último mes</option>
+              <option value="ultimos-3-meses">3 últimos meses</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label><i class="fas fa-search"></i></label>
+            <input type="text" id="buscarSolicitud" placeholder="Buscar por número o descripción...">
+          </div>
+          <button class="btn btn-primary" onclick="limpiarFiltrosSolicitudes()">
+            <i class="fas fa-times"></i> Limpiar
+          </button>
+        </div>
+      </div>
+
+      <!-- SOLICITUDES GRID -->
       <div id="solicitudesContainer" class="solicitudes-grid"></div>
+
+      <!-- TABLA ALTERNATIVA -->
+      <div id="tablaSolicitudesContainer" class="table-container" style="display: none;">
+        <div class="table-header">
+          <h2>Vista Tabular</h2>
+          <button onclick="toggleVistaSolicitudes()" class="btn btn-secondary">
+            <i class="fas fa-th-large"></i> Vista Tarjetas
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="solicitudes-table">
+            <thead>
+              <tr>
+                <th>Nº</th>
+                <th>Tipo</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaSolicitudes"></tbody>
+          </table>
+        </div>
+      </div>
 
     </div>
   </main>
 
-  <!-- Modal -->
+  <!-- MODAL NUEVA SOLICITUD -->
   <div id="modalSolicitud" class="modal">
-    <div class="modal-content">
-
+    <div class="modal-content large">
       <div class="modal-header">
-        <h3>Nueva Solicitud</h3>
-        <button id="closeModal" class="close-modal">&times;</button>
+        <h3><i class="fas fa-file-plus"></i> Nueva Solicitud</h3>
+        <button class="close-modal" id="closeModalSolicitud">&times;</button>
       </div>
 
       <form id="formSolicitud" class="solicitud-form">
-        <select id="tipoSolicitud" required>
-          <option value="">Tipo de Solicitud</option>
-          <option>Certificado</option>
-          <option>Convalidación</option>
-        </select>
+        
+        <!-- SELECT TIPO SOLICITUD -->
+        <div class="form-group">
+          <label>Tipo de Solicitud <span class="required">*</span></label>
+          <div class="select-wrapper">
+            <select id="tipoSolicitud" required>
+              <option value="">Seleccionar tipo...</option>
+              <!-- Se llenan dinámicamente -->
+            </select>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
 
-        <textarea id="descripcion" placeholder="Descripción" required></textarea>
+        <!-- DESCRIPCIÓN -->
+        <div class="form-group">
+          <label>Descripción <span class="required">*</span></label>
+          <textarea id="descripcion" rows="5" placeholder="Describe tu solicitud detalladamente..." required></textarea>
+        </div>
 
-        <button type="submit" class="btn-primary">
-          Enviar
-        </button>
+        <!-- ARCHIVOS ADJUNTOS -->
+        <div class="form-group">
+          <label>Documentos (opcional)</label>
+          <div class="file-upload">
+            <input type="file" id="archivos" multiple accept=".pdf,.jpg,.png">
+            <div class="file-placeholder">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span>Arrastra archivos o haz clic</span>
+            </div>
+          </div>
+          <div id="archivosPreview"></div>
+        </div>
+
+        <!-- PRIORIDAD -->
+        <div class="form-group">
+          <label>Prioridad</label>
+          <div class="prioridad-options">
+            <label class="radio-card baja">
+              <input type="radio" name="prioridad" value="baja">
+              <i class="fas fa-clock"></i>
+              <span>Baja</span>
+            </label>
+            <label class="radio-card media">
+              <input type="radio" name="prioridad" value="media" checked>
+              <i class="fas fa-exclamation-triangle"></i>
+              <span>Media</span>
+            </label>
+            <label class="radio-card alta">
+              <input type="radio" name="prioridad" value="alta">
+              <i class="fas fa-exclamation-circle"></i>
+              <span>Alta</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModalSolicitud()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i>
+            Enviar Solicitud
+          </button>
+        </div>
+
       </form>
-
     </div>
   </div>
 

@@ -10,31 +10,90 @@
 </head>
 
 <body>
-
   <!-- Sidebar dinámico -->
   <div id="sidebar"></div>
 
   <main class="main-content">
-
     <!-- Header dinámico -->
     <div id="header"></div>
 
     <div class="page-content">
+      
+      <!-- WELCOME HEADER -->
+      <div class="welcome-section">
+        <div class="welcome-content">
+          <div class="welcome-greeting">
+            <h1>¡Bienvenido de vuelta!</h1>
+            <p id="welcomeUser">Estudiante</p>
+          </div>
+          <div class="welcome-stats">
+            <div class="stat-quick">
+              <span id="quickPromedio">-</span>
+              <small>Promedio actual</small>
+            </div>
+            <div class="stat-quick">
+              <span id="quickCreditos">-</span>
+              <small>Créditos semestre</small>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <!-- Stats dinámicos -->
-      <div id="statsContainer" class="dashboard-stats"></div>
+      <!-- STATS PRINCIPALES -->
+      <div id="statsContainer" class="dashboard-stats-grid"></div>
 
-      <!-- Grid dinámico -->
+      <!-- DASHBOARD GRID PRINCIPAL -->
       <div class="dashboard-grid">
-
-        <div class="card">
-          <h3>Próximas Clases</h3>
-          <div id="classesContainer"></div>
+        
+        <!-- PRÓXIMAS CLASES -->
+        <div class="card full-height">
+          <div class="card-header">
+            <h3><i class="fas fa-clock"></i> Próximas Clases</h3>
+            <a href="materias.html" class="view-more">Ver todas →</a>
+          </div>
+          <div id="classesContainer" class="classes-list"></div>
         </div>
 
+        <!-- NOTIFICACIONES -->
+        <div class="card full-height">
+          <div class="card-header">
+            <h3><i class="fas fa-bell"></i> Notificaciones</h3>
+            <span id="notifCount" class="notif-badge">5</span>
+          </div>
+          <ul id="notificationsContainer" class="notifications-list"></ul>
+        </div>
+
+        <!-- RENDIMIENTO RECIENTE -->
         <div class="card">
-          <h3>Notificaciones</h3>
-          <ul id="notificationsContainer"></ul>
+          <div class="card-header">
+            <h3><i class="fas fa-chart-line"></i> Rendimiento Reciente</h3>
+          </div>
+          <div id="performanceChart" class="chart-container-small"></div>
+        </div>
+
+        <!-- ACCIONES RÁPIDAS -->
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-bolt"></i> Acciones Rápidas</h3>
+          </div>
+          <div class="quick-actions-grid">
+            <a href="calificaciones.html" class="quick-action">
+              <i class="fas fa-chart-bar"></i>
+              <span>Ver Calificaciones</span>
+            </a>
+            <a href="materias.html" class="quick-action">
+              <i class="fas fa-book-open"></i>
+              <span>Mis Materias</span>
+            </a>
+            <a href="historial-academico.html" class="quick-action">
+              <i class="fas fa-history"></i>
+              <span>Historial</span>
+            </a>
+            <a href="solicitudes.html" class="quick-action">
+              <i class="fas fa-file-invoice"></i>
+              <span>Nueva Solicitud</span>
+            </a>
+          </div>
         </div>
 
       </div>

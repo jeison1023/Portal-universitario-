@@ -10,41 +10,126 @@
 </head>
 
 <body>
-
   <div id="sidebar"></div>
 
   <main class="main-content">
-
     <div id="header"></div>
 
     <div class="page-content">
+      
+      <!-- HEADER AVANZADO -->
+      <div class="page-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div>
+            <h1>Calificaciones</h1>
+            <p>Tus calificaciones por periodo académico</p>
+          </div>
+        </div>
+        
+        <div class="header-actions">
+          <button class="btn btn-secondary" onclick="exportarCalificaciones()">
+            <i class="fas fa-download"></i> Exportar PDF
+          </button>
+          <button class="btn btn-secondary" onclick="imprimirCalificaciones()">
+            <i class="fas fa-print"></i> Imprimir
+          </button>
+        </div>
+      </div>
 
-      <div id="statsContainer" class="stats-row"></div>
+      <!-- ESTADÍSTICAS PRINCIPALES -->
+      <div class="stats-grid" id="statsContainer">
+        <!-- Se llenan dinámicamente -->
+      </div>
 
+      <!-- FILTROS AVANZADOS -->
+      <div class="filters-card">
+        <div class="filters-row">
+          <div class="filter-group">
+            <label><i class="fas fa-calendar-alt"></i> Periodo:</label>
+            <select id="filtroPeriodo" onchange="filtrarCalificaciones()">
+              <option value="">Todos los periodos</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label><i class="fas fa-filter"></i> Estado:</label>
+            <select id="filtroEstado" onchange="filtrarCalificaciones()">
+              <option value="">Todos</option>
+              <option value="Aprobada">Aprobada</option>
+              <option value="Reprobada">Reprobada</option>
+              <option value="En curso">En curso</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label><i class="fas fa-search"></i></label>
+            <input type="text" id="buscarMateria" placeholder="Buscar materia..." onkeyup="filtrarCalificaciones()">
+          </div>
+          
+          <button class="btn btn-primary" id="limpiarFiltros" onclick="limpiarFiltrosCalificaciones()">
+            <i class="fas fa-times"></i> Limpiar
+          </button>
+        </div>
+      </div>
+
+      <!-- TABLA PRINCIPAL -->
       <div class="table-container">
         <div class="table-header">
-          <h2>Calificaciones</h2>
-
-          <select id="periodo" class="periodo-select"></select>
+          <h2><i class="fas fa-table"></i> Detalle de Calificaciones</h2>
+          <div class="table-actions">
+            <span id="totalMaterias" class="stat-small"></span>
+            <span id="promedioActual" class="stat-small"></span>
+          </div>
         </div>
 
         <div class="table-responsive">
           <table class="calificaciones-table">
             <thead>
               <tr>
-                <th>Materia</th>
-                <th>Nota 1</th>
-                <th>Nota 2</th>
-                <th>Parcial</th>
-                <th>Final</th>
-                <th>Promedio</th>
-                <th>Estado</th>
+                <th data-sort="materia">
+                  <i class="fas fa-book"></i> Materia
+                </th>
+                <th data-sort="nota1">
+                  <i class="fas fa-pen"></i> Nota 1
+                </th>
+                <th data-sort="nota2">
+                  <i class="fas fa-pen"></i> Nota 2
+                </th>
+                <th data-sort="parcial">
+                  <i class="fas fa-calculator"></i> Parcial
+                </th>
+                <th data-sort="final">
+                  <i class="fas fa-star"></i> Final
+                </th>
+                <th data-sort="promedio">
+                  <i class="fas fa-chart-bar"></i> Promedio
+                </th>
+                <th data-sort="estado">
+                  <i class="fas fa-circle-check"></i> Estado
+                </th>
+                <th>Acciones</th>
               </tr>
             </thead>
-
-            <tbody id="tabla-calificaciones"></tbody>
-
+            <tbody id="tabla-calificaciones">
+              <!-- Datos dinámicos -->
+            </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- GRÁFICO RESUMEN -->
+      <div class="chart-container">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-chart-pie"></i> Resumen Gráfico</h3>
+          </div>
+          <div id="graficoResumen" class="chart-placeholder">
+            <!-- Canvas para gráfico -->
+            <canvas id="chartCanvas"></canvas>
+          </div>
         </div>
       </div>
 

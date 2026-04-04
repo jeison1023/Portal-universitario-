@@ -10,47 +10,142 @@
 </head>
 
 <body>
-
   <div id="sidebar"></div>
 
   <main class="main-content">
-
     <div id="header"></div>
 
     <div class="page-content">
+      
+      <!-- PAGE HEADER PRO -->
+      <div class="page-header">
+        <div class="header-content">
+          <div class="header-icon blue">
+            <i class="fas fa-book-open"></i>
+          </div>
+          <div>
+            <h1>Mis Materias</h1>
+            <p>Semestre 2024-I • <span id="totalMateriasDash">-</span> materias</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="nuevaMatricula()">
+            <i class="fas fa-plus"></i> Matricular Materia
+          </button>
+          <button class="btn btn-secondary" onclick="exportarMaterias()">
+            <i class="fas fa-download"></i> Exportar PDF
+          </button>
+        </div>
+      </div>
 
+      <!-- STATS MATERIAS -->
+      <div class="materias-stats">
+        <div class="stat-card small">
+          <div class="stat-icon green">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div>
+            <h3 id="materiasAprobadas">0</h3>
+            <p>Aprobadas</p>
+          </div>
+        </div>
+        <div class="stat-card small">
+          <div class="stat-icon orange">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div>
+            <h3 id="materiasCurso">0</h3>
+            <p>En Curso</p>
+          </div>
+        </div>
+        <div class="stat-card small">
+          <div class="stat-icon blue">
+            <i class="fas fa-bookmark"></i>
+          </div>
+          <div>
+            <h3 id="creditosTotal">0</h3>
+            <p>Créditos Total</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTROS AVANZADOS -->
+      <div class="filters-card">
+        <div class="filters-row">
+          <div class="filter-group">
+            <label><i class="fas fa-filter"></i> Filtro:</label>
+            <select id="filtroEstadoMateria">
+              <option value="">Todas las materias</option>
+              <option value="activa">Activas</option>
+              <option value="finalizada">Finalizadas</option>
+              <option value="reprobada">Reprobadas</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label><i class="fas fa-calendar"></i> Periodo:</label>
+            <select id="filtroPeriodoMateria">
+              <option value="">Todos los periodos</option>
+              <option value="2024-I">2024-I</option>
+              <option value="2023-II">2023-II</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label><i class="fas fa-search"></i></label>
+            <input type="text" id="buscarMateria" placeholder="Buscar por nombre o código...">
+          </div>
+          <button class="btn btn-primary" onclick="limpiarFiltrosMaterias()">
+            <i class="fas fa-times"></i> Limpiar
+          </button>
+        </div>
+      </div>
+
+      <!-- TABLA PRINCIPAL -->
       <div class="table-container">
-
         <div class="table-header">
-          <h2>Materias Matriculadas</h2>
-
+          <h2><i class="fas fa-list"></i> Detalle de Materias</h2>
           <div class="table-actions">
-            <button id="exportBtn" class="btn-secondary">
-              <i class="fas fa-download"></i> Exportar
+            <span id="materiasActivas" class="stat-small">0 activas</span>
+            <button id="toggleView" class="btn btn-secondary">
+              <i class="fas fa-th"></i> Vista Tarjetas
             </button>
           </div>
         </div>
 
-        <div class="table-responsive">
+        <!-- TABLA MODE -->
+        <div class="table-responsive table-mode active" id="tableMode">
           <table class="materias-table">
             <thead>
               <tr>
-                <th>Código</th>
-                <th>Materia</th>
-                <th>Docente</th>
-                <th>Horario</th>
-                <th>Aula</th>
-                <th>Créditos</th>
-                <th>Estado</th>
-                <th>Acciones</th>
+                <th data-sort="codigo"><i class="fas fa-hashtag"></i> Código</th>
+                <th data-sort="nombre"><i class="fas fa-book"></i> Materia</th>
+                <th data-sort="docente"><i class="fas fa-chalkboard-teacher"></i> Docente</th>
+                <th data-sort="horario"><i class="fas fa-clock"></i> Horario</th>
+                <th data-sort="aula"><i class="fas fa-school"></i> Aula</th>
+                <th data-sort="creditos"><i class="fas fa-coins"></i> Créditos</th>
+                <th data-sort="estado"><i class="fas fa-circle-info"></i> Estado</th>
+                <th><i class="fas fa-ellipsis-v"></i> Acciones</th>
               </tr>
             </thead>
-
             <tbody id="tabla-materias"></tbody>
-
           </table>
         </div>
 
+        <!-- CARDS MODE -->
+        <div class="cards-mode" id="cardsMode">
+          <div id="materias-cards-container" class="materias-cards-grid">
+            <!-- Cards dinámicas -->
+          </div>
+        </div>
+      </div>
+
+      <!-- HORARIO SEMANAL -->
+      <div class="horario-section">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-calendar-week"></i> Horario Semanal</h3>
+          </div>
+          <div id="horarioSemanal" class="horario-grid"></div>
+        </div>
       </div>
 
     </div>
