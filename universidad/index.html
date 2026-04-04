@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Portal Universitario</title>
+    <title>Acceso | Portal Universitario</title>
 
-    <!-- CSS -->
     <link rel="stylesheet" href="/public/style.css">
 
-    <!-- ICONOS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    <!-- FUENTE -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -21,47 +18,15 @@
 
         <div class="login-card">
 
-            <!-- HEADER -->
             <div class="login-header">
                 <i class="fas fa-university"></i>
                 <h2>Portal Universitario</h2>
-                <p>Accede a tu sistema académico</p>
+                <p>Accediendo automáticamente...</p>
             </div>
-
-            <!-- FORM -->
-            <form id="loginForm" class="login-form">
-
-                <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input 
-                        type="text" 
-                        id="username" 
-                        placeholder="Usuario"
-                        required
-                    >
-                </div>
-                
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        placeholder="Contraseña"
-                        required
-                    >
-                </div>
-
-                <button type="submit" class="btn-primary full-width">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Iniciar Sesión
-                </button>
-
-            </form>
 
         </div>
 
-        <!-- LOADING -->
-        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-overlay">
             <div class="loading-spinner">
                 <i class="fas fa-university fa-spin"></i>
                 <p>Entrando...</p>
@@ -70,55 +35,8 @@
 
     </div>
 
-    <!-- SCRIPT LOGIN REAL -->
-    <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
-
-        if (!username || !password) {
-            alert('Completa todos los campos');
-            return;
-        }
-
-        showLoading(true);
-
-        try {
-            const res = await fetch('http://localhost:3000/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.message || 'Error al iniciar sesión');
-            }
-
-            // 🔥 GUARDAR TOKEN Y USUARIO
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
-
-            // 🚀 REDIRECCIÓN
-            window.location.href = 'dashboard.html';
-
-        } catch (error) {
-            alert(error.message);
-        } finally {
-            showLoading(false);
-        }
-    });
-
-    function showLoading(show) {
-        const overlay = document.getElementById('loadingOverlay');
-        overlay.style.display = show ? 'flex' : 'none';
-    }
-    </script>
+    <!-- 🔥 SOLO IMPORTAMOS JS -->
+    <script src="/public/main.js"></script>
 
 </body>
 </html>

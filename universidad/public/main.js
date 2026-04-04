@@ -1,11 +1,16 @@
 // ============================================================================
-// PORTAL UNIVERSITARIO - MAIN PRO (BACKEND READY)
+// PORTAL UNIVERSITARIO - MAIN PRO (AUTO LOGIN CONTROLADO)
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', initApp);
 
+// ============================================================================
+// INIT
+// ============================================================================
+
 function initApp() {
-    initAuth();
+    autoLogin();     // 🔥 manejar login automático
+    initAuth();      // 🔥 validar sesión
     renderLayout();
     initEvents();
     initTables();
@@ -13,12 +18,43 @@ function initApp() {
 }
 
 // ============================================================================
+// AUTO LOGIN (SOLO EN INDEX)
+// ============================================================================
+
+function autoLogin() {
+    const isLoginPage = window.location.pathname.includes('index.html');
+
+    if (!isLoginPage) return;
+
+    const existingUser = localStorage.getItem('user');
+
+    // 🔥 si ya hay usuario → ir directo
+    if (existingUser) {
+        window.location.href = 'dashboard.html';
+        return;
+    }
+
+    // 🔥 crear usuario automático
+    const user = {
+        nombre: "Luis",
+        username: "luis"
+    };
+
+    localStorage.setItem('user', JSON.stringify(user));
+
+    setTimeout(() => {
+        window.location.href = 'dashboard.html';
+    }, 1000);
+}
+
+// ============================================================================
 // AUTH
 // ============================================================================
 
 function initAuth() {
+    const isLoginPage = window.location.pathname.includes('index.html');
+
     let user = null;
-    let token = localStorage.getItem('token');
 
     try {
         user = JSON.parse(localStorage.getItem('user'));
@@ -27,22 +63,25 @@ function initAuth() {
         logout();
     }
 
-    // 🔥 PROTECCIÓN REAL
-    if ((!user || !token) && !window.location.pathname.includes('index.html')) {
-        window.location.href = '/index.html';
+    // 🔥 proteger páginas
+    if (!user && !isLoginPage) {
+        window.location.href = 'index.html';
         return;
     }
 
-    // Mostrar nombre
-    const userNameElements = document.querySelectorAll('#userName');
-    userNameElements.forEach(el => {
+    // 🔥 mostrar nombre
+    document.querySelectorAll('#userName').forEach(el => {
         el.textContent = user?.nombre || user?.username || 'Usuario';
     });
 }
 
+// ============================================================================
+// LOGOUT
+// ============================================================================
+
 function logout() {
     localStorage.removeItem('user');
-    localStorage.removeItem('token'); // 🔥 importante
+
     window.location.href = 'index.html';
 }
 
@@ -55,6 +94,7 @@ function renderLayout() {
     renderHeader();
 }
 
+// Sidebar dinámico
 function renderSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (!sidebar) return;
@@ -67,7 +107,7 @@ function renderSidebar() {
             </div>
 
             <nav class="sidebar-nav">
-                <a href="dashboard.html" class="nav-item">Principal</a>
+                <a href="dashboard.html" class="nav-item">Dashboard</a>
                 <a href="materias.html" class="nav-item">Materias</a>
                 <a href="calificaciones.html" class="nav-item">Calificaciones</a>
                 <a href="solicitudes.html" class="nav-item">Solicitudes</a>
@@ -78,6 +118,7 @@ function renderSidebar() {
     `;
 }
 
+// Header dinámico
 function renderHeader() {
     const header = document.getElementById('header');
     if (!header) return;
@@ -105,33 +146,29 @@ function renderHeader() {
 
 function initEvents() {
 
-    // Sidebar
     document.addEventListener('click', (e) => {
+
+        // Sidebar
         if (e.target.closest('.menu-toggle')) {
             document.body.classList.toggle('sidebar-collapsed');
         }
-    });
 
-    // Logout
-    document.addEventListener('click', (e) => {
+        // Logout
         if (e.target.closest('#logoutBtn')) {
             e.preventDefault();
             logout();
         }
-    });
 
-    // Modal open
-    document.addEventListener('click', (e) => {
+        // Modal abrir
         if (e.target.closest('#btnNuevaSolicitud')) {
             document.getElementById('modalSolicitud')?.classList.add('active');
         }
-    });
 
-    // Modal close
-    document.addEventListener('click', (e) => {
+        // Modal cerrar
         if (e.target.closest('#closeModal') || e.target.classList.contains('modal')) {
             document.querySelector('.modal')?.classList.remove('active');
         }
+
     });
 }
 
@@ -167,6 +204,7 @@ function sortTable(table, columnIndex) {
 
 function initForms() {
     document.addEventListener('submit', (e) => {
+
         if (e.target.id === 'formSolicitud') {
             e.preventDefault();
 
@@ -175,6 +213,7 @@ function initForms() {
             document.querySelector('.modal')?.classList.remove('active');
             e.target.reset();
         }
+
     });
 }
 
