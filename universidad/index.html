@@ -9,61 +9,117 @@
     <link rel="stylesheet" href="styles/login.css">
 
     <!-- Fuente -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Iconos -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="login-body">
-
+    <!-- CONTAINER PRINCIPAL -->
     <div class="login-container">
-        <div class="login-card">
-
-            <!-- HEADER -->
-            <div class="login-header">
+        
+        <!-- LOGO IZQUIERDO -->
+        <div class="login-logo">
+            <div class="logo-circle">
                 <i class="fas fa-graduation-cap"></i>
-                <h2>Portal Universitario</h2>
-                <p>Acceso autorizado - Bienvenido</p>
+            </div>
+            <h1>UNI-PORTAL</h1>
+            <p>Sistema Académico Universitario</p>
+        </div>
+
+        <!-- CARD LOGIN -->
+        <div class="login-card">
+            <div class="login-header">
+                <div class="welcome-text">
+                    <h2>Bienvenido</h2>
+                    <p>Inicia sesión para continuar</p>
+                </div>
             </div>
 
-            <!-- FORM -->
-            <form id="loginForm">
-
-                <!-- INPUT USUARIO -->
-                <div class="input-group">
-                    <input type="text" id="usuario" placeholder="Usuario" required>
+            <!-- FORMULARIO -->
+            <form id="loginForm" novalidate>
+                
+                <!-- USUARIO -->
+                <div class="input-group icon-left">
+                    <i class="fas fa-user"></i>
+                    <input 
+                        type="text" 
+                        id="usuario" 
+                        placeholder="Usuario o código estudiantil"
+                        required
+                        autocomplete="username"
+                    >
+                    <span class="input-error" id="errorUsuario"></span>
                 </div>
 
-                <!-- INPUT PASSWORD -->
-                <div class="input-group">
-                    <input type="password" id="clave" placeholder="Contraseña" required>
+                <!-- PASSWORD -->
+                <div class="input-group icon-left">
+                    <i class="fas fa-lock"></i>
+                    <input 
+                        type="password" 
+                        id="clave" 
+                        placeholder="Contraseña"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <button type="button" class="toggle-password" id="togglePassword">
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
+                    <span class="input-error" id="errorClave"></span>
                 </div>
 
-                <!-- BOTÓN -->
-                <button type="submit" class="btn-login">
-                    <i class="fas fa-arrow-right"></i>
-                    Entrar al Portal
+                <!-- RECORDARME -->
+                <div class="form-options">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="recordarme">
+                        <span class="checkmark"></span>
+                        Recordarme
+                    </label>
+                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <!-- BOTÓN PRINCIPAL -->
+                <button type="submit" class="btn-login" id="btnLogin">
+                    <span class="btn-text">Entrar al Portal</span>
+                    <div class="btn-loading" id="btnLoading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
                 </button>
-
             </form>
+
+            <!-- ALTERNATIVAS -->
+            <div class="login-divider">
+                <span>o</span>
+            </div>
+
+            <div class="login-alternatives">
+                <button class="btn-alt" id="btnRecuperar">
+                    <i class="fas fa-key"></i>
+                    Recuperar Acceso
+                </button>
+            </div>
 
             <!-- FOOTER -->
             <div class="login-footer">
-                <small><i class="fas fa-shield-alt"></i> Acceso seguro</small>
+                <small>
+                    <i class="fas fa-shield-alt"></i>
+                    Conexión segura • UNI-PORTAL v2.0
+                </small>
             </div>
-
         </div>
     </div>
 
-    <!-- LOADING -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner"></div>
-        <p>Redirigiendo al Dashboard...</p>
+    <!-- LOADING OVERLAY -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="spinner-border"></div>
+            <p>Validando credenciales...</p>
+            <p class="loading-progress">Redirigiendo al Dashboard</p>
+        </div>
     </div>
 
     <!-- JS -->
     <script src="JS/login.js"></script>
-
 </body>
 </html>
