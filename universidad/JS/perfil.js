@@ -1,222 +1,168 @@
-// DATOS DEL PERFIL SIMULADOS
-const perfilData = {
-  personal: {
-    nombre: "Ana García López",
-    codigo: "20230001",
-    fechaNacimiento: "15/03/2002",
-    telefono: "+51 987 654 321",
-    correo: "ana.garcia@email.com"
-  },
-  academico: {
-    programa: "Ingeniería de Sistemas",
-    fechaIngreso: "15/03/2023",
-    semestre: "2024-I",
-    creditos: 48,
-    promedio: 17.2,
-    asistencia: "95%"
-  },
-  institucional: {
-    correoInstitucional: "ana.garcia@universidad.edu.pe",
-    usuario: "agarcia2023"
-  },
-  historial: [
-    {
-      periodo: "2024-I",
-      promedio: 17.2,
-      creditos: 24,
-      estado: "curso"
-    },
-    {
-      periodo: "2023-II",
-      promedio: 16.8,
-      creditos: 24,
-      estado: "completado"
-    },
-    {
-      periodo: "2023-I",
-      promedio: 17.5,
-      creditos: 24,
-      estado: "completado"
+// ========================================
+// JS/perfil.js - VERSION PRO COMPLETA
+// ========================================
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    // =============================================
+    // INIT
+    // =============================================
+    initSidebar();
+    initTabs();
+    initEventosPerfil();
+
+    // =============================================
+    // SIDEBAR (MISMO SISTEMA GLOBAL)
+    // =============================================
+    function initSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const btnDesktop = document.getElementById('sidebarToggle');
+        const btnMobile = document.getElementById('mobileMenuToggle');
+
+        btnDesktop?.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+        });
+
+        btnMobile?.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        overlay?.addEventListener('click', cerrarSidebar);
+
+        function cerrarSidebar() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        document.addEventListener('click', (e) => {
+            if (
+                window.innerWidth <= 768 &&
+                !sidebar.contains(e.target) &&
+                !btnMobile.contains(e.target)
+            ) {
+                cerrarSidebar();
+            }
+        });
     }
-  ]
-};
 
-// INICIALIZACIÓN DEL PERFIL
-function inicializarPerfil() {
-  verificarSesion();
-  
-  cargarSidebar();
-  cargarHeader();
-  
-  setTimeout(() => {
-    cargarDatosPerfil();
-    inicializarEventosPerfil();
-    inicializarTabs();
-  }, 500);
-}
+    // =============================================
+    // TABS PERFIL
+    // =============================================
+    function initTabs() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
 
-// CARGAR DATOS DEL PERFIL
-function cargarDatosPerfil() {
-  // Datos principales
-  document.getElementById('nombreCompleto').textContent = perfilData.personal.nombre;
-  document.getElementById('codigoEstudiantil').textContent = perfilData.personal.codigo;
-  document.getElementById('fechaNacimiento').textContent = perfilData.personal.fechaNacimiento;
-  document.getElementById('telefono').textContent = perfilData.personal.telefono;
-  document.getElementById('correoPersonal').textContent = perfilData.personal.correo;
-  
-  // Académico
-  document.getElementById('programaAcademico').textContent = perfilData.academico.programa;
-  document.getElementById('fechaIngreso').textContent = perfilData.academico.fechaIngreso;
-  document.getElementById('programaBadge').textContent = perfilData.academico.programa;
-  
-  // Institucional
-  document.getElementById('correoInstitucional').textContent = perfilData.institucional.correoInstitucional;
-  document.getElementById('usuario').textContent = perfilData.institucional.usuario;
-  
-  // Estadísticas
-  document.getElementById('creditosMatriculados').textContent = perfilData.academico.creditos;
-  document.getElementById('semestreActual').textContent = perfilData.academico.semestre;
-  document.getElementById('promedioGeneral').textContent = perfilData.academico.promedio;
-  document.getElementById('asistencia').textContent = perfilData.academico.asistencia;
-  
-  // Historial
-  renderizarHistorialPreview();
-}
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
 
-// RENDERIZAR HISTORIAL PREVIEW
-function renderizarHistorialPreview() {
-  const container = document.getElementById('historialPreview');
-  container.innerHTML = perfilData.historial.map(item => `
-    <div class="history-item">
-      <div class="history-periodo">${item.periodo}</div>
-      <div class="history-promedio">${item.promedio}</div>
-      <div class="history-creditos">${item.creditos} créditos</div>
-    </div>
-  `).join('');
-}
+                // Quitar activos
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
 
-// INICIALIZAR TABS
-function inicializarTabs() {
-  const tabs = document.querySelectorAll('.tab-btn');
-  const contents = document.querySelectorAll('.tab-content');
-  
-  tabs.forEach(tab => {
-    tab.addEventListener('click', function() {
-      const targetTab = this.dataset.tab;
-      
-      // Remover clases activas
-      tabs.forEach(t => t.classList.remove('active'));
-      contents.forEach(c => c.classList.remove('active'));
-      
-      // Activar tab seleccionada
-      this.classList.add('active');
-      document.getElementById(`tab-${targetTab}`).classList.add('active');
-    });
-  });
-}
-
-// EVENTOS DEL PERFIL
-function inicializarEventosPerfil() {
-  // Cambiar foto de perfil
-  const fotoInput = document.getElementById('fotoInput');
-  const fotoPerfil = document.getElementById('fotoPerfil');
-  
-  fotoInput.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        fotoPerfil.src = e.target.result;
-        mostrarNotificacion('Foto actualizada correctamente ✅');
-      };
-      reader.readAsDataURL(file);
+                // Activar actual
+                tab.classList.add('active');
+                const target = document.getElementById(`tab-${tab.dataset.tab}`);
+                target?.classList.add('active');
+            });
+        });
     }
-  });
-  
-  // Botones de acción
-  document.getElementById('btnEditarPerfil').addEventListener('click', editarPerfil);
-  document.getElementById('btnCambiarPassword').addEventListener('click', cambiarPassword);
-  document.getElementById('btnDescargarDatos').addEventListener('click', descargarDatos);
-}
 
-// FUNCIONES DE ACCIÓN
-function editarPerfil() {
-  mostrarNotificacion('🔧 Modo edición activado');
-  // Aquí iría la lógica para activar campos editables
-}
+    // =============================================
+    // EVENTOS PERFIL
+    // =============================================
+    function initEventosPerfil() {
 
-function cambiarPassword() {
-  mostrarNotificacion('🔐 Redirigiendo a cambio de contraseña...');
-  // window.location.href = 'cambiar-password.html';
-}
+        // Guardar cambios
+        document.getElementById('btnGuardarCambios')?.addEventListener('click', () => {
+            mostrarToast('✅ Cambios guardados correctamente');
+        });
 
-function descargarDatos() {
-  mostrarNotificacion('📥 Descargando datos personales...');
-  // Lógica para generar PDF o JSON
-}
+        // Editar perfil
+        document.getElementById('btnEditarPerfil')?.addEventListener('click', () => {
+            mostrarToast('✏️ Modo edición activado');
+        });
 
-// NOTIFICACIONES
-function mostrarNotificacion(mensaje) {
-  // Crear notificación toast
-  const notif = document.createElement('div');
-  notif.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3);
-    z-index: 10000;
-    transform: translateX(400px);
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    font-weight: 500;
-  `;
-  notif.textContent = mensaje;
-  document.body.appendChild(notif);
-  
-  // Animar entrada
-  requestAnimationFrame(() => {
-    notif.style.transform = 'translateX(0)';
-  });
-  
-  // Auto-eliminar
-  setTimeout(() => {
-    notif.style.transform = 'translateX(400px)';
-    setTimeout(() => {
-      document.body.removeChild(notif);
-    }, 400);
-  }, 4000);
-}
+        // Cambiar contraseña
+        document.getElementById('btnCambiarPassword')?.addEventListener('click', () => {
+            alert('🔒 Aquí irá el módulo de cambio de contraseña');
+        });
 
-// SIMULAR EDICIÓN DE CAMPOS
-function activarEdicion(campoId) {
-  const campo = document.getElementById(campoId);
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.value = campo.textContent;
-  input.style.cssText = `
-    width: 100%;
-    padding: 0.75rem;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-    background: white;
-  `;
-  
-  campo.innerHTML = '';
-  campo.appendChild(input);
-  input.focus();
-  
-  input.addEventListener('blur', function() {
-    campo.textContent = this.value;
-  });
-  
-  input.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      this.blur();
+        // Descargar datos
+        document.getElementById('btnDescargarDatos')?.addEventListener('click', () => {
+            descargarDatos();
+        });
+
+        // Foto perfil
+        const inputFoto = document.getElementById('fotoInput');
+        const img = document.getElementById('fotoPerfil');
+
+        inputFoto?.addEventListener('change', function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                img.src = e.target.result;
+                mostrarToast('📸 Foto actualizada');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Logout
+        document.querySelector('.logout-btn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('¿Cerrar sesión?')) {
+                localStorage.removeItem('userSession');
+                window.location.href = 'login.html';
+            }
+        });
     }
-  });
-}
+
+    // =============================================
+    // FUNCIONES
+    // =============================================
+    function descargarDatos() {
+        const data = {
+            nombre: document.getElementById('nombreCompleto').textContent,
+            codigo: document.getElementById('codigoEstudiantil').textContent,
+            programa: document.getElementById('programaAcademico').textContent
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'perfil.json';
+        a.click();
+
+        mostrarToast('📥 Datos descargados');
+    }
+
+    // =============================================
+    // TOAST PRO
+    // =============================================
+    function mostrarToast(mensaje) {
+        const toast = document.createElement('div');
+        toast.textContent = mensaje;
+
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.right = '20px';
+        toast.style.background = '#111';
+        toast.style.color = '#fff';
+        toast.style.padding = '12px 20px';
+        toast.style.borderRadius = '10px';
+        toast.style.zIndex = '9999';
+        toast.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 2500);
+    }
+
+});

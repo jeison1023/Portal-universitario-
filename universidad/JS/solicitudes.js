@@ -1,208 +1,266 @@
-// ===============================
-// DATOS SIMULADOS
-// ===============================
-const tiposSolicitud = [
-  { value: 'constancia-estudios', label: 'Constancia de Estudios' },
-  { value: 'carta-recomendacion', label: 'Carta de Recomendación' },
-  { value: 'cambio-materia', label: 'Cambio de Materia' },
-  { value: 'retiro-materia', label: 'Retiro de Materia' },
-  { value: 'certificado-notas', label: 'Certificado de Notas' },
-  { value: 'convalidacion', label: 'Convalidación' },
-  { value: 'pension', label: 'Trámite Pensión' },
-  { value: 'otros', label: 'Otros' }
-];
+// ========================================
+// JS/solicitudes.js - VERSION PRO COMPLETA
+// ========================================
 
-const solicitudesData = [
-  {
-    id: 1,
-    numero: "#SOL-2024-001",
-    tipo: "Constancia de Estudios",
-    fecha: "2024-03-15",
-    estado: "aprobada",
-    descripcion: "Constancia para banco.",
-    prioridad: "media"
-  },
-  {
-    id: 2,
-    numero: "#SOL-2024-002",
-    tipo: "Cambio de Materia",
-    fecha: "2024-03-10",
-    estado: "pendiente",
-    descripcion: "Cambio por horario.",
-    prioridad: "alta"
-  },
-  {
-    id: 3,
-    numero: "#SOL-2024-003",
-    tipo: "Certificado de Notas",
-    fecha: "2024-02-28",
-    estado: "rechazada",
-    descripcion: "Certificado para beca.",
-    prioridad: "baja"
-  }
-];
+document.addEventListener('DOMContentLoaded', function () {
 
-let solicitudesFiltradas = [...solicitudesData];
+    // =============================================
+    // DATA (SIMULADA)
+    // =============================================
+    let solicitudes = [
+        {
+            id: 1,
+            tipo: 'certificado',
+            descripcion: 'Certificado de estudios',
+            fecha: '2024-09-01',
+            estado: 'aprobada'
+        },
+        {
+            id: 2,
+            tipo: 'convalidacion',
+            descripcion: 'Convalidación de materias',
+            fecha: '2024-09-10',
+            estado: 'pendiente'
+        },
+        {
+            id: 3,
+            tipo: 'certificado',
+            descripcion: 'Certificado de notas',
+            fecha: '2024-09-15',
+            estado: 'rechazada'
+        },
+        {
+            id: 4,
+            tipo: 'certificado',
+            descripcion: 'Constancia de matrícula',
+            fecha: '2024-09-18',
+            estado: 'pendiente'
+        }
+    ];
 
-// ===============================
-// INICIALIZACIÓN
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-  inicializarSolicitudes();
+    let filtros = {
+        estado: '',
+        tipo: '',
+        fecha: '',
+        busqueda: ''
+    };
+
+    let vistaTabla = false;
+
+    // =============================================
+    // INIT
+    // =============================================
+    initSidebar();
+    initEventos();
+    renderSolicitudes();
+    actualizarStats();
+
+    // =============================================
+    // SIDEBAR (GLOBAL)
+    // =============================================
+    function initSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const btnDesktop = document.getElementById('sidebarToggle');
+        const btnMobile = document.getElementById('mobileMenuToggle');
+
+        btnDesktop?.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+        });
+
+        btnMobile?.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        overlay?.addEventListener('click', cerrarSidebar);
+
+        function cerrarSidebar() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+    }
+
+    // =============================================
+    // EVENTOS
+    // =============================================
+    function initEventos() {
+
+        // Filtros
+        document.getElementById('filtroEstadoSolicitud').addEventListener('change', e => {
+            filtros.estado = e.target.value;
+            aplicarFiltros();
+        });
+
+        document.getElementById('filtroTipoSolicitud').addEventListener('change', e => {
+            filtros.tipo = e.target.value;
+            aplicarFiltros();
+        });
+
+        document.getElementById('buscarSolicitud').addEventListener('input', debounce(e => {
+            filtros.busqueda = e.target.value.toLowerCase();
+            aplicarFiltros();
+        }, 300));
+
+        document.getElementById('btnLimpiarFiltros').addEventListener('click', limpiarFiltros);
+
+        // Nueva solicitud
+        document.getElementById('btnNuevaSolicitud').addEventListener('click', crearSolicitud);
+
+        // Toggle vista
+        document.getElementById('toggleVista').addEventListener('click', toggleVista);
+
+        // Logout
+        document.querySelector('.logout-btn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('¿Cerrar sesión?')) {
+                window.location.href = 'login.html';
+            }
+        });
+    }
+
+    // =============================================
+    // RENDER
+    // =============================================
+    function renderSolicitudes() {
+        const container = document.getElementById('solicitudesGrid');
+        const data = filtrarSolicitudes();
+
+        if (data.length === 0) {
+            container.innerHTML = `<p style="text-align:center;color:gray;">No hay resultados</p>`;
+            return;
+        }
+
+        if (!vistaTabla) {
+            container.innerHTML = data.map(s => `
+                <div class="lista-clase">
+                    <div class="lista-clase-dia">${s.id}</div>
+                    <div class="lista-clase-info">
+                        <div class="lista-clase-titulo">${s.descripcion}</div>
+                        <div class="lista-clase-detalles">
+                            <span>${s.tipo}</span>
+                            <span>${formatearFecha(s.fecha)}</span>
+                        </div>
+                    </div>
+                    <span class="estado-badge estado-${s.estado}">
+                        ${s.estado}
+                    </span>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = `
+                <table style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Descripción</th>
+                            <th>Tipo</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(s => `
+                            <tr>
+                                <td>${s.id}</td>
+                                <td>${s.descripcion}</td>
+                                <td>${s.tipo}</td>
+                                <td>${formatearFecha(s.fecha)}</td>
+                                <td>${s.estado}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+    }
+
+    // =============================================
+    // FILTROS
+    // =============================================
+    function filtrarSolicitudes() {
+        return solicitudes.filter(s => {
+            return (
+                (!filtros.estado || s.estado === filtros.estado) &&
+                (!filtros.tipo || s.tipo === filtros.tipo) &&
+                (!filtros.busqueda || s.descripcion.toLowerCase().includes(filtros.busqueda))
+            );
+        });
+    }
+
+    function aplicarFiltros() {
+        renderSolicitudes();
+    }
+
+    function limpiarFiltros() {
+        filtros = { estado: '', tipo: '', fecha: '', busqueda: '' };
+
+        document.getElementById('filtroEstadoSolicitud').value = '';
+        document.getElementById('filtroTipoSolicitud').value = '';
+        document.getElementById('buscarSolicitud').value = '';
+
+        renderSolicitudes();
+    }
+
+    // =============================================
+    // ACCIONES
+    // =============================================
+    function crearSolicitud() {
+        const nueva = {
+            id: solicitudes.length + 1,
+            tipo: 'certificado',
+            descripcion: 'Nueva solicitud',
+            fecha: new Date().toISOString().split('T')[0],
+            estado: 'pendiente'
+        };
+
+        solicitudes.unshift(nueva);
+        renderSolicitudes();
+        actualizarStats();
+
+        mostrarToast('📄 Solicitud creada');
+    }
+
+    function toggleVista() {
+        vistaTabla = !vistaTabla;
+        document.getElementById('toggleVista').textContent = vistaTabla ? 'Vista Cards' : 'Vista Tabular';
+        renderSolicitudes();
+    }
+
+    // =============================================
+    // STATS
+    // =============================================
+    function actualizarStats() {
+        document.getElementById('totalSolicitudes').textContent = solicitudes.length;
+        document.getElementById('solicitudesPendientes').textContent = solicitudes.filter(s => s.estado === 'pendiente').length;
+        document.getElementById('solicitudesAprobadas').textContent = solicitudes.filter(s => s.estado === 'aprobada').length;
+    }
+
+    // =============================================
+    // UTILIDADES
+    // =============================================
+    function formatearFecha(fecha) {
+        return new Date(fecha).toLocaleDateString('es-ES');
+    }
+
+    function debounce(func, wait) {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func(...args), wait);
+        };
+    }
+
+    function mostrarToast(msg) {
+        const t = document.createElement('div');
+        t.textContent = msg;
+        t.style.cssText = `
+            position:fixed;bottom:20px;right:20px;
+            background:#111;color:#fff;padding:10px 16px;
+            border-radius:8px;z-index:9999;
+        `;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 2000);
+    }
+
 });
-
-function inicializarSolicitudes() {
-  verificarSesion();
-  poblarFiltrosSolicitudes();
-  actualizarEstadisticasSolicitudes();
-  renderizarSolicitudes();
-}
-
-// ===============================
-// SESIÓN
-// ===============================
-function verificarSesion() {
-  if (!localStorage.getItem("sesionActiva")) {
-    window.location.href = "index.html";
-  }
-}
-
-// ===============================
-// FILTROS
-// ===============================
-function poblarFiltrosSolicitudes() {
-  const select = document.getElementById("filtroTipoSolicitud");
-  if (!select) return;
-
-  tiposSolicitud.forEach(t => {
-    const opt = document.createElement("option");
-    opt.value = t.value;
-    opt.textContent = t.label;
-    select.appendChild(opt);
-  });
-
-  select.addEventListener("change", aplicarFiltrosSolicitudes);
-}
-
-function aplicarFiltrosSolicitudes() {
-  const tipo = document.getElementById("filtroTipoSolicitud")?.value;
-
-  solicitudesFiltradas = solicitudesData.filter(s => {
-    if (!tipo) return true;
-
-    return s.tipo.toLowerCase().includes(tipo.replace("-", " "));
-  });
-
-  renderizarSolicitudes();
-}
-
-// ===============================
-// ESTADÍSTICAS
-// ===============================
-function actualizarEstadisticasSolicitudes() {
-  setText("totalSolicitudes", solicitudesData.length);
-
-  const pendientes = solicitudesData.filter(s => s.estado === "pendiente").length;
-  setText("solicitudesPendientes", pendientes);
-}
-
-function setText(id, valor) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = valor;
-}
-
-// ===============================
-// RENDER (CARDS)
-// ===============================
-function renderizarSolicitudes() {
-  const container = document.getElementById("solicitudesContainer");
-  if (!container) return;
-
-  if (solicitudesFiltradas.length === 0) {
-    container.innerHTML = `
-      <div style="text-align:center;">
-        <h3>No hay solicitudes</h3>
-      </div>
-    `;
-    return;
-  }
-
-  container.innerHTML = solicitudesFiltradas.map(s => `
-    <div class="solicitud-card" style="
-      border:1px solid #e5e7eb;
-      padding:1.5rem;
-      border-radius:14px;
-      background:white;
-      box-shadow:0 10px 25px rgba(0,0,0,0.05);
-    ">
-
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <strong>${s.numero}</strong>
-        <span style="
-          padding:5px 10px;
-          border-radius:8px;
-          font-size:0.8rem;
-          background:${getColorEstado(s.estado)};
-          color:white;
-        ">
-          ${s.estado}
-        </span>
-      </div>
-
-      <h3 style="margin:10px 0;">${s.tipo}</h3>
-      <p style="color:#6b7280;">${s.descripcion}</p>
-
-      <small>📅 ${s.fecha}</small>
-
-      <div style="margin-top:1rem; display:flex; gap:10px;">
-        <button onclick="verSolicitud(${s.id})">Ver</button>
-        <button onclick="eliminarSolicitud(${s.id})">Eliminar</button>
-      </div>
-
-    </div>
-  `).join("");
-}
-
-// ===============================
-// UTILIDADES
-// ===============================
-function getColorEstado(estado) {
-  switch (estado) {
-    case "aprobada": return "#10b981";
-    case "pendiente": return "#f59e0b";
-    case "rechazada": return "#ef4444";
-    default: return "#6b7280";
-  }
-}
-
-// ===============================
-// ACCIONES
-// ===============================
-function verSolicitud(id) {
-  const s = solicitudesData.find(x => x.id === id);
-  alert(`📄 ${s.numero}\n\n${s.descripcion}`);
-}
-
-function eliminarSolicitud(id) {
-  solicitudesFiltradas = solicitudesFiltradas.filter(s => s.id !== id);
-  renderizarSolicitudes();
-}
-
-// ===============================
-// NUEVA SOLICITUD (SIMULADA)
-// ===============================
-function abrirModalSolicitud() {
-  const nueva = {
-    id: Date.now(),
-    numero: "#SOL-" + Date.now(),
-    tipo: "Otros",
-    fecha: new Date().toISOString().split("T")[0],
-    estado: "pendiente",
-    descripcion: "Nueva solicitud creada",
-    prioridad: "media"
-  };
-
-  solicitudesData.push(nueva);
-  solicitudesFiltradas = [...solicitudesData];
-  renderizarSolicitudes();
-}

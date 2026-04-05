@@ -1,187 +1,123 @@
-// ============================================
-// MATERIAS.JS - VERSION PRO
-// ============================================
-
 document.addEventListener('DOMContentLoaded', () => {
+  const sidebar = document.getElementById('sidebar');
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
 
-  // ============================
-  // SIDEBAR MOBILE (FIX)
-  // ============================
-  const sidebar = document.getElementById("sidebar");
-  const mobileToggle = document.getElementById("mobileMenuToggle");
-  const overlay = document.getElementById("sidebarOverlay");
-
-  if (mobileToggle) {
-    mobileToggle.addEventListener("click", () => {
-      sidebar.classList.add("active");
-      overlay.classList.add("active");
-      document.body.style.overflow = "hidden";
-    });
+  // =========================
+  // SIDEBAR STATE (PRO)
+  // =========================
+  const savedState = localStorage.getItem('sidebar-collapsed');
+  if (savedState === 'true') {
+    sidebar.classList.add('collapsed');
   }
 
-  if (overlay) {
-    overlay.addEventListener("click", cerrarMenu);
-  }
+  // =========================
+  // DESKTOP TOGGLE
+  // =========================
+  sidebarToggle?.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
 
-  function cerrarMenu() {
-    sidebar.classList.remove("active");
-    overlay.classList.remove("active");
-    document.body.style.overflow = "";
-  }
-
-  document.querySelectorAll(".nav-link").forEach(link => {
-    link.addEventListener("click", cerrarMenu);
+    localStorage.setItem(
+      'sidebar-collapsed',
+      sidebar.classList.contains('collapsed')
+    );
   });
 
-  // ============================
-  // DATA MOCK
-  // ============================
-  const materiasData = [
-    { id: 1, nombre: 'Programación Web II', docente: 'Dr. María Gómez', aula: 'A-301', estado: 'activa', credito: 4 },
-    { id: 2, nombre: 'Base de Datos II', docente: 'Ing. Carlos Ruiz', aula: 'Lab-105', estado: 'activa', credito: 4 },
-    { id: 3, nombre: 'Matemáticas Discretas', docente: 'MSc. Laura Torres', aula: 'B-204', estado: 'finalizada', credito: 3 },
-    { id: 4, nombre: 'Ingeniería de Software', docente: 'Dr. Pedro López', aula: 'C-112', estado: 'activa', credito: 4 },
-    { id: 5, nombre: 'Redes de Computadoras', docente: 'Ing. Ana Martínez', aula: 'Lab-201', estado: 'reprobada', credito: 4 }
+  // =========================
+  // MOBILE OPEN
+  // =========================
+  mobileMenuToggle?.addEventListener('click', () => {
+    sidebar.classList.add('active');
+    sidebarOverlay.classList.add('active');
+    document.body.classList.add('menu-open');
+  });
+
+  // =========================
+  // CLOSE FUNCTION (REUTILIZABLE)
+  // =========================
+  const closeSidebar = () => {
+    sidebar.classList.remove('active');
+    sidebarOverlay.classList.remove('active');
+    document.body.classList.remove('menu-open');
+  };
+
+  // =========================
+  // MOBILE CLOSE
+  // =========================
+  sidebarOverlay?.addEventListener('click', closeSidebar);
+
+  // Cerrar al hacer click en link (móvil)
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 992) closeSidebar();
+    });
+  });
+
+  // Cerrar con ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSidebar();
+  });
+
+  // =========================
+  // ACTIVE LINK (INTELIGENTE)
+  // =========================
+  const currentPage = window.location.pathname.split('/').pop();
+
+  document.querySelectorAll('.nav-link').forEach(link => {
+    const href = link.getAttribute('href');
+
+    if (href === currentPage) {
+      link.classList.add('active');
+      link.parentElement.classList.add('active');
+    }
+
+    link.addEventListener('click', function () {
+      document.querySelectorAll('.nav-link').forEach(l => {
+        l.classList.remove('active');
+        l.parentElement.classList.remove('active');
+      });
+
+      this.classList.add('active');
+      this.parentElement.classList.add('active');
+    });
+  });
+
+  // =========================
+  // STATS DINÁMICOS
+  // =========================
+  const statsData = [
+    { title: 'Materias Inscritas', value: '6', trend: '+1', color: 'success' },
+    { title: 'Créditos Totales', value: '18', trend: '0', color: 'primary' },
+    { title: 'Promedio Semestre', value: '4.5', trend: '+0.3', color: 'success' },
+    { title: 'Pendientes', value: '2', trend: '-1', color: 'warning' }
   ];
 
-  // ============================
-  // RENDER TABLA
-  // ============================
-  const tbody = document.getElementById('tabla-materias');
-  const emptyState = document.getElementById('emptyState');
+  const statsContainer = document.getElementById('statsContainer');
 
-  function renderTable(data = materiasData) {
-
-    if (!tbody) return;
-
-    if (data.length === 0) {
-      tbody.innerHTML = "";
-      emptyState.style.display = 'block';
-      return;
-    }
-
-    tbody.innerHTML = data.map(materia => `
-      <tr>
-        <td><strong>${materia.nombre}</strong></td>
-        <td>${materia.docente}</td>
-        <td>${materia.aula}</td>
-        <td>
-          <span class="status-badge status-${materia.estado}">
-            ${formatearEstado(materia.estado)}
-          </span>
-        </td>
-        <td class="actions-cell">
-          <button class="action-btn action-edit" title="Ver detalles" data-id="${materia.id}">
-            <i class="fas fa-eye"></i>
-          </button>
-          <button class="action-btn action-delete" title="Retirar" data-id="${materia.id}">
-            <i class="fas fa-trash"></i>
-          </button>
-        </td>
-      </tr>
+  if (statsContainer) {
+    statsContainer.innerHTML = statsData.map(stat => `
+      <div class="stat-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+          <span style="color:var(--secondary);font-size:0.9rem;">${stat.title}</span>
+          <i class="fas fa-arrow-${stat.trend.includes('+') ? 'up' : 'down'}" 
+             style="color:var(--${stat.color})"></i>
+        </div>
+        <div style="font-size:2.5rem;font-weight:700;color:var(--${stat.color})">
+          ${stat.value}
+        </div>
+      </div>
     `).join('');
-
-    emptyState.style.display = 'none';
   }
 
-  // ============================
-  // FORMATO ESTADO (PRO)
-  // ============================
-  function formatearEstado(estado) {
-    return {
-      activa: "En curso",
-      finalizada: "Finalizada",
-      reprobada: "Reprobada"
-    }[estado] || estado;
-  }
+  // =========================
+  // QUICK STATS
+  // =========================
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
 
-  // ============================
-  // EVENTOS TABLA (DELEGACIÓN)
-  // ============================
-  tbody.addEventListener('click', (e) => {
-    const btn = e.target.closest('button');
-    if (!btn) return;
-
-    const id = btn.dataset.id;
-
-    if (btn.classList.contains('action-edit')) {
-      verMateria(id);
-    }
-
-    if (btn.classList.contains('action-delete')) {
-      retirarMateria(id);
-    }
-  });
-
-  // ============================
-  // FILTROS
-  // ============================
-  const filtroEstado = document.getElementById('filtroEstadoMateria');
-  const buscarInput = document.getElementById('buscarMateria');
-
-  if (filtroEstado) {
-    filtroEstado.addEventListener('change', () => aplicarFiltros());
-  }
-
-  if (buscarInput) {
-    buscarInput.addEventListener('input', () => aplicarFiltros());
-  }
-
-  function aplicarFiltros() {
-    const estado = filtroEstado.value;
-    const termino = buscarInput.value.toLowerCase();
-
-    const filtrado = materiasData.filter(m =>
-      (!estado || m.estado === estado) &&
-      (
-        m.nombre.toLowerCase().includes(termino) ||
-        m.docente.toLowerCase().includes(termino)
-      )
-    );
-
-    renderTable(filtrado);
-  }
-
-  // ============================
-  // STATS
-  // ============================
-  const aprobadas = materiasData.filter(m => m.estado === 'finalizada').length;
-  const enCurso = materiasData.filter(m => m.estado === 'activa').length;
-  const creditos = materiasData.reduce((sum, m) => sum + m.credito, 0);
-
-  document.getElementById('materiasAprobadas').textContent = aprobadas;
-  document.getElementById('materiasCurso').textContent = enCurso;
-  document.getElementById('creditosTotal').textContent = creditos;
-
-  // ============================
-  // BOTÓN NUEVA MATERIA
-  // ============================
-  const btnNueva = document.getElementById('btnNuevaMateria');
-
-  if (btnNueva) {
-    btnNueva.addEventListener('click', () => {
-      alert('🚧 Módulo de matrícula próximamente');
-    });
-  }
-
-  // ============================
-  // INIT
-  // ============================
-  renderTable();
-
+  setText('quickPromedio', '4.5');
+  setText('quickCreditos', '18');
 });
-
-// ============================================
-// FUNCIONES GLOBALES
-// ============================================
-
-function verMateria(id) {
-  alert(`📘 Ver detalles de materia ID: ${id}`);
-}
-
-function retirarMateria(id) {
-  if (confirm('¿Seguro que deseas retirar esta materia?')) {
-    alert(`✅ Materia ${id} retirada`);
-    location.reload();
-  }
-}

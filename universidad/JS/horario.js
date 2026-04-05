@@ -1,266 +1,270 @@
-// JS/horarios.js - COMPLETO Y FUNCIONAL
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // =============================================
-    // DATOS DE HORARIO (ejemplo realista)
-    // =============================================
-    const horariosData = {
-        semestre: '2024-1',
-        clases: [
-            {
-                id: 1,
-                materia: 'Programación Web Avanzada',
-                profesor: 'Dr. Juan Pérez',
-                aula: 'A-301',
-                dia: 'Lunes',
-                horaInicio: '09:00',
-                horaFin: '11:00',
-                color: 'default'
-            },
-            {
-                id: 2,
-                materia: 'Base de Datos II',
-                profesor: 'MSc. María Gómez',
-                aula: 'B-205',
-                dia: 'Lunes',
-                horaInicio: '14:00',
-                horaFin: '16:00',
-                color: 'mate'
-            },
-            {
-                id: 3,
-                materia: 'Matemáticas Discretas',
-                profesor: 'Dr. Luis Rodríguez',
-                aula: 'C-112',
-                dia: 'Martes',
-                horaInicio: '08:00',
-                horaFin: '10:00',
-                color: 'mate'
-            },
-            {
-                id: 4,
-                materia: 'Inglés Técnico IV',
-                profesor: 'Lic. Ana Martínez',
-                aula: 'D-101',
-                dia: 'Martes',
-                horaInicio: '10:00',
-                horaFin: '12:00',
-                color: 'ingles'
-            },
-            {
-                id: 5,
-                materia: 'Laboratorio de Redes',
-                profesor: 'Ing. Carlos López',
-                aula: 'LAB-01',
-                dia: 'Miércoles',
-                horaInicio: '15:00',
-                horaFin: '18:00',
-                color: 'laboratorio'
-            }
-        ]
-    };
+// ========================================
+// HORARIOS.JS - VERSION FINAL PRO
+// ========================================
 
-    let clases = [...horariosData.clases];
-    let vistaActual = 'semanal';
-
-    // =============================================
-    // INICIALIZACIÓN
-    // =============================================
-    initHorarios();
-
-    function initHorarios() {
-        renderizarEstadisticas();
-        renderizarHorarioSemanal();
-        inicializarEventos();
-        actualizarProximasClases();
-    }
-
-    function inicializarEventos() {
-        // Toggle vistas
-        document.querySelectorAll('[data-vista]').forEach(btn => {
-            btn.addEventListener('click', function() {
-                cambiarVista(this.dataset.vista);
-            });
-        });
-
-        // Toggle horario/lista
-        document.getElementById('toggleHorario')?.addEventListener('click', toggleVistaHorario);
-        document.getElementById('toggleBackToGrid')?.addEventListener('click', toggleBackToGrid);
-
-        // Selector semestre
-        document.getElementById('semestreSelector')?.addEventListener('change', function() {
-            // Cambiar semestre (simulado)
-            document.getElementById('horariosTitle').textContent = this.value;
-        });
-
-        // Imprimir
-        document.getElementById('btnImprimirHorario')?.addEventListener('click', imprimirHorario);
-
-        // Sidebar (común)
-        inicializarSidebar();
-    }
-
-    function inicializarSidebar() {
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const mobileToggle = document.getElementById('mobileMenuToggle');
-        const overlay = document.getElementById('sidebarOverlay');
-        const sidebar = document.getElementById('sidebar');
-
-        sidebarToggle?.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
-        mobileToggle?.addEventListener('click', () => {
-            sidebar.classList.add('mobile-open');
-            overlay.classList.add('active');
-        });
-        overlay?.addEventListener('click', () => {
-            sidebar.classList.remove('mobile-open');
-            overlay.classList.remove('active');
-        });
-    }
-
-    // =============================================
-    // RENDERIZADO
-    // =============================================
-    function renderizarEstadisticas() {
-        const totalClases = clases.length;
-        const horasSemanales = clases.reduce((sum, c) => sum + calcularHoras(c.horaInicio, c.horaFin), 0);
-        const creditos = 18; // Fijo por semestre
-
-        document.getElementById('totalClases').textContent = totalClases;
-        document.getElementById('horasSemanales').textContent = horasSemanales;
-        document.getElementById('creditosHorario').textContent = creditos;
-    }
-
-    function renderizarHorarioSemanal() {
-        const container = document.getElementById('horarioSemanal');
-        const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-        
-        let html = `
-            <table class="horario-table">
-                <thead>
-                    <tr>
-                        <th>Hora</th>
-                        ${dias.map(dia => `<th>${dia}</th>`).join('')}
-                    </tr>
-                </thead>
-                <tbody>
-        `;
-
-        // Horas del día (8:00 - 20:00)
-        for (let h = 8; h <= 20; h += 2) {
-            html += `<tr>
-                <td>${String(h).padStart(2, '0')}:00 - ${String(h+2).padStart(2, '0')}:00</td>`;
-            
-            dias.forEach(dia => {
-                const clasesDia = clases.filter(c => c.dia === dia && 
-                    parseInt(c.horaInicio.split(':')[0]) >= h && 
-                    parseInt(c.horaInicio.split(':')[0]) < h+2);
-                
-                if (clasesDia.length > 0) {
-                    const clase = clasesDia[0];
-                    html += `
-                        <td>
-                            <div class="horario-clase ${clase.color}">
-                                <div class="clase-titulo">${clase.materia}</div>
-                                <div class="clase-detalles">${clase.profesor}</div>
-                                <div class="clase-aula">${clase.aula}</div>
-                            </div>
-                        </td>
-                    `;
-                } else {
-                    html += '<td></td>';
-                }
-            });
-            
-            html += '</tr>';
-        }
-
-        html += '</tbody></table>';
-        container.innerHTML = html;
-    }
-
-    function renderizarListaClases() {
-        const container = document.getElementById('listaClases');
-        container.innerHTML = clases.map(clase => `
-            <div class="lista-clase">
-                <div class="clase-hora">${clase.horaInicio} - ${clase.horaFin}</div>
-                <div class="clase-dia">${clase.dia}</div>
-                <div class="class-info flex-1">
-                    <strong>${clase.materia}</strong>
-                    <div>${clase.profesor} • ${clase.aula}</div>
-                </div>
-                <button class="action-btn">
-                    <i class="fas fa-map-marker-alt"></i>
-                </button>
-            </div>
-        `).join('');
-    }
-
-    function actualizarProximasClases() {
-        const container = document.getElementById('proximasClases');
-        const proximas = clases.slice(0, 5); // Primeras 5
-        
-        container.innerHTML = proximas.map((clase, i) => `
-            <div class="class-item proximas-clase">
-                <div class="class-time">${clase.horaInicio}</div>
-                <div class="class-info">
-                    <strong>${clase.materia}</strong>
-                    <div>${clase.profesor} • ${clase.aula}</div>
-                </div>
-                <div class="countdown">${i + 1}</div>
-            </div>
-        `).join('');
-    }
-
-    // =============================================
-    // FUNCIONES DE VISTA
-    // =============================================
-    function cambiarVista(vista) {
-        vistaActual = vista;
-        document.querySelectorAll('[data-vista]').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-        
-        // Renderizar vista específica
-        switch(vista) {
-            case 'semanal':
-                document.getElementById('horarioSemanalContainer').style.display = 'block';
-                break;
-            case 'diaria':
-                alert('Vista diaria próximamente');
-                break;
-            case 'lista':
-                toggleVistaHorario();
-                break;
-        }
-    }
-
-    function toggleVistaHorario() {
-        const grid = document.getElementById('horarioSemanalContainer');
-        const lista = document.getElementById('listaClasesContainer');
-        
-        grid.style.display = 'none';
-        lista.style.display = 'block';
-        renderizarListaClases();
-        document.getElementById('toggleHorario').textContent = 'Horario';
-    }
-
-    function toggleBackToGrid() {
-        document.getElementById('horarioSemanalContainer').style.display = 'block';
-        document.getElementById('listaClasesContainer').style.display = 'none';
-        document.getElementById('toggleHorario').textContent = 'Lista';
-    }
-
-    function imprimirHorario() {
-        window.print();
-    }
-
-    function calcularHoras(inicio, fin) {
-        const [h1] = inicio.split(':').map(Number);
-        const [h2] = fin.split(':').map(Number);
-        return h2 - h1;
-    }
-
-    // =============================================
-    // SIMULACIÓN ACTUALIZACIÓN EN TIEMPO REAL
-    // =============================================
-    setInterval(actualizarProximasClases, 30000); // Cada 30s
+document.addEventListener('DOMContentLoaded', () => {
+  initApp();
 });
+
+// ========================================
+// INIT APP
+// ========================================
+function initApp() {
+  initSidebar();
+  initEventos();
+  renderizarTodo();
+  actualizarProximasClases();
+
+  // Auto refresh
+  setInterval(actualizarProximasClases, 30000);
+}
+
+// ========================================
+// SIDEBAR GLOBAL
+// ========================================
+function initSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('sidebarToggle');
+  const mobileToggle = document.getElementById('mobileMenuToggle');
+  const overlay = document.getElementById('sidebarOverlay');
+
+  // Desktop collapse
+  toggle?.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+  });
+
+  // Mobile open
+  mobileToggle?.addEventListener('click', () => {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+    document.body.classList.add('menu-open');
+  });
+
+  // Mobile close
+  overlay?.addEventListener('click', closeSidebar);
+
+  function closeSidebar() {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+    document.body.classList.remove('menu-open');
+  }
+
+  // Auto close on click outside
+  document.addEventListener('click', (e) => {
+    if (
+      window.innerWidth < 768 &&
+      !sidebar.contains(e.target) &&
+      !mobileToggle.contains(e.target)
+    ) {
+      closeSidebar();
+    }
+  });
+
+  // Active link automático
+  const currentPage = window.location.pathname.split('/').pop();
+  document.querySelectorAll('.nav-link').forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === currentPage) {
+      link.classList.add('active');
+    }
+  });
+}
+
+// ========================================
+// DATA (SIMULADA)
+// ========================================
+const horariosData = [
+  {
+    materia: 'Programación Web',
+    profesor: 'Dr. Juan Pérez',
+    aula: 'A-301',
+    dia: 'Lunes',
+    inicio: 9,
+    fin: 11
+  },
+  {
+    materia: 'Base de Datos II',
+    profesor: 'María Gómez',
+    aula: 'B-205',
+    dia: 'Lunes',
+    inicio: 14,
+    fin: 16
+  },
+  {
+    materia: 'Matemáticas Discretas',
+    profesor: 'Luis Rodríguez',
+    aula: 'C-112',
+    dia: 'Martes',
+    inicio: 8,
+    fin: 10
+  },
+  {
+    materia: 'Inglés Técnico',
+    profesor: 'Ana Martínez',
+    aula: 'D-101',
+    dia: 'Miércoles',
+    inicio: 10,
+    fin: 12
+  },
+  {
+    materia: 'Laboratorio Redes',
+    profesor: 'Carlos López',
+    aula: 'LAB-01',
+    dia: 'Jueves',
+    inicio: 15,
+    fin: 18
+  }
+];
+
+// ========================================
+// EVENTOS
+// ========================================
+function initEventos() {
+  // Cambiar vista
+  document.querySelectorAll('[data-vista]').forEach(btn => {
+    btn.addEventListener('click', () => cambiarVista(btn.dataset.vista));
+  });
+
+  // Toggle lista/grid
+  document.getElementById('toggleHorario')?.addEventListener('click', mostrarLista);
+  document.getElementById('toggleBackToGrid')?.addEventListener('click', mostrarGrid);
+
+  // Imprimir
+  document.getElementById('btnImprimirHorario')?.addEventListener('click', () => window.print());
+
+  // Cambio semestre
+  document.getElementById('semestreSelector')?.addEventListener('change', function () {
+    document.getElementById('horariosTitle').textContent = `Semestre ${this.value}`;
+  });
+}
+
+// ========================================
+// RENDER GENERAL
+// ========================================
+function renderizarTodo() {
+  renderStats();
+  renderHorario();
+}
+
+// ========================================
+// STATS
+// ========================================
+function renderStats() {
+  const total = horariosData.length;
+  const horas = horariosData.reduce((acc, c) => acc + (c.fin - c.inicio), 0);
+
+  document.getElementById('totalClases').textContent = total;
+  document.getElementById('horasSemanales').textContent = horas;
+  document.getElementById('creditosHorario').textContent = 18;
+}
+
+// ========================================
+// TABLA HORARIO
+// ========================================
+function renderHorario() {
+  const container = document.getElementById('horarioSemanal');
+  const dias = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
+
+  let html = `
+    <table class="horario-table">
+      <thead>
+        <tr>
+          <th>Hora</th>
+          ${dias.map(d => `<th>${d}</th>`).join('')}
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  for (let hora = 8; hora <= 20; hora += 2) {
+    html += `<tr><td>${hora}:00 - ${hora + 2}:00</td>`;
+
+    dias.forEach(dia => {
+      const clase = horariosData.find(c => c.dia === dia && c.inicio === hora);
+
+      if (clase) {
+        html += `
+          <td>
+            <div class="horario-clase">
+              <div class="materia">${clase.materia}</div>
+              <div class="profesor">${clase.profesor}</div>
+              <div class="aula">${clase.aula}</div>
+            </div>
+          </td>
+        `;
+      } else {
+        html += `<td class="horario-vacio"></td>`;
+      }
+    });
+
+    html += `</tr>`;
+  }
+
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+
+// ========================================
+// VISTA LISTA
+// ========================================
+function mostrarLista() {
+  document.getElementById('horarioSemanalContainer').style.display = 'none';
+  document.getElementById('listaClasesContainer').style.display = 'block';
+
+  const container = document.getElementById('listaClases');
+
+  container.innerHTML = horariosData.map(c => `
+    <div class="lista-clase">
+      <div class="lista-clase-dia">${c.dia}</div>
+      <div class="lista-clase-info">
+        <div class="lista-clase-titulo">${c.materia}</div>
+        <div class="lista-clase-detalles">
+          <span>${c.profesor}</span>
+          <span>${c.aula}</span>
+          <span>${c.inicio}:00 - ${c.fin}:00</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function mostrarGrid() {
+  document.getElementById('horarioSemanalContainer').style.display = 'block';
+  document.getElementById('listaClasesContainer').style.display = 'none';
+}
+
+// ========================================
+// CAMBIO DE VISTA
+// ========================================
+function cambiarVista(vista) {
+  document.querySelectorAll('[data-vista]').forEach(btn => btn.classList.remove('active'));
+  document.querySelector(`[data-vista="${vista}"]`).classList.add('active');
+
+  if (vista === 'lista') {
+    mostrarLista();
+  } else {
+    mostrarGrid();
+  }
+}
+
+// ========================================
+// PRÓXIMAS CLASES
+// ========================================
+function actualizarProximasClases() {
+  const container = document.getElementById('proximasClases');
+
+  container.innerHTML = horariosData.slice(0, 3).map(c => `
+    <div class="class-item">
+      <div class="class-time">${c.inicio}:00</div>
+      <div class="class-info">
+        <strong>${c.materia}</strong>
+        <div>${c.profesor} • ${c.aula}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ========================================
+// DEBUG
+// ========================================
+console.log('✅ HORARIOS cargado sin errores');
