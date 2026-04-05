@@ -3,180 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portal Universitario - Gestión académica moderna">
-    
-    <title>Portal Universitario | Iniciar Sesión</title>
+    <title>Portal Universitario | Acceso</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="styles/login.css">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Fuente -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-    <!-- Icons -->
+    <!-- Iconos -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 
-<body class="login-body landing">
+<body class="login-body">
 
-<!-- NAVBAR -->
-<nav class="navbar-landing" role="navigation">
-    <div class="nav-container">
-        <div class="logo">
-            <i class="fas fa-graduation-cap"></i>
-            <span>Portal UN</span>
-        </div>
+    <div class="login-container">
+        <div class="login-card">
 
-        <a href="index.html" class="btn-login" aria-label="Ir al login">
-            <i class="fas fa-sign-in-alt"></i>
-            Iniciar Sesión
-        </a>
-    </div>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-    <div class="hero-content">
-        <h1>
-            Bienvenido al <span class="highlight">Portal</span><br>
-            <span class="highlight">Universitario</span>
-        </h1>
-
-        <p>
-            Gestiona tu vida académica desde cualquier lugar.
-            Calificaciones, horarios, solicitudes y mucho más.
-        </p>
-
-        <div class="hero-buttons">
-            <a href="index.html" class="btn-primary btn-large">
-                <i class="fas fa-rocket"></i>
-                Acceder Ahora
-            </a>
-
-            <button class="btn-secondary btn-large" id="demoBtn">
-                <i class="fas fa-play"></i>
-                Ver Demo
-            </button>
-        </div>
-    </div>
-
-    <div class="hero-image">
-        <img 
-            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iI2ZmZiIvPg==" 
-            alt="Vista del dashboard universitario"
-            loading="lazy"
-        >
-    </div>
-</section>
-
-<!-- LOGIN -->
-<main class="login-container" id="login">
-    <div class="login-card">
-
-        <!-- HEADER -->
-        <div class="login-header">
-            <div class="login-icon">
-                <i class="fas fa-university"></i>
-            </div>
-
-            <div>
-                <h2>Acceso al Portal</h2>
-                <p id="login-subtitle">Ingresa tus credenciales</p>
-            </div>
-        </div>
-
-        <!-- FORM -->
-        <form id="loginForm" class="login-form" autocomplete="on">
-
-            <!-- USER -->
-            <div class="input-group">
-                <label for="username" class="sr-only">Usuario</label>
-                <i class="fas fa-user"></i>
-
-                <input 
-                    type="text"
-                    id="username"
-                    name="username"
-                    placeholder="Código estudiantil o usuario"
-                    required
-                >
-
-                <div class="input-glow"></div>
-            </div>
-
-            <!-- PASSWORD -->
-            <div class="input-group">
-                <label for="password" class="sr-only">Contraseña</label>
-                <i class="fas fa-lock"></i>
-
-                <input 
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Contraseña"
-                    required
-                >
-
-                <div class="input-glow"></div>
-            </div>
-
-            <!-- DEMO -->
-            <div class="demo-section">
-                <p><strong>Usuarios Demo:</strong></p>
-
-                <div class="demo-users">
-                    <button type="button" class="demo-user" data-user="2023001">2023001</button>
-                    <button type="button" class="demo-user" data-user="2023002">2023002</button>
-                    <button type="button" class="demo-user" data-user="admin">admin</button>
-                </div>
-            </div>
-
-            <!-- SUBMIT -->
-            <button type="submit" class="btn-primary full-width login-btn">
-                <span class="btn-text">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Iniciar Sesión
-                </span>
-
-                <span class="btn-loading">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    Entrando...
-                </span>
-            </button>
-        </form>
-
-        <!-- FOOTER -->
-        <div class="login-footer">
-            <p>
-                ¿Primer acceso? 
-                <a href="#" id="firstLoginBtn">Solicitar credenciales</a>
-            </p>
-        </div>
-
-    </div>
-</main>
-
-<!-- LOADING -->
-<div id="loadingOverlay" class="loading-overlay" aria-hidden="true">
-    <div class="loading-content">
-        <div class="loading-spinner-pro">
-            <div class="spinner-orbit"></div>
-            <div class="spinner-core">
+            <!-- HEADER -->
+            <div class="login-header">
                 <i class="fas fa-graduation-cap"></i>
+                <h2>Portal Universitario</h2>
+                <p>Acceso autorizado - Bienvenido</p>
             </div>
-        </div>
 
-        <p>Conectando con el sistema...</p>
+            <!-- FORM -->
+            <form id="loginForm">
 
-        <div class="loading-progress">
-            <div class="progress-bar"></div>
+                <!-- INPUT USUARIO -->
+                <div class="input-group">
+                    <input type="text" id="usuario" placeholder="Usuario" required>
+                </div>
+
+                <!-- INPUT PASSWORD -->
+                <div class="input-group">
+                    <input type="password" id="clave" placeholder="Contraseña" required>
+                </div>
+
+                <!-- BOTÓN -->
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-arrow-right"></i>
+                    Entrar al Portal
+                </button>
+
+            </form>
+
+            <!-- FOOTER -->
+            <div class="login-footer">
+                <small><i class="fas fa-shield-alt"></i> Acceso seguro</small>
+            </div>
+
         </div>
     </div>
-</div>
 
-<!-- JS -->
-<script type="module" src="/public/main.js" defer></script>
+    <!-- LOADING -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Redirigiendo al Dashboard...</p>
+    </div>
+
+    <!-- JS -->
+    <script src="JS/login.js"></script>
 
 </body>
 </html>
