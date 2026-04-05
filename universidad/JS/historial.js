@@ -30,7 +30,7 @@ class HistorialAcademico {
           <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
           <li class="nav-item"><a href="materias.html" class="nav-link"><i class="fas fa-book"></i><span>Materias</span></a></li>
           <li class="nav-item"><a href="calificaciones.html" class="nav-link"><i class="fas fa-chart-bar"></i><span>Calificaciones</span></a></li>
-          <li class="nav-item"><a href="horarios.html" class="nav-link"><i class="fas fa-calendar-alt"></i><span>Horarios</span></a></li>
+          <li class="nav-item"><a href="horario.html" class="nav-link"><i class="fas fa-calendar-alt"></i><span>Horarios</span></a></li>
           <li class="nav-item active"><a href="historial.html" class="nav-link active"><i class="fas fa-history"></i><span>Historial</span></a></li>
           <li class="nav-item"><a href="solicitudes.html" class="nav-link"><i class="fas fa-file-invoice"></i><span>Solicitudes</span></a></li>
           <li class="nav-item"><a href="finanzas.html" class="nav-link"><i class="fas fa-dollar-sign"></i><span>Finanzas</span></a></li>
