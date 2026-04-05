@@ -1,142 +1,232 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- META -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Dashboard del Portal Universitario">
+  <meta name="description" content="Gestión de materias - Portal Universitario">
+  <meta name="author" content="Portal Universitario">
 
-  <title>Dashboard | Portal Universitario</title>
+  <title>Mis Materias | Portal Universitario</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="styles/dashboard.css">
+  <link rel="stylesheet" href="styles/materias.css">
 
-  <!-- Icons -->
+  <!-- FUENTES -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- ICONOS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
+  <!-- =========================
+       APP WRAPPER
+  ========================== -->
+  <div class="app-wrapper">
 
-  <!-- SIDEBAR -->
-  <div id="sidebar"></div>
-
-  <!-- MAIN -->
-  <main class="main-content">
-
-    <!-- HEADER -->
-    <div id="header"></div>
-
-    <section class="page-content">
-
-      <!-- WELCOME -->
-      <section class="welcome-section" aria-label="Bienvenida del usuario">
-        <div class="welcome-content">
-
-          <div class="welcome-greeting">
-            <h1>¡Bienvenido de vuelta!</h1>
-            <p id="welcomeUser">Cargando...</p>
-          </div>
-
-          <div class="welcome-stats">
-            <div class="stat-quick">
-              <span id="quickPromedio">--</span>
-              <small>Promedio actual</small>
-            </div>
-
-            <div class="stat-quick">
-              <span id="quickCreditos">--</span>
-              <small>Créditos semestre</small>
-            </div>
-          </div>
-
+    <!-- =========================
+         SIDEBAR - MISMO QUE DASHBOARD
+    ========================== -->
+    <aside id="sidebar" class="sidebar" aria-label="Menú de navegación principal">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <span>UNI-PORTAL</span>
         </div>
-      </section>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Colapsar menú">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
 
-      <!-- STATS -->
-      <section 
-        id="statsContainer" 
-        class="dashboard-stats-grid"
-        aria-label="Estadísticas del estudiante"
-      >
-        <!-- JS INYECTA -->
-      </section>
-
-      <!-- GRID -->
-      <section class="dashboard-grid">
-
-        <!-- CLASES -->
-        <article class="card full-height">
-          <header class="card-header">
-            <h3><i class="fas fa-clock"></i> Próximas Clases</h3>
-            <a href="materias.html" class="view-more">Ver todas →</a>
-          </header>
-
-          <div id="classesContainer" class="classes-list">
-            <p class="empty-state">No hay clases cargadas</p>
-          </div>
-        </article>
-
-        <!-- NOTIFICACIONES -->
-        <article class="card full-height">
-          <header class="card-header">
-            <h3><i class="fas fa-bell"></i> Notificaciones</h3>
-            <span id="notifCount" class="notif-badge">0</span>
-          </header>
-
-          <ul id="notificationsContainer" class="notifications-list">
-            <li class="empty-state">Sin notificaciones</li>
-          </ul>
-        </article>
-
-        <!-- RENDIMIENTO -->
-        <article class="card">
-          <header class="card-header">
-            <h3><i class="fas fa-chart-line"></i> Rendimiento Reciente</h3>
-          </header>
-
-          <div id="performanceChart" class="chart-container-small">
-            <p class="empty-state">Cargando gráfico...</p>
-          </div>
-        </article>
-
-        <!-- ACCIONES -->
-        <article class="card">
-          <header class="card-header">
-            <h3><i class="fas fa-bolt"></i> Acciones Rápidas</h3>
-          </header>
-
-          <div class="quick-actions-grid">
-
-            <a href="calificaciones.html" class="quick-action">
+      <nav class="sidebar-nav" role="navigation" aria-label="Navegación principal">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="dashboard.html" class="nav-link" data-page="dashboard">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="materias.html" class="nav-link active" data-page="materias">
+              <i class="fas fa-book"></i>
+              <span>Materias</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="calificaciones.html" class="nav-link" data-page="calificaciones">
               <i class="fas fa-chart-bar"></i>
               <span>Calificaciones</span>
             </a>
-
-            <a href="materias.html" class="quick-action">
-              <i class="fas fa-book-open"></i>
-              <span>Materias</span>
+          </li>
+          <li class="nav-item">
+            <a href="horarios.html" class="nav-link" data-page="horarios">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Horarios</span>
             </a>
-
-            <a href="historial.html" class="quick-action">
+          </li>
+          <li class="nav-item">
+            <a href="historial.html" class="nav-link" data-page="historial">
               <i class="fas fa-history"></i>
               <span>Historial</span>
             </a>
-
-            <a href="solicitudes.html" class="quick-action">
+          </li>
+          <li class="nav-item">
+            <a href="solicitudes.html" class="nav-link" data-page="solicitudes">
               <i class="fas fa-file-invoice"></i>
               <span>Solicitudes</span>
             </a>
+          </li>
+          <li class="nav-item">
+            <a href="finanzas.html" class="nav-link" data-page="finanzas">
+              <i class="fas fa-dollar-sign"></i>
+              <span>Finanzas</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
 
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <img src="https://via.placeholder.com/40" alt="Foto de perfil" class="user-avatar">
+          <div>
+            <div class="user-name">Juan Pérez</div>
+            <div class="user-role">Estudiante - 2024001</div>
           </div>
-        </article>
+        </div>
+        <a href="#" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Cerrar Sesión</span>
+        </a>
+      </div>
+    </aside>
 
-      </section>
+    <!-- =========================
+         OVERLAY MÓVIL
+    ========================== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    </section>
+    <!-- =========================
+         CONTENIDO PRINCIPAL
+    ========================== -->
+    <div class="main-container">
+      <!-- HEADER CONSISTENTE -->
+      <header class="main-header" id="header" aria-label="Encabezado del sistema">
+        <div class="header-left">
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="page-title">
+            <i class="fas fa-book-open"></i>
+            Mis Materias
+          </h1>
+        </div>
 
-  </main>
+        <div class="header-right">
+          <div class="header-actions">
+            <button class="header-btn" aria-label="Notificaciones">
+              <i class="fas fa-bell"></i>
+              <span class="badge">3</span>
+            </button>
+            <button class="header-btn" id="btnNuevaMateria" aria-label="Matricular nueva materia">
+              <i class="fas fa-plus"></i>
+              <span>Matricular</span>
+            </button>
+          </div>
+        </div>
+      </header>
 
-  <!-- JS -->
-  <script type="module" src="JS/dashoard.js" defer></script>
+      <!-- CONTENIDO PRINCIPAL -->
+      <main class="main-content" role="main">
+        <section class="page-content" aria-labelledby="materiasTitle">
+          
+          <!-- ESTADÍSTICAS RÁPIDAS -->
+          <section class="dashboard-stats-grid" aria-label="Estadísticas de materias" role="group">
+            <article class="stat-card" role="img" aria-label="Materias aprobadas">
+              <div class="stat-quick">
+                <span id="materiasAprobadas">3</span>
+                <small><i class="fas fa-check-circle"></i> Aprobadas</small>
+              </div>
+            </article>
+            <article class="stat-card" role="img" aria-label="Materias en curso">
+              <div class="stat-quick">
+                <span id="materiasCurso" style="color: var(--warning)">4</span>
+                <small><i class="fas fa-clock"></i> En curso</small>
+              </div>
+            </article>
+            <article class="stat-card" role="img" aria-label="Créditos totales">
+              <div class="stat-quick">
+                <span id="creditosTotal" style="color: var(--success)">18</span>
+                <small><i class="fas fa-coins"></i> Créditos</small>
+              </div>
+            </article>
+          </section>
 
+          <!-- FILTROS -->
+          <div class="filters-section card" aria-label="Filtros de búsqueda">
+            <div class="filters-grid">
+              <div class="filter-group">
+                <label for="filtroEstadoMateria">Filtrar por estado</label>
+                <select id="filtroEstadoMateria" class="filter-input">
+                  <option value="">Todas las materias</option>
+                  <option value="activa">En curso</option>
+                  <option value="finalizada">Finalizadas</option>
+                  <option value="reprobada">Reprobadas</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="buscarMateria">Buscar materia</label>
+                <input type="text" id="buscarMateria" class="filter-input" 
+                       placeholder="Ej: Programación, Matemáticas..." autocomplete="off">
+              </div>
+            </div>
+          </div>
+
+          <!-- TABLA PRINCIPAL -->
+          <section class="materias-table-section card" aria-labelledby="materiasTableTitle">
+            <header class="card-header">
+              <h2 id="materiasTableTitle">
+                <i class="fas fa-list"></i>
+                Listado de Materias
+              </h2>
+              <span id="materiasActivas" class="notif-badge">7 activas</span>
+            </header>
+            
+            <div class="classes-list">
+              <table role="table" aria-label="Tabla de materias inscritas">
+                <thead>
+                  <tr>
+                    <th scope="col">Materia</th>
+                    <th scope="col">Docente</th>
+                    <th scope="col">Aula</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col" class="actions-header">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="tabla-materias">
+                  <!-- Contenido dinámico con JS -->
+                </tbody>
+              </table>
+              
+              <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-icon">
+                  <i class="fas fa-book-open"></i>
+                </div>
+                <h3>No hay materias</h3>
+                <p>Matricúlate en tus primeras materias para comenzar tu semestre</p>
+                <button class="header-btn" id="btnMatricularEmpty">
+                  <i class="fas fa-plus"></i> Matricular ahora
+                </button>
+              </div>
+            </div>
+          </section>
+
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="./JS/materia.js" defer></script>
 </body>
 </html>

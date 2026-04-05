@@ -4,119 +4,290 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calificaciones | Portal Universitario</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles/dashboard.css">
   <link rel="stylesheet" href="styles/calificaciones.css">
+
+  <!-- FUENTES -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- ICONOS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <!-- Chart.js para gráficos -->
+
+  <!-- CHART -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
-  <div id="sidebar"></div>
+  <!-- =========================
+       APP WRAPPER (IGUAL QUE DASHBOARD)
+  ========================== -->
+  <div class="app-wrapper">
 
-  <main class="main-content">
-    <div id="header"></div>
+    <!-- SIDEBAR (IGUAL QUE DASHBOARD) -->
+    <aside id="sidebar" class="sidebar" aria-label="Menú de navegación principal">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <span>UNI-PORTAL</span>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Colapsar menú">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
 
-    <div class="page-content">
+      <nav class="sidebar-nav" role="navigation" aria-label="Navegación principal">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="dashboard.html" class="nav-link" data-page="dashboard">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="materias.html" class="nav-link" data-page="materias">
+              <i class="fas fa-book"></i>
+              <span>Materias</span>
+            </a>
+          </li>
+          <li class="nav-item active">
+            <a href="calificaciones.html" class="nav-link active" data-page="calificaciones">
+              <i class="fas fa-chart-bar"></i>
+              <span>Calificaciones</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="horario.html" class="nav-link" data-page="horarios">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Horarios</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="historial.html" class="nav-link" data-page="historial">
+              <i class="fas fa-history"></i>
+              <span>Historial</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="solicitudes.html" class="nav-link" data-page="solicitudes">
+              <i class="fas fa-file-invoice"></i>
+              <span>Solicitudes</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="finanzas.html" class="nav-link" data-page="finanzas">
+              <i class="fas fa-dollar-sign"></i>
+              <span>Finanzas</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <img src="https://via.placeholder.com/40" alt="Foto de perfil" class="user-avatar">
+          <div>
+            <div class="user-name">Juan Pérez</div>
+            <div class="user-role">Estudiante - 2024001</div>
+          </div>
+        </div>
+        <a href="#" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Cerrar Sesión</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- OVERLAY MÓVIL -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- =========================
+         MAIN CONTAINER
+    ========================== -->
+    <div class="main-container">
       
       <!-- HEADER -->
-      <div class="page-header">
-        <div class="header-content">
-          <div class="header-icon">
-            <i class="fas fa-chart-line"></i>
-          </div>
-          <div>
-            <h1>Calificaciones</h1>
-            <p>Tus calificaciones por periodo académico</p>
-          </div>
-        </div>
-        
-        <div class="header-actions">
-          <button class="btn btn-secondary" onclick="exportarCalificaciones()">
-            <i class="fas fa-download"></i> Exportar PDF
+      <header class="main-header" id="header" aria-label="Encabezado del sistema">
+        <div class="header-left">
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+            <i class="fas fa-bars"></i>
           </button>
-          <button class="btn btn-secondary" onclick="imprimirCalificaciones()">
-            <i class="fas fa-print"></i> Imprimir
-          </button>
-        </div>
-      </div>
-
-      <!-- ESTADÍSTICAS -->
-      <div class="stats-grid" id="statsContainer"></div>
-
-      <!-- FILTROS -->
-      <div class="filters-card">
-        <div class="filters-row">
-          <div class="filter-group">
-            <label><i class="fas fa-calendar-alt"></i> Periodo:</label>
-            <select id="filtroPeriodo" onchange="filtrarCalificaciones()">
-              <option value="">Todos los periodos</option>
-            </select>
-          </div>
-          
-          <div class="filter-group">
-            <label><i class="fas fa-filter"></i> Estado:</label>
-            <select id="filtroEstado" onchange="filtrarCalificaciones()">
-              <option value="">Todos</option>
-              <option value="Aprobada">Aprobada</option>
-              <option value="Reprobada">Reprobada</option>
-              <option value="En curso">En curso</option>
-            </select>
-          </div>
-          
-          <div class="filter-group">
-            <label><i class="fas fa-search"></i></label>
-            <input type="text" id="buscarMateria" placeholder="Buscar materia..." onkeyup="filtrarCalificaciones()">
-          </div>
-          
-          <button class="btn btn-primary" id="limpiarFiltros" onclick="limpiarFiltrosCalificaciones()">
-            <i class="fas fa-times"></i> Limpiar
-          </button>
-        </div>
-      </div>
-
-      <!-- TABLA -->
-      <div class="table-container">
-        <div class="table-header">
-          <h2><i class="fas fa-table"></i> Detalle de Calificaciones</h2>
-          <div class="table-actions">
-            <span id="totalMaterias" class="stat-small"></span>
-            <span id="promedioActual" class="stat-small"></span>
+          <div class="breadcrumb">
+            <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Calificaciones</span>
           </div>
         </div>
 
-        <div class="table-responsive">
-          <table class="calificaciones-table">
-            <thead>
-              <tr>
-                <th data-sort="materia">Materia</th>
-                <th data-sort="nota1">Nota 1</th>
-                <th data-sort="nota2">Nota 2</th>
-                <th data-sort="parcial">Parcial</th>
-                <th data-sort="final">Final</th>
-                <th data-sort="promedio">Promedio</th>
-                <th data-sort="estado">Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-calificaciones"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- GRÁFICO -->
-      <div class="chart-container">
-        <div class="card">
-          <div class="card-header">
-            <h3><i class="fas fa-chart-pie"></i> Resumen Gráfico</h3>
-          </div>
-          <div class="chart-wrapper">
-            <canvas id="chartCanvas"></canvas>
+        <div class="header-right">
+          <div class="header-actions">
+            <button class="header-btn" aria-label="Notificaciones">
+              <i class="fas fa-bell"></i>
+              <span class="badge">2</span>
+            </button>
+            <button class="header-btn" aria-label="Configuración">
+              <i class="fas fa-cog"></i>
+            </button>
           </div>
         </div>
-      </div>
+      </header>
 
+      <!-- MAIN CONTENT -->
+      <main class="main-content" role="main">
+        <div class="page-content">
+
+          <!-- PAGE HEADER -->
+          <div class="page-header">
+            <div class="header-content">
+              <div class="header-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div>
+                <h1>Calificaciones Académicas</h1>
+                <p>Tus calificaciones organizadas por periodo académico</p>
+              </div>
+            </div>
+
+            <div class="header-actions">
+              <button class="btn btn-secondary" onclick="exportarCalificaciones()">
+                <i class="fas fa-download"></i> Exportar PDF
+              </button>
+              <button class="btn btn-secondary" onclick="imprimirCalificaciones()">
+                <i class="fas fa-print"></i> Imprimir
+              </button>
+            </div>
+          </div>
+
+          <!-- STATS RÁPIDOS -->
+          <div class="stats-grid" id="statsContainer">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-star"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value" id="promedioGeneral">4.25</div>
+                <div class="stat-label">Promedio General</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value" id="materiasAprobadas">14</div>
+                <div class="stat-label">Materias Aprobadas</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value text-danger" id="materiasReprobadas">2</div>
+                <div class="stat-label">Materias Reprobadas</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value" id="creditosAprobados">128</div>
+                <div class="stat-label">Créditos Aprobados</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FILTROS -->
+          <div class="filters-card">
+            <div class="filters-row">
+              <div class="filter-group">
+                <label><i class="fas fa-calendar"></i> Periodo:</label>
+                <select id="filtroPeriodo">
+                  <option value="">Todos los periodos</option>
+                  <option value="2024-1">2024-I</option>
+                  <option value="2024-2" selected>2024-II</option>
+                  <option value="2023-2">2023-II</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label><i class="fas fa-filter"></i> Estado:</label>
+                <select id="filtroEstado">
+                  <option value="">Todos</option>
+                  <option value="Aprobada">Aprobada</option>
+                  <option value="Reprobada">Reprobada</option>
+                  <option value="En curso">En curso</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label><i class="fas fa-search"></i></label>
+                <input type="text" id="buscarMateria" placeholder="Buscar materia o código...">
+              </div>
+
+              <div class="filter-group">
+                <button class="btn btn-primary" id="aplicarFiltros">
+                  <i class="fas fa-search"></i> Filtrar
+                </button>
+                <button class="btn btn-outline" id="limpiarFiltros">
+                  Limpiar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TABLA DE CALIFICACIONES -->
+          <div class="table-container">
+            <div class="table-header">
+              <h3><i class="fas fa-table"></i> Detalle de Calificaciones</h3>
+              <div class="table-actions">
+                <span id="totalRegistros">15 registros</span>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="calificaciones-table">
+                <thead>
+                  <tr>
+                    <th><i class="fas fa-book"></i> Materia</th>
+                    <th>Nota 1</th>
+                    <th>Nota 2</th>
+                    <th>Parcial</th>
+                    <th>Final</th>
+                    <th>Promedio</th>
+                    <th>Estado</th>
+                    <th><i class="fas fa-cog"></i></th>
+                  </tr>
+                </thead>
+                <tbody id="tabla-calificaciones">
+                  <!-- Datos cargados por JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- GRÁFICO -->
+          <div class="chart-section">
+            <div class="chart-header">
+              <h3><i class="fas fa-chart-bar"></i> Evolución de Calificaciones</h3>
+              <select id="chartPeriodo">
+                <option value="todos">Todos los periodos</option>
+                <option value="2024-2">2024-II</option>
+                <option value="2024-1">2024-I</option>
+              </select>
+            </div>
+            <div class="chart-container">
+              <canvas id="chartCanvas"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </main>
     </div>
-  </main>
+  </div>
 
-  <script type="module" src="JS/calificaciones.js></script>
+  <!-- SCRIPTS -->
+  <script src="JS/calificaciones.js"></script>
 </body>
 </html>

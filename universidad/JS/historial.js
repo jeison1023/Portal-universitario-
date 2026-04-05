@@ -1,275 +1,257 @@
-// DATOS SIMULADOS DE HISTORIAL ACADÉMICO
-const historialData = [
-  {
-    id: 1,
-    periodo: "2024-I",
-    estado: "completado",
-    promedio: 17.2,
-    creditosAprobados: 24,
-    materiasTotal: 6,
-    materias: [
-      {
-        nombre: "Matemáticas Avanzadas",
-        codigo: "MAT-401",
-        profesor: "Dr. Miguel López",
-        nota: 18.5,
-        creditos: 4,
-        estado: "aprobada"
-      },
-      {
-        nombre: "Programación Web",
-        codigo: "PROG-305",
-        profesor: "Msc. Laura Pérez",
-        nota: 19.2,
-        creditos: 4,
-        estado: "aprobada"
-      },
-      {
-        nombre: "Física Cuántica",
-        codigo: "FIS-402",
-        profesor: "Dr. Carlos Ruiz",
-        nota: 12.8,
-        creditos: 4,
-        estado: "reprobada"
-      },
-      {
-        nombre: "Base de Datos",
-        codigo: "BD-301",
-        profesor: "Ing. Ana Gómez",
-        nota: 17.8,
-        creditos: 4,
-        estado: "aprobada"
-      },
-      {
-        nombre: "Redes de Computadoras",
-        codigo: "RED-302",
-        profesor: "Msc. Juan Martínez",
-        nota: 16.5,
-        creditos: 4,
-        estado: "aprobada"
-      },
-      {
-        nombre: "Estadística Aplicada",
-        codigo: "EST-201",
-        profesor: "Dr. María Vargas",
-        nota: 18.0,
-        creditos: 4,
-        estado: "aprobada"
-      }
-    ]
-  },
-  {
-    id: 2,
-    periodo: "2023-II",
-    estado: "completado",
-    promedio: 16.8,
-    creditosAprobados: 20,
-    materiasTotal: 5,
-    materias: [
-      {
-        nombre: "Algoritmos Avanzados",
-        codigo: "ALGO-401",
-        profesor: "Dr. Roberto Silva",
-        nota: 17.5,
-        creditos: 4,
-        estado: "aprobada"
-      }
-    ]
-  },
-  {
-    id: 3,
-    periodo: "2024-II",
-    estado: "curso",
-    promedio: 16.5,
-    creditosAprobados: 12,
-    materiasTotal: 4,
-    materias: [
-      {
-        nombre: "Inteligencia Artificial",
-        codigo: "IA-501",
-        profesor: "Msc. Elena Torres",
-        nota: null,
-        creditos: 4,
-        estado: "curso"
-      },
-      {
-        nombre: "Machine Learning",
-        codigo: "ML-502",
-        profesor: "Dr. David Morales",
-        nota: null,
-        creditos: 4,
-        estado: "curso"
-      }
-    ]
+// JS/historial.js
+class HistorialAcademico {
+  constructor() {
+    this.datosHistorial = [];
+    this.datosFiltrados = [];
+    this.init();
   }
-];
 
-let historialFiltrado = [...historialData];
-let sortDirection = 'desc';
+  init() {
+    this.cargarSidebar();
+    this.cargarHeader();
+    this.cargarDatos();
+    this.initEventListeners();
+    this.initSidebarToggle();
+  }
 
-// INICIALIZACIÓN ESPECÍFICA PARA HISTORIAL
-function inicializarHistorial() {
-  cargarSidebar();
-  cargarHeader();
-  
-  // Esperar un momento para simular carga
-  setTimeout(() => {
-    poblarFiltros();
-    calcularEstadisticasGlobales();
-    renderizarHistorial();
-    inicializarEventos();
-  }, 800);
-}
-
-// CALCULAR ESTADÍSTICAS GLOBALES
-function calcularEstadisticasGlobales() {
-  const todasMaterias = historialData.flatMap(periodo => periodo.materias);
-  const aprobadas = todasMaterias.filter(m => m.estado === 'aprobada').length;
-  const reprobadas = todasMaterias.filter(m => m.estado === 'reprobada').length;
-  const creditosAprobados = todasMaterias
-    .filter(m => m.estado === 'aprobada')
-    .reduce((sum, m) => sum + m.creditos, 0);
-  
-  const promedioGeneral = todasMaterias
-    .filter(m => m.nota !== null)
-    .reduce((sum, m) => sum + m.nota, 0) / todasMaterias.filter(m => m.nota !== null).length || 0;
-
-  document.getElementById('promedioGeneral').textContent = promedioGeneral.toFixed(1);
-  document.getElementById('creditosAprobados').textContent = creditosAprobados;
-  document.getElementById('materiasAprobadas').textContent = aprobadas;
-  document.getElementById('materiasReprobadas').textContent = reprobadas;
-}
-
-// POBLAR FILTROS
-function poblarFiltros() {
-  const periodos = [...new Set(historialData.map(p => p.periodo))];
-  const selectPeriodo = document.getElementById('filtroPeriodo');
-  
-  selectPeriodo.innerHTML = '<option value="">Todos</option>';
-  periodos.forEach(periodo => {
-    const option = document.createElement('option');
-    option.value = periodo;
-    option.textContent = periodo;
-    selectPeriodo.appendChild(option);
-  });
-}
-
-// RENDERIZAR HISTORIAL
-function renderizarHistorial() {
-  const container = document.getElementById('historialContainer');
-  const filtrado = aplicarFiltros();
-  
-  if (filtrado.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <i class="fas fa-search"></i>
-        <h3>No se encontraron periodos</h3>
-        <p>Intenta ajustar los filtros de búsqueda</p>
+  cargarSidebar() {
+    document.getElementById('sidebar').innerHTML = `
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <span>UNI-PORTAL</span>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+          <li class="nav-item"><a href="materias.html" class="nav-link"><i class="fas fa-book"></i><span>Materias</span></a></li>
+          <li class="nav-item"><a href="calificaciones.html" class="nav-link"><i class="fas fa-chart-bar"></i><span>Calificaciones</span></a></li>
+          <li class="nav-item"><a href="horarios.html" class="nav-link"><i class="fas fa-calendar-alt"></i><span>Horarios</span></a></li>
+          <li class="nav-item active"><a href="historial.html" class="nav-link active"><i class="fas fa-history"></i><span>Historial</span></a></li>
+          <li class="nav-item"><a href="solicitudes.html" class="nav-link"><i class="fas fa-file-invoice"></i><span>Solicitudes</span></a></li>
+          <li class="nav-item"><a href="finanzas.html" class="nav-link"><i class="fas fa-dollar-sign"></i><span>Finanzas</span></a></li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <img src="https://via.placeholder.com/40" alt="Foto de perfil" class="user-avatar">
+          <div>
+            <div class="user-name">Juan Pérez</div>
+            <div class="user-role">Estudiante - 2024001</div>
+          </div>
+        </div>
+        <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i><span>Cerrar Sesión</span></a>
       </div>
     `;
-    return;
   }
-  
-  container.innerHTML = filtrado.map(periodo => `
-    <div class="historial-periodo">
-      <div class="periodo-header">
-        <div class="periodo-titulo">
-          <span class="periodo-badge">${periodo.periodo}</span>
-          <div class="periodo-estado estado-${periodo.estado}">
-            <i class="fas fa-circle"></i>
-            ${periodo.estado === 'completado' ? 'Completado' : 
-              periodo.estado === 'curso' ? 'En curso' : 'Pendiente'}
-          </div>
-        </div>
-        
-        <div class="periodo-stats">
-          <div class="periodo-stat">
-            <div class="periodo-stat-value">${periodo.promedio?.toFixed(1) || '-'}</div>
-            <div class="periodo-stat-label">Promedio</div>
-          </div>
-          <div class="periodo-stat">
-            <div class="periodo-stat-value">${periodo.creditosAprobados}</div>
-            <div class="periodo-stat-label">Créditos</div>
-          </div>
-          <div class="periodo-stat">
-            <div class="periodo-stat-value">${periodo.materias.length}</div>
-            <div class="periodo-stat-label">Materias</div>
-          </div>
+
+  cargarHeader() {
+    document.getElementById('header').innerHTML = `
+      <div class="header-left">
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="breadcrumb">
+          <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Historial Académico</span>
         </div>
       </div>
+      <div class="header-right">
+        <div class="header-actions">
+          <button class="header-btn" aria-label="Notificaciones">
+            <i class="fas fa-bell"></i>
+            <span class="badge">2</span>
+          </button>
+          <button class="header-btn" aria-label="Configuración">
+            <i class="fas fa-cog"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  cargarDatos() {
+    // Simular carga de datos
+    setTimeout(() => {
+      this.datosHistorial = [
+        {
+          periodo: '2024-II',
+          promedio: 4.35,
+          creditos: 20,
+          materiasAprobadas: 5,
+          materiasReprobadas: 0,
+          materias: [
+            {codigo: 'PROG-401', nombre: 'Programación IV', profesor: 'Dr. Carlos López', creditos: 4, promedio: 4.85, estado: 'En curso'},
+            {codigo: 'FIS-202', nombre: 'Física II', profesor: 'Ing. María Gómez', creditos: 4, promedio: 4.0, estado: 'Aprobada'}
+          ]
+        },
+        {
+          periodo: '2024-I',
+          promedio: 3.85,
+          creditos: 18,
+          materiasAprobadas: 4,
+          materiasReprobadas: 1,
+          materias: [
+            {codigo: 'CAL-201', nombre: 'Cálculo II', profesor: 'Dr. Ana Torres', creditos: 4, promedio: 2.7, estado: 'Reprobada'},
+            {codigo: 'MAT-301', nombre: 'Matemáticas III', profesor: 'Ing. Luis Ramírez', creditos: 4, promedio: 4.6, estado: 'Aprobada'}
+          ]
+        }
+      ];
       
-      <div class="materias-lista">
-        ${periodo.materias.map(materia => `
-          <div class="materia-item">
-            <div class="materia-info">
-              <div class="materia-icon" style="background: linear-gradient(135deg, ${materia.estado === 'aprobada' ? '#10b981' : materia.estado === 'reprobada' ? '#ef4444' : '#f59e0b'}20, ${materia.estado === 'aprobada' ? '#059669' : materia.estado === 'reprobada' ? '#dc2626' : '#d97706'}10); color: ${materia.estado === 'aprobada' ? '#10b981' : materia.estado === 'reprobada' ? '#ef4444' : '#f59e0b'};">
-                <i class="fas fa-book"></i>
-              </div>
-              <div class="materia-detalle">
-                <h4>${materia.nombre}</h4>
-                <p><strong>${materia.codigo}</strong> | ${materia.profesor}</p>
-              </div>
+      this.datosFiltrados = [...this.datosHistorial];
+      this.actualizarEstadisticas();
+      this.renderizarHistorial();
+      document.getElementById('historialContainer').classList.remove('loading');
+    }, 1500);
+  }
+
+  actualizarEstadisticas() {
+    const totalMaterias = this.datosFiltrados.reduce((sum, p) => sum + p.materias.length, 0);
+    const totalAprobadas = this.datosFiltrados.reduce((sum, p) => sum + p.materiasAprobadas, 0);
+    const totalReprobadas = this.datosFiltrados.reduce((sum, p) => sum + p.materiasReprobadas, 0);
+    const totalCreditos = this.datosFiltrados.reduce((sum, p) => sum + p.creditos, 0);
+    const promedioGeneral = this.datosFiltrados.reduce((sum, p) => sum + (p.promedio * p.creditos), 0) / totalCreditos || 0;
+
+    document.getElementById('promedioGeneral').textContent = promedioGeneral.toFixed(2);
+    document.getElementById('creditosAprobados').textContent = totalCreditos;
+    document.getElementById('materiasAprobadas').textContent = totalAprobadas;
+    document.getElementById('materiasReprobadas').textContent = totalReprobadas;
+    document.getElementById('totalPeriodos').textContent = `${this.datosFiltrados.length} periodos`;
+  }
+
+  renderizarHistorial() {
+    const container = document.getElementById('historialContainer');
+    container.innerHTML = this.datosFiltrados.map(periodo => `
+      <div class="periodo-card">
+        <div class="periodo-header">
+          <div class="periodo-titulo">${periodo.periodo}</div>
+          <div class="periodo-stats">
+            <div class="stat-periodo">
+              <span class="value">${periodo.promedio.toFixed(2)}</span>
+              <span>Promedio</span>
             </div>
-            <div class="materia-calificacion ${materia.estado === 'aprobada' ? 'calif-aprobada' : materia.estado === 'reprobada' ? 'calif-reprobada' : 'calif-curso'}">
-              ${materia.nota !== null ? materia.nota.toFixed(1) : '-'}
+            <div class="stat-periodo">
+              <span class="value">${periodo.materiasAprobadas}</span>
+              <span>Aprob.</span>
             </div>
-            <div class="materia-creditos">${materia.creditos} cr.</div>
+            <div class="stat-periodo">
+              <span class="value">${periodo.materiasReprobadas}</span>
+              <span>Repr.</span>
+            </div>
           </div>
-        `).join('')}
+        </div>
+        <div class="materias-grid">
+          ${periodo.materias.map(materia => `
+            <div class="materia-item">
+              <div class="materia-header">
+                <div>
+                  <div class="materia-nombre">${materia.nombre}</div>
+                  <div class="materia-codigo">${materia.codigo}</div>
+                </div>
+                <div class="materia-promedio promedio-${materia.estado.toLowerCase().replace(/ /g,'-')}">
+                  ${materia.promedio.toFixed(2)}
+                </div>
+              </div>
+              <div class="materia-info">
+                <div class="info-item">
+                  <span class="info-label">Profesor</span>
+                  <span class="info-value">${materia.profesor}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Créditos</span>
+                  <span class="info-value">${materia.creditos}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Estado</span>
+                  <span class="info-value">${materia.estado}</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  }
+
+  initEventListeners() {
+    // Filtros
+    document.getElementById('btnAplicarFiltros').addEventListener('click', () => this.aplicarFiltros());
+    document.getElementById('btnLimpiarHistorial').addEventListener('click', () => this.limpiarFiltros());
+    document.getElementById('buscarMateria').addEventListener('input', (e) => this.buscarMateria(e.target.value));
+    
+    // Acciones
+    document.getElementById('btnExportarHistorial').addEventListener('click', () => {
+      window.print();
+      console.log('Exportando PDF...');
+    });
+    
+    document.getElementById('btnImprimirHistorial').addEventListener('click', () => window.print());
+  }
+
+  aplicarFiltros() {
+    const periodo = document.getElementById('filtroPeriodo').value;
+    const estado = document.getElementById('filtroEstado').value;
+    
+    this.datosFiltrados = this.datosHistorial.filter(periodoData => {
+      const periodoMatch = !periodo || periodoData.periodo.includes(periodo);
+      const estadoMatch = !estado || periodoData.materias.some(m => m.estado === estado);
+      return periodoMatch && estadoMatch;
+    });
+    
+    this.actualizarEstadisticas();
+    this.renderizarHistorial();
+  }
+
+  limpiarFiltros() {
+    document.getElementById('filtroPeriodo').value = '';
+    document.getElementById('filtroEstado').value = '';
+    document.getElementById('buscarMateria').value = '';
+    this.datosFiltrados = [...this.datosHistorial];
+    this.actualizarEstadisticas();
+    this.renderizarHistorial();
+  }
+
+  buscarMateria(termino) {
+    if (!termino) {
+      this.datosFiltrados = [...this.datosHistorial];
+    } else {
+      this.datosFiltrados = this.datosHistorial
+        .map(periodo => ({
+          ...periodo,
+          materias: periodo.materias.filter(materia => 
+            materia.nombre.toLowerCase().includes(termino.toLowerCase()) ||
+            materia.codigo.toLowerCase().includes(termino.toLowerCase())
+          )
+        }))
+        .filter(periodo => periodo.materias.length > 0);
+    }
+    this.actualizarEstadisticas();
+    this.renderizarHistorial();
+  }
+
+  initSidebarToggle() {
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('collapsed');
+      overlay.classList.toggle('active');
+    }
+
+    sidebarToggle?.addEventListener('click', toggleSidebar);
+    mobileToggle?.addEventListener('click', toggleSidebar);
+    overlay?.addEventListener('click', toggleSidebar);
+  }
 }
 
-// APLICAR FILTROS
-function aplicarFiltros() {
-  let filtrado = [...historialData];
-
-  // Filtro por periodo
-  const periodo = document.getElementById('filtroPeriodo').value;
-  if (periodo) {
-    filtrado = filtrado.filter(p => p.periodo === periodo);
-  }
-
-  // Filtro por estado de materias (aplicado a periodos que contengan materias con ese estado)
-  const estado = document.getElementById('filtroEstado').value;
-  if (estado) {
-    filtrado = filtrado.filter(periodo => 
-      periodo.materias.some(m => 
-        (estado === 'Aprobada' && m.estado === 'aprobada') ||
-        (estado === 'Reprobada' && m.estado === 'reprobada') ||
-        (estado === 'En curso' && m.estado === 'curso')
-      )
-    );
-  }
-
-  // Filtro de búsqueda
-  const busqueda = document.getElementById('buscarMateria').value.toLowerCase();
-  if (busqueda) {
-    filtrado = filtrado.filter(periodo => 
-      periodo.materias.some(materia => 
-        materia.nombre.toLowerCase().includes(busqueda) ||
-        materia.codigo.toLowerCase().includes(busqueda)
-      )
-    );
-  }
-
-  // Ordenar por periodo (más reciente primero)
-  filtrado.sort((a, b) => {
-    const dateA = new Date(a.periodo.split('-')[0], a.periodo.split('-')[1] === 'I' ? 0 : 6);
-    const dateB = new Date(b.periodo.split('-')[0], b.periodo.split('-')[1] === 'I' ? 0 : 6);
-    return sortDirection === 'desc' ? dateB - dateA : dateA - dateB;
-  });
-
-  return filtrado;
-}
-
-// EVENTOS
-function inicializarEventos() {
-  // Filtros
-  document.getElementById('filtroPeriodo').addEventListener('change', filtrarHistorial);
-  document.getElementById('filtroEstado').addEventListener('change', filtrarHistorial);
-  document.getElementById('buscarMateria').addEventListener('input', filtrarHistorial);
-  
-  // Botones
-  document.getElementById('btnLimpiarHistorial')}
+// Inicializar aplicación
+document.addEventListener('DOMContentLoaded', () => {
+  new HistorialAcademico();
+});

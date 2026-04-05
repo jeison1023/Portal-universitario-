@@ -3,144 +3,175 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Historial Académico Completo | Portal Universitario">
 
   <title>Historial Académico | Portal Universitario</title>
 
+  <!-- FUENTES -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles/dashboard.css">
   <link rel="stylesheet" href="styles/historial.css">
+  
+  <!-- ICONOS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
+  <!-- APP WRAPPER -->
+  <div class="app-wrapper">
+    
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar" aria-label="Menú de navegación principal">
+      <!-- Se carga dinámicamente -->
+    </aside>
 
-  <div id="sidebar"></div>
+    <!-- OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <main class="main-content">
-    <div id="header"></div>
-
-    <section class="page-content">
-
+    <!-- MAIN CONTAINER -->
+    <div class="main-container">
+      
       <!-- HEADER -->
-      <section class="page-header">
-        <div>
-          <h1><i class="fas fa-chart-bar"></i> Historial Académico</h1>
-          <p>Rendimiento académico por periodos</p>
+      <header class="main-header" id="header" aria-label="Encabezado del sistema">
+        <!-- Se carga dinámicamente -->
+      </header>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content" role="main">
+        <div class="page-content">
+
+          <!-- PAGE HEADER -->
+          <section class="page-header">
+            <div>
+              <h1><i class="fas fa-history"></i> Historial Académico</h1>
+              <p>Tu rendimiento académico completo por periodos</p>
+            </div>
+
+            <div class="header-actions">
+              <button id="btnExportarHistorial" class="btn btn-primary">
+                <i class="fas fa-download"></i> Exportar PDF
+              </button>
+              <button id="btnImprimirHistorial" class="btn btn-secondary">
+                <i class="fas fa-print"></i> Imprimir
+              </button>
+            </div>
+          </section>
+
+          <!-- FILTROS -->
+          <section class="filters-card card">
+            <div class="filters-row">
+              <div class="filter-group">
+                <label for="filtroPeriodo">
+                  <i class="fas fa-calendar-alt"></i> Periodo
+                </label>
+                <select id="filtroPeriodo">
+                  <option value="">Todos los periodos</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="filtroEstado">
+                  <i class="fas fa-filter"></i> Estado
+                </label>
+                <select id="filtroEstado">
+                  <option value="">Todos</option>
+                  <option value="Aprobada">Aprobada</option>
+                  <option value="Reprobada">Reprobada</option>
+                  <option value="En curso">En curso</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="buscarMateria">
+                  <i class="fas fa-search"></i> Buscar materia
+                </label>
+                <input 
+                  type="text" 
+                  id="buscarMateria" 
+                  placeholder="Nombre de materia o código..."
+                >
+              </div>
+
+              <div class="filter-group filter-actions">
+                <button id="btnAplicarFiltros" class="btn btn-primary">
+                  <i class="fas fa-search"></i> Filtrar
+                </button>
+                <button id="btnLimpiarHistorial" class="btn btn-outline">
+                  <i class="fas fa-times"></i> Limpiar
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- STATS RÁPIDOS -->
+          <section class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-trophy"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="promedioGeneral">0.00</h3>
+                <p>Promedio General</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="creditosAprobados">0</h3>
+                <p>Créditos Aprobados</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-book"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="materiasAprobadas">0</h3>
+                <p>Materias Aprobadas</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="materiasReprobadas">0</h3>
+                <p>Materias Reprobadas</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- CONTENIDO HISTORIAL -->
+          <section class="card full-height">
+            <header class="card-header">
+              <h3><i class="fas fa-calendar-alt"></i> Periodos Académicos</h3>
+              <div class="table-actions">
+                <span id="totalPeriodos">0 periodos</span>
+              </div>
+            </header>
+
+            <div id="historialContainer">
+              <div class="empty-state">
+                <i class="fas fa-clock-loader"></i>
+                <h3>Cargando historial académico...</h3>
+                <p>Esto puede tomar unos segundos</p>
+              </div>
+            </div>
+          </section>
+
         </div>
+      </main>
+    </div>
+  </div>
 
-        <div class="header-actions">
-          <button id="btnExportarHistorial" class="btn btn-primary" type="button">
-            <i class="fas fa-download"></i> Exportar
-          </button>
-
-          <button id="btnImprimirHistorial" class="btn btn-secondary" type="button">
-            <i class="fas fa-print"></i> Imprimir
-          </button>
-        </div>
-      </section>
-
-      <!-- FILTROS -->
-      <section class="filters-card card">
-        <div class="filters-row">
-
-          <div class="filter-group">
-            <label for="filtroPeriodo">Periodo</label>
-            <select id="filtroPeriodo">
-              <option value="">Todos</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label for="filtroEstado">Estado</label>
-            <select id="filtroEstado">
-              <option value="">Todos</option>
-              <option value="Aprobada">Aprobada</option>
-              <option value="Reprobada">Reprobada</option>
-              <option value="En curso">En curso</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label for="buscarMateria">Buscar</label>
-            <input 
-              type="text" 
-              id="buscarMateria" 
-              placeholder="Nombre de materia..."
-            >
-          </div>
-
-          <button id="btnLimpiarHistorial" class="btn btn-outline" type="button">
-            <i class="fas fa-times"></i>
-          </button>
-
-        </div>
-      </section>
-
-      <!-- STATS -->
-      <section class="stats-grid">
-
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-trophy"></i>
-          </div>
-          <div class="stat-info">
-            <h3 id="promedioGeneral">-</h3>
-            <p>Promedio General</p>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-check-circle"></i>
-          </div>
-          <div class="stat-info">
-            <h3 id="creditosAprobados">-</h3>
-            <p>Créditos Aprobados</p>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-book"></i>
-          </div>
-          <div class="stat-info">
-            <h3 id="materiasAprobadas">-</h3>
-            <p>Materias Aprobadas</p>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-exclamation-triangle"></i>
-          </div>
-          <div class="stat-info">
-            <h3 id="materiasReprobadas">-</h3>
-            <p>Materias Reprobadas</p>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- HISTORIAL -->
-      <section class="card">
-
-        <header class="card-header">
-          <h3><i class="fas fa-calendar-alt"></i> Periodos Académicos</h3>
-        </header>
-
-        <div id="historialContainer">
-
-          <!-- Estado inicial -->
-          <div class="empty-state">
-            Cargando historial académico...
-          </div>
-
-        </div>
-
-      </section>
-
-    </section>
-  </main>
-
+  <!-- SCRIPTS -->
   <script type="module" src="JS/historial.js" defer></script>
-
 </body>
 </html>

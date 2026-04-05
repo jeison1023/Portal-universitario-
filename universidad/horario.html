@@ -4,10 +4,10 @@
   <!-- META - PATRÓN DASHBOARD -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Gestión de solicitudes y trámites - Portal Universitario">
+  <meta name="description" content="Horarios académicos y clases - Portal Universitario">
   <meta name="author" content="Portal Universitario">
 
-  <title>Solicitudes | Portal Universitario</title>
+  <title>Horarios | Portal Universitario</title>
 
   <!-- CSS - PATRÓN DASHBOARD -->
   <link rel="stylesheet" href="styles/dashboard.css">
@@ -59,7 +59,7 @@
               <span>Calificaciones</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a href="horarios.html" class="nav-link" data-page="horarios">
               <i class="fas fa-calendar-alt"></i>
               <span>Horarios</span>
@@ -71,7 +71,7 @@
               <span>Historial</span>
             </a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item">
             <a href="solicitudes.html" class="nav-link" data-page="solicitudes">
               <i class="fas fa-file-invoice"></i>
               <span>Solicitudes</span>
@@ -123,8 +123,8 @@
             <i class="fas fa-bars"></i>
           </button>
           <h1 class="page-title">
-            <i class="fas fa-file-invoice"></i>
-            Mis Solicitudes
+            <i class="fas fa-calendar-alt"></i>
+            Mis Horarios
           </h1>
         </div>
 
@@ -134,133 +134,136 @@
               <i class="fas fa-bell"></i>
               <span class="badge">3</span>
             </button>
-            <button class="header-btn" id="btnNuevaSolicitud" aria-label="Nueva solicitud">
-              <i class="fas fa-plus"></i>
-              Nueva
-            </button>
+            <div class="header-actions-group">
+              <select id="semestreSelector" class="header-btn" style="padding: 0.75rem 1rem; background: var(--white); border: 1px solid #e2e8f0;">
+                <option>2024-1</option>
+                <option>2023-2</option>
+              </select>
+              <button class="header-btn" id="btnImprimirHorario" aria-label="Imprimir">
+                <i class="fas fa-print"></i>
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
       <!-- MAIN CONTENT - PATRÓN DASHBOARD -->
       <main class="main-content" role="main">
-        <section class="page-content" aria-labelledby="solicitudesTitle">
+        <section class="page-content" aria-labelledby="horariosTitle">
 
           <!-- ===================================
                WELCOME SECTION - PATRÓN DASHBOARD
           =================================== -->
-          <section class="welcome-section" aria-label="Resumen de solicitudes">
+          <section class="welcome-section" aria-label="Resumen de horarios">
             <div class="welcome-content">
               <div class="welcome-greeting">
-                <h1 id="solicitudesTitle">Gestión de Trámites</h1>
-                <p>Historial completo de tus solicitudes y trámites académicos</p>
+                <h1 id="horariosTitle">Semestre 2024-1</h1>
+                <p>Consulta tu horario de clases, profesores y aulas</p>
               </div>
 
-              <div class="welcome-stats" role="group" aria-label="Estadísticas rápidas">
+              <div class="welcome-stats" role="group" aria-label="Estadísticas del horario">
                 <div class="stat-quick">
-                  <span id="totalSolicitudes">14</span>
-                  <small>Total</small>
+                  <span id="totalClases">22</span>
+                  <small>Clases semanales</small>
                 </div>
                 <div class="stat-quick">
-                  <span id="solicitudesPendientes" style="color: var(--warning);">3</span>
-                  <small>Pendientes</small>
+                  <span id="horasSemanales" style="color: var(--warning);">16</span>
+                  <small>Horas</small>
                 </div>
                 <div class="stat-quick">
-                  <span id="solicitudesAprobadas" style="color: var(--success);">9</span>
-                  <small>Aprobadas</small>
+                  <span id="creditosHorario" style="color: var(--success);">18</span>
+                  <small>Créditos</small>
                 </div>
               </div>
             </div>
           </section>
 
           <!-- ===================================
-               FILTROS - CARD DASHBOARD
+               CONTROLES HORARIO - CARD
           =================================== -->
-          <section class="card" aria-label="Filtros avanzados">
+          <section class="card" aria-label="Controles del horario">
             <header class="card-header">
-              <h3><i class="fas fa-filter"></i> Filtros</h3>
+              <h3><i class="fas fa-cogs"></i> Vista</h3>
             </header>
-            <div class="quick-actions-grid" style="padding: 2rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-              <div class="filter-group">
-                <label>Estado</label>
-                <select id="filtroEstadoSolicitud" class="header-btn" style="width: 100%; background: var(--white); border: 1px solid #e2e8f0;">
-                  <option value="">Todos</option>
-                  <option value="pendiente">Pendientes</option>
-                  <option value="aprobada">Aprobadas</option>
-                  <option value="rechazada">Rechazadas</option>
-                </select>
-              </div>
-              <div class="filter-group">
-                <label>Tipo</label>
-                <select id="filtroTipoSolicitud" class="header-btn" style="width: 100%; background: var(--white); border: 1px solid #e2e8f0;">
-                  <option value="">Todos</option>
-                  <option value="certificado">Certificado</option>
-                  <option value="convalidacion">Convalidación</option>
-                </select>
-              </div>
-              <div class="filter-group">
-                <label>Fecha</label>
-                <select id="filtroFechaSolicitud" class="header-btn" style="width: 100%; background: var(--white); border: 1px solid #e2e8f0;">
-                  <option value="">Todas</option>
-                  <option value="semana">Última semana</option>
-                </select>
-              </div>
-              <div class="filter-group">
-                <label>Buscar</label>
-                <input type="text" id="buscarSolicitud" class="header-btn" placeholder="Número o descripción..." style="width: 100%; background: var(--white); border: 1px solid #e2e8f0;">
-              </div>
-              <div style="display: flex; gap: 0.5rem;">
-                <button id="btnLimpiarFiltros" class="header-btn" style="background: var(--danger); color: white;">
-                  <i class="fas fa-times"></i> Limpiar
-                </button>
-              </div>
+            <div class="quick-actions-grid" style="padding: 2rem; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+              <button id="vistaSemanal" class="quick-action active" data-vista="semanal">
+                <i class="fas fa-calendar-week"></i>
+                <span>Semanal</span>
+              </button>
+              <button id="vistaDiaria" class="quick-action" data-vista="diaria">
+                <i class="fas fa-calendar-day"></i>
+                <span>Diaria</span>
+              </button>
+              <button id="vistaLista" class="quick-action" data-vista="lista">
+                <i class="fas fa-list"></i>
+                <span>Lista</span>
+              </button>
+              <button id="vistaMes" class="quick-action" data-vista="mes">
+                <i class="fas fa-calendar"></i>
+                <span>Mes</span>
+              </button>
             </div>
           </section>
 
           <!-- ===================================
-               SOLICITUDES GRID - DASHBOARD GRID
+               HORARIO PRINCIPAL - DASHBOARD GRID
           =================================== -->
           <section class="dashboard-grid">
-            <article class="card full-height" id="solicitudesContainer">
+            
+            <!-- HORARIO SEMANAL -->
+            <article class="card full-height" id="horarioSemanalContainer">
               <header class="card-header">
-                <h3><i class="fas fa-list"></i> Solicitudes Recientes</h3>
-                <button id="toggleVista" class="header-btn">Vista Tabular</button>
+                <h3><i class="fas fa-calendar-week"></i> Horario Semanal</h3>
+                <button id="toggleHorario" class="header-btn">Lista</button>
               </header>
-              <div id="solicitudesGrid" class="classes-list" style="padding: 2rem;">
-                <!-- JS llena dinámicamente -->
+              <div id="horarioSemanal" class="horario-container">
+                <!-- JS genera tabla horario -->
               </div>
             </article>
 
-            <!-- STATS DETALLADAS -->
-            <article class="card">
+            <!-- PRÓXIMAS CLASES -->
+            <article class="card full-height" id="proximasClasesContainer">
               <header class="card-header">
-                <h3><i class="fas fa-chart-pie"></i> Por Estado</h3>
+                <h3><i class="fas fa-clock"></i> Próximas Clases</h3>
               </header>
-              <div id="statsPorEstado" class="classes-list" style="padding: 2rem;">
-                <div class="stat-card-inline">
-                  <span class="status-badge status-pendiente">Pendientes: 3</span>
-                </div>
-                <div class="stat-card-inline">
-                  <span class="status-badge status-aprobada">Aprobadas: 9</span>
+              <div id="proximasClases" class="classes-list">
+                <div class="class-item">
+                  <div class="class-time">09:00 - 11:00</div>
+                  <div class="class-info">
+                    <strong>Programación Web</strong>
+                    <div>Dr. Juan Pérez • A-301</div>
+                  </div>
                 </div>
               </div>
             </article>
 
-            <!-- TIPOS MÁS COMUNES -->
+            <!-- RESUMEN POR DÍA -->
             <article class="card">
               <header class="card-header">
-                <h3><i class="fas fa-tags"></i> Por Tipo</h3>
+                <h3><i class="fas fa-chart-bar"></i> Horas por Día</h3>
               </header>
-              <div class="classes-list" style="padding: 2rem;">
-                <div class="quick-action">
-                  <i class="fas fa-certificate"></i>
-                  <span>Certificados <strong>5</strong></span>
+              <div id="horasPorDia" class="classes-list" style="padding: 2rem;">
+                <div class="stat-card-inline">
+                  <span>Lun: <strong>4h</strong></span>
                 </div>
-                <div class="quick-action">
-                  <i class="fas fa-exchange-alt"></i>
-                  <span>Convalidaciones <strong>3</strong></span>
+                <div class="stat-card-inline">
+                  <span>Mar: <strong>3h</strong></span>
                 </div>
               </div>
+            </article>
+
+          </section>
+
+          <!-- ===================================
+             LISTA DE CLASES - ALTERNATIVA
+          =================================== -->
+          <section class="card" id="listaClasesContainer" style="display: none;">
+            <header class="card-header">
+              <h3><i class="fas fa-list"></i> Lista Completa</h3>
+              <button id="toggleBackToGrid" class="header-btn">Horario</button>
+            </header>
+            <div id="listaClases" class="classes-list" style="max-height: 600px;">
+              <!-- JS genera lista -->
             </div>
           </section>
 
@@ -270,6 +273,6 @@
   </div>
 
   <!-- SCRIPT - PATRÓN DASHBOARD -->
-  <script src="./JS/solicitudes.js" defer></script>
+  <script src="./JS/horarios.js" defer></script>
 </body>
 </html>

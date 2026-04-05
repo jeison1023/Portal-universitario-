@@ -1,180 +1,251 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- META -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Gestión de materias del estudiante">
+  <meta name="description" content="Gestión de materias - Portal Universitario">
+  <meta name="author" content="Portal Universitario">
 
-  <title>Materias | Portal Universitario</title>
+  <title>Mis Materias | Portal Universitario</title>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="styles/materias.css">
+  <!-- CSS - MISMO PATRÓN -->
+  <link rel="stylesheet" href="styles/dashboard.css">
 
-  <!-- Icons -->
+  <!-- FUENTES - MISMO PATRÓN -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- ICONOS - MISMO PATRÓN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
+  <!-- =========================
+       APP WRAPPER - IDÉNTICO
+  ========================== -->
+  <div class="app-wrapper">
 
-  <div id="sidebar"></div>
+    <!-- =========================
+         SIDEBAR - EXACTAMENTE IGUAL
+    ========================== -->
+    <aside id="sidebar" class="sidebar" aria-label="Menú de navegación principal">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <span>UNI-PORTAL</span>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Colapsar menú">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
 
-  <main class="main-content">
-    <div id="header"></div>
+      <nav class="sidebar-nav" role="navigation" aria-label="Navegación principal">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="dashboard.html" class="nav-link" data-page="dashboard">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="materias.html" class="nav-link active" data-page="materias">
+              <i class="fas fa-book"></i>
+              <span>Materias</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="calificaciones.html" class="nav-link" data-page="calificaciones">
+              <i class="fas fa-chart-bar"></i>
+              <span>Calificaciones</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="horarios.html" class="nav-link" data-page="horarios">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Horarios</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="historial.html" class="nav-link" data-page="historial">
+              <i class="fas fa-history"></i>
+              <span>Historial</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="solicitudes.html" class="nav-link" data-page="solicitudes">
+              <i class="fas fa-file-invoice"></i>
+              <span>Solicitudes</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="finanzas.html" class="nav-link" data-page="finanzas">
+              <i class="fas fa-dollar-sign"></i>
+              <span>Finanzas</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
 
-    <section class="page-content">
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <img src="https://via.placeholder.com/40" alt="Foto de perfil" class="user-avatar">
+          <div>
+            <div class="user-name">Juan Pérez</div>
+            <div class="user-role">Estudiante - 2024001</div>
+          </div>
+        </div>
+        <a href="#" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Cerrar Sesión</span>
+        </a>
+      </div>
+    </aside>
 
-      <!-- HEADER -->
-      <section class="page-header">
-        <div class="header-content">
-          <div class="header-icon blue">
+    <!-- =========================
+         OVERLAY - IDÉNTICO
+    ========================== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- =========================
+         CONTENIDO PRINCIPAL - PATRÓN EXACTO
+    ========================== -->
+    <div class="main-container">
+      <!-- HEADER - EXACTAMENTE IGUAL -->
+      <header class="main-header" id="header" aria-label="Encabezado del sistema">
+        <div class="header-left">
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="page-title">
             <i class="fas fa-book-open"></i>
-          </div>
-
-          <div>
-            <h1>Mis Materias</h1>
-            <p>Semestre 2024-I • <span id="totalMateriasDash">0</span> materias</p>
-          </div>
+            Mis Materias
+          </h1>
         </div>
 
-        <div class="header-actions">
-          <button class="btn btn-primary" id="btnNuevaMateria" type="button">
-            <i class="fas fa-plus"></i> Matricular
-          </button>
-
-          <button class="btn btn-secondary" id="btnExportar" type="button">
-            <i class="fas fa-download"></i> Exportar
-          </button>
-        </div>
-      </section>
-
-      <!-- STATS -->
-      <section class="materias-stats">
-
-        <article class="stat-card small">
-          <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
-          <div>
-            <h3 id="materiasAprobadas">0</h3>
-            <p>Aprobadas</p>
-          </div>
-        </article>
-
-        <article class="stat-card small">
-          <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
-          <div>
-            <h3 id="materiasCurso">0</h3>
-            <p>En curso</p>
-          </div>
-        </article>
-
-        <article class="stat-card small">
-          <div class="stat-icon blue"><i class="fas fa-bookmark"></i></div>
-          <div>
-            <h3 id="creditosTotal">0</h3>
-            <p>Créditos</p>
-          </div>
-        </article>
-
-      </section>
-
-      <!-- FILTROS -->
-      <section class="filters-card">
-        <div class="filters-row">
-
-          <div class="filter-group">
-            <label for="filtroEstadoMateria">Estado</label>
-            <select id="filtroEstadoMateria">
-              <option value="">Todas</option>
-              <option value="activa">Activas</option>
-              <option value="finalizada">Finalizadas</option>
-              <option value="reprobada">Reprobadas</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label for="filtroPeriodoMateria">Periodo</label>
-            <select id="filtroPeriodoMateria">
-              <option value="">Todos</option>
-              <option value="2024-I">2024-I</option>
-              <option value="2023-II">2023-II</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label for="buscarMateria">Buscar</label>
-            <input type="text" id="buscarMateria" placeholder="Nombre o código...">
-          </div>
-
-          <button class="btn btn-primary" id="btnLimpiarFiltros" type="button">
-            <i class="fas fa-times"></i>
-          </button>
-
-        </div>
-      </section>
-
-      <!-- TABLA -->
-      <section class="table-container">
-
-        <header class="table-header">
-          <h2><i class="fas fa-list"></i> Materias</h2>
-
-          <div class="table-actions">
-            <span id="materiasActivas" class="stat-small">0 activas</span>
-
-            <button id="toggleView" class="btn btn-secondary" type="button">
-              <i class="fas fa-th"></i> Cambiar Vista
+        <div class="header-right">
+          <div class="header-actions">
+            <button class="header-btn" aria-label="Notificaciones">
+              <i class="fas fa-bell"></i>
+              <span class="badge">3</span>
+            </button>
+            <button class="header-btn" id="btnNuevaMateria" aria-label="Matricular nueva materia">
+              <i class="fas fa-plus-circle"></i>
+              Matricular
             </button>
           </div>
-        </header>
-
-        <!-- TABLA -->
-        <div class="table-responsive table-mode active" id="tableMode">
-          <table class="materias-table">
-            <thead>
-              <tr>
-                <th>Código</th>
-                <th>Materia</th>
-                <th>Docente</th>
-                <th>Horario</th>
-                <th>Aula</th>
-                <th>Créditos</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-materias">
-              <tr>
-                <td colspan="8" class="empty-state">Cargando materias...</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
+      </header>
 
-        <!-- CARDS -->
-        <div class="cards-mode" id="cardsMode">
-          <div id="materias-cards-container" class="materias-cards-grid">
-            <p class="empty-state">Sin datos</p>
-          </div>
-        </div>
+      <!-- CONTENIDO - SIGUE PATRÓN DASHBOARD -->
+      <main class="main-content" role="main">
+        <section class="page-content" aria-labelledby="materiasTitle">
 
-      </section>
+          <!-- ===================================
+               WELCOME SECTION - PATRÓN DASHBOARD
+          =================================== -->
+          <section class="welcome-section" aria-label="Resumen de materias">
+            <div class="welcome-content">
+              <div class="welcome-greeting">
+                <h1 id="materiasTitle">Gestión de Materias</h1>
+                <p id="welcomeUser">Matricúlate, consulta y gestiona todas tus materias del semestre</p>
+              </div>
 
-      <!-- HORARIO -->
-      <section class="horario-section">
-        <article class="card">
-          <header class="card-header">
-            <h3><i class="fas fa-calendar-week"></i> Horario Semanal</h3>
-          </header>
+              <div class="welcome-stats" role="group" aria-label="Estadísticas rápidas de materias">
+                <div class="stat-quick">
+                  <span id="quickMateriasTotal">12</span>
+                  <small>Total inscritas</small>
+                </div>
+                <div class="stat-quick">
+                  <span id="quickPromedioMaterias">85%</span>
+                  <small>Promedio materias</small>
+                </div>
+              </div>
+            </div>
+          </section>
 
-          <div id="horarioSemanal" class="horario-grid">
-            <p class="empty-state">Cargando horario...</p>
-          </div>
-        </article>
-      </section>
+          <!-- ===================================
+               DASHBOARD STATS GRID - PATRÓN EXACTO
+          =================================== -->
+          <section id="statsContainer" class="dashboard-stats-grid" aria-label="Estadísticas detalladas">
+            <article class="stat-card">
+              <div class="stat-quick">
+                <span id="materiasAprobadas">8</span>
+                <small>Aprobadas</small>
+              </div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-quick">
+                <span id="materiasCurso" style="color: var(--warning)">4</span>
+                <small>En curso</small>
+              </div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-quick">
+                <span id="creditosTotal" style="color: var(--success)">18</span>
+                <small>Créditos total</small>
+              </div>
+            </article>
+          </section>
 
-    </section>
-  </main>
+          <!-- ===================================
+               FILTROS - NUEVA SECCIÓN CARD
+          =================================== -->
+          <section class="card" aria-label="Filtros y búsqueda">
+            <div class="card-header">
+              <h3><i class="fas fa-filter"></i> Filtros</h3>
+            </div>
+            <div class="quick-actions-grid" style="padding: 2rem;">
+              <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: end;">
+                <div style="flex: 1; min-width: 200px;">
+                  <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--secondary);">Estado</label>
+                  <select id="filtroEstadoMateria" class="header-btn" style="width: 100%; background: var(--white); border: 1px solid #e2e8f0; text-align: left;">
+                    <option value="">Todas</option>
+                    <option value="activa">Activas</option>
+                    <option value="finalizada">Finalizadas</option>
+                  </select>
+                </div>
+                <div style="flex: 1; min-width: 250px;">
+                  <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--secondary);">Buscar</label>
+                  <input type="text" id="buscarMateria" class="header-btn" placeholder="Nombre de materia o docente..." style="width: 100%; background: var(--white); border: 1px solid #e2e8f0;">
+                </div>
+              </div>
+            </div>
+          </section>
 
-  <script type="module" src="JS/materia.js" defer></script>
+          <!-- ===================================
+               TABLA PRINCIPAL - CARD PRINCIPAL
+          =================================== -->
+          <section class="card full-height" aria-labelledby="tablaTitle">
+            <header class="card-header">
+              <h3 id="tablaTitle">
+                <i class="fas fa-list"></i> Listado de Materias
+              </h3>
+              <span id="materiasActivas" class="notif-badge">4 activas</span>
+            </header>
+            <div class="classes-list" style="max-height: none; overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
+                <thead style="background: var(--light); text-align: left;">
+                  <tr>
+                    <th style="padding: 1.5rem 1.25rem;">Materia</th>
+                    <th style="padding: 1.5rem 1.25rem;">Docente</th>
+                    <th style="padding: 1.5rem 1.25rem;">Aula</th>
+                    <th style="padding: 1.5rem 1.25rem;">Estado</th>
+                    <th style="padding: 1.5rem 1.25rem;">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="tabla-materias">
+                  <!-- JS lo llena dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </section>
 
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- SCRIPT - MISMO PATRÓN -->
+  <script src="./JS/materia.js" defer></script>
 </body>
 </html>

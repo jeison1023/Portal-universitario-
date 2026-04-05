@@ -1,234 +1,332 @@
-// ===============================
-// DATOS SIMULADOS
-// ===============================
-const materiasData = [
-  {
-    id: 1,
-    codigo: "MAT-401",
-    nombre: "Matemáticas Avanzadas",
-    docente: "Dr. Miguel López",
-    horario: "Lun 08:00-10:00, Mié 08:00-10:00",
-    aula: "A-201",
-    creditos: 4,
-    estado: "activa",
-    promedio: 17.5,
-    color: "#3b82f6"
-  },
-  {
-    id: 2,
-    codigo: "PROG-305",
-    nombre: "Programación Web Avanzada",
-    docente: "Msc. Laura Pérez",
-    horario: "Mar 10:30-12:30, Jue 10:30-12:30",
-    aula: "B-105",
-    creditos: 4,
-    estado: "activa",
-    promedio: 19.2,
-    color: "#10b981"
-  },
-  {
-    id: 3,
-    codigo: "BD-301",
-    nombre: "Base de Datos Relacionales",
-    docente: "Ing. Ana Gómez",
-    horario: "Vie 14:00-16:00",
-    aula: "C-308",
-    creditos: 4,
-    estado: "finalizada",
-    promedio: 17.8,
-    color: "#3b82f6"
-  },
-  {
-    id: 4,
-    codigo: "RED-302",
-    nombre: "Redes de Computadoras",
-    docente: "Msc. Juan Martínez",
-    horario: "Lun 14:00-16:00, Mié 14:00-16:00",
-    aula: "D-120",
-    creditos: 4,
-    estado: "activa",
-    promedio: 16.5,
-    color: "#f59e0b"
-  },
-  {
-    id: 5,
-    codigo: "FIS-402",
-    nombre: "Física Cuántica",
-    docente: "Dr. Carlos Ruiz",
-    horario: "Mar 08:00-10:00",
-    aula: "F-205",
-    creditos: 4,
-    estado: "reprobada",
-    promedio: 12.8,
-    color: "#ef4444"
-  }
-];
+// JS/materia.js - COMPLETO Y FUNCIONAL
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // =============================================
+    // DATOS DE EJEMPLO (en app real: API)
+    // =============================================
+    const materiasData = [
+        {
+            id: 1,
+            nombre: 'Programación Web Avanzada',
+            docente: 'Dr. Juan Pérez',
+            aula: 'A-301',
+            estado: 'activa',
+            creditos: 4,
+            calificacion: null,
+            fechaInicio: '2024-08-01'
+        },
+        {
+            id: 2,
+            nombre: 'Base de Datos II',
+            docente: 'MSc. María Gómez',
+            aula: 'B-205',
+            estado: 'activa',
+            creditos: 3,
+            calificacion: null,
+            fechaInicio: '2024-08-01'
+        },
+        {
+            id: 3,
+            nombre: 'Algoritmos y Estructuras',
+            docente: 'Ing. Carlos López',
+            aula: 'C-112',
+            estado: 'finalizada',
+            creditos: 4,
+            calificacion: 92,
+            fechaInicio: '2024-01-15'
+        },
+        {
+            id: 4,
+            nombre: 'Ingeniería de Software',
+            docente: 'Dra. Ana Martínez',
+            aula: 'A-405',
+            estado: 'finalizada',
+            creditos: 3,
+            calificacion: 88,
+            fechaInicio: '2024-01-15'
+        },
+        {
+            id: 5,
+            nombre: 'Matemáticas Discretas',
+            docente: 'Dr. Luis Rodríguez',
+            aula: 'D-101',
+            estado: 'activa',
+            creditos: 3,
+            calificacion: null,
+            fechaInicio: '2024-08-01'
+        }
+    ];
 
-let materiasFiltradas = [...materiasData];
-let vistaActual = 'table';
+    let materias = [...materiasData];
+    let filtroEstado = '';
+    let filtroBusqueda = '';
 
-// ===============================
-// INICIALIZACIÓN
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-  inicializarMaterias();
+    // =============================================
+    // INICIALIZACIÓN
+    // =============================================
+    function initApp() {
+        renderizarEstadisticas();
+        renderizarTabla();
+        inicializarEventos();
+        actualizarContadorActivas();
+    }
+
+    function inicializarEventos() {
+        // Filtros
+        document.getElementById('filtroEstadoMateria').addEventListener('change', function() {
+            filtroEstado = this.value;
+            filtrarMaterias();
+        });
+
+        document.getElementById('buscarMateria').addEventListener('input', debounce(function() {
+            filtroBusqueda = this.value.toLowerCase();
+            filtrarMaterias();
+        }, 300));
+
+        // Botón nueva materia
+        document.getElementById('btnNuevaMateria').addEventListener('click', abrirModalMatricula);
+
+        // Sidebar responsive
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const mobileToggle = document.getElementById('mobileToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const sidebar = document.getElementById('sidebar');
+
+        if (sidebarToggle) sidebarToggle.addEventListener('click', toggleSidebar);
+        if (mobileToggle) mobileToggle.addEventListener('click', toggleMobileMenu);
+        if (sidebarOverlay) sidebarOverlay.addEventListener('click', cerrarSidebarMovil);
+
+        // Logout
+        const logoutBtn = document.querySelector('.logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                    alert('Redirigiendo al login...');
+                    // window.location.href = 'login.html';
+                }
+            });
+        }
+    }
+
+    // =============================================
+    // RENDERIZADO
+    // =============================================
+    function renderizarEstadisticas() {
+        const aprobadas = materias.filter(m => m.estado === 'finalizada' && m.calificacion >= 70).length;
+        const enCurso = materias.filter(m => m.estado === 'activa').length;
+        const creditosTotal = materias.reduce((sum, m) => sum + m.creditos, 0);
+
+        document.getElementById('materiasAprobadas').textContent = aprobadas;
+        document.getElementById('materiasCurso').textContent = enCurso;
+        document.getElementById('creditosTotal').textContent = creditosTotal;
+    }
+
+    function renderizarTabla() {
+        const tbody = document.getElementById('tabla-materias');
+        const materiasFiltradas = filtrarMateriasArray();
+
+        if (materiasFiltradas.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 4rem; color: var(--secondary);">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p>No se encontraron materias</p>
+                        <small>Ajusta los filtros para ver resultados</small>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = materiasFiltradas.map(materia => crearFilaMateria(materia)).join('');
+
+        // Event listeners para botones de acción (después de renderizar)
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('tr');
+                const id = parseInt(row.dataset.id);
+                verDetallesMateria(id);
+            });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('tr');
+                const nombre = row.querySelector('td:nth-child(1) strong').textContent;
+                confirmarEliminarMateria(nombre, row.dataset.id);
+            });
+        });
+    }
+
+    function crearFilaMateria(materia) {
+        const calificacion = materia.calificacion ? `(${materia.calificacion}%)` : '';
+        return `
+            <tr class="materia-row" data-id="${materia.id}">
+                <td style="padding: 1.2rem 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div class="materia-icon" style="
+                            width: 45px; height: 45px; border-radius: 12px; 
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                            display: flex; align-items: center; justify-content: center; 
+                            color: white; font-weight: 600; font-size: 1.1rem;
+                        ">
+                            ${materia.nombre.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <strong style="font-weight: 600; color: var(--dark);">${materia.nombre}</strong>
+                            <br><small style="color: var(--secondary);">${materia.creditos} créditos</small>
+                        </div>
+                    </div>
+                </td>
+                <td style="padding: 1.2rem 1rem; color: var(--dark); font-weight: 500;">
+                    ${materia.docente}
+                </td>
+                <td style="padding: 1.2rem 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--primary);">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${materia.aula}</span>
+                    </div>
+                </td>
+                <td style="padding: 1.2rem 1rem;">
+                    <span class="status-badge status-${materia.estado}">
+                        ${materia.estado === 'activa' ? 'En curso' : 'Finalizada'}
+                        ${calificacion}
+                    </span>
+                </td>
+                <td style="padding: 1.2rem 1rem;">
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="action-btn view-btn" title="Ver detalles">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        ${materia.estado === 'activa' ? 
+                            '<button class="action-btn edit-btn" title="Gestionar"><i class="fas fa-cog"></i></button>' : 
+                            ''
+                        }
+                        <button class="action-btn delete-btn" title="Retirar">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+
+    // =============================================
+    // FILTROS
+    // =============================================
+    function filtrarMateriasArray() {
+        return materias.filter(materia => {
+            const coincideEstado = !filtroEstado || materia.estado === filtroEstado;
+            const coincideBusqueda = !filtroBusqueda || 
+                materia.nombre.toLowerCase().includes(filtroBusqueda) ||
+                materia.docente.toLowerCase().includes(filtroBusqueda);
+            return coincideEstado && coincideBusqueda;
+        });
+    }
+
+    function filtrarMaterias() {
+        renderizarTabla();
+        actualizarContadorActivas();
+    }
+
+    function actualizarContadorActivas() {
+        const activas = materias.filter(m => m.estado === 'activa').length;
+        document.getElementById('materiasActivas').textContent = `${activas} activas`;
+    }
+
+    // =============================================
+    // FUNCIONES DE UI
+    // =============================================
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('collapsed');
+    }
+
+    function toggleMobileMenu() {
+        document.getElementById('sidebar').classList.add('mobile-open');
+        document.getElementById('sidebarOverlay').classList.add('active');
+    }
+
+    function cerrarSidebarMovil() {
+        document.getElementById('sidebar').classList.remove('mobile-open');
+        document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+
+    // =============================================
+    // FUNCIONES DE NEGOCIO
+    // =============================================
+    function abrirModalMatricula() {
+        const modal = `
+            <div class="modal-overlay" style="
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+                background: rgba(0,0,0,0.5); z-index: 1000; display: flex; 
+                align-items: center; justify-content: center; backdrop-filter: blur(2px);
+            " id="modalMatricula">
+                <div style="
+                    background: white; border-radius: 16px; padding: 2rem; max-width: 500px; 
+                    width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+                ">
+                    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="margin: 0;"><i class="fas fa-plus"></i> Matricular Nueva Materia</h3>
+                        <button onclick="this.closest('.modal-overlay').remove()" style="
+                            background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--secondary);
+                        ">&times;</button>
+                    </div>
+                    <div style="display: grid; gap: 1rem;">
+                        <input placeholder="Nombre de la materia" style="padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <input placeholder="Docente" style="padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <input placeholder="Aula" style="padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <input type="number" placeholder="Créditos" style="padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <button style="
+                            background: var(--primary); color: white; border: none; 
+                            padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; 
+                            cursor: pointer; width: 100%;
+                        ">Matricular Materia</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modal);
+    }
+
+    function verDetallesMateria(id) {
+        const materia = materias.find(m => m.id === id);
+        if (materia) {
+            alert(`📚 DETALLES DE "${materia.nombre}"\n\n` +
+                  `👨‍🏫 Docente: ${materia.docente}\n` +
+                  `🏫 Aula: ${materia.aula}\n` +
+                  `📅 Inicio: ${new Date(materia.fechaInicio).toLocaleDateString('es-ES')}\n` +
+                  `🎯 Estado: ${materia.estado === 'activa' ? 'En curso' : 'Finalizada'}\n` +
+                  `${materia.calificacion ? `⭐ Calificación: ${materia.calificacion}%` : ''}`);
+        }
+    }
+
+    function confirmarEliminarMateria(nombre, id) {
+        if (confirm(`⚠️ ¿Retirar "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
+            // Simular eliminación
+            materias = materias.filter(m => m.id != id);
+            renderizarEstadisticas();
+            renderizarTabla();
+            actualizarContadorActivas();
+            alert('✅ Materia retirada exitosamente');
+        }
+    }
+
+    // =============================================
+    // UTILIDADES
+    // =============================================
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func.apply(this, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // INICIAR APLICACIÓN
+    initApp();
 });
-
-function inicializarMaterias() {
-  verificarSesion();
-
-  actualizarEstadisticas();
-  poblarFiltros();
-  renderizarTabla();
-  renderizarCards();
-  generarHorario();
-}
-
-// ===============================
-// SESIÓN
-// ===============================
-function verificarSesion() {
-  const sesion = localStorage.getItem('sesionActiva');
-  if (!sesion) {
-    window.location.href = 'index.html';
-  }
-}
-
-// ===============================
-// ESTADÍSTICAS
-// ===============================
-function actualizarEstadisticas() {
-  const activas = materiasData.filter(m => m.estado === 'activa').length;
-  const aprobadas = materiasData.filter(m => m.estado === 'finalizada').length;
-  const creditos = materiasData.reduce((sum, m) => sum + m.creditos, 0);
-
-  setText('totalMateriasDash', materiasData.length);
-  setText('materiasAprobadas', aprobadas);
-  setText('materiasCurso', activas);
-  setText('creditosTotal', creditos);
-  setText('materiasActivas', `${activas} activas`);
-}
-
-function setText(id, valor) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = valor;
-}
-
-// ===============================
-// FILTROS
-// ===============================
-function poblarFiltros() {
-  const selectEstado = document.getElementById('filtroEstadoMateria');
-  if (!selectEstado) return;
-
-  const estados = [...new Set(materiasData.map(m => m.estado))];
-
-  estados.forEach(estado => {
-    const option = document.createElement('option');
-    option.value = estado;
-    option.textContent = estado;
-    selectEstado.appendChild(option);
-  });
-
-  selectEstado.addEventListener('change', aplicarFiltros);
-}
-
-function aplicarFiltros() {
-  const estado = document.getElementById('filtroEstadoMateria')?.value;
-
-  materiasFiltradas = materiasData.filter(m => {
-    return !estado || m.estado === estado;
-  });
-
-  renderizarTabla();
-  renderizarCards();
-}
-
-// ===============================
-// TABLA
-// ===============================
-function renderizarTabla() {
-  const tbody = document.getElementById('tabla-materias');
-  if (!tbody) return;
-
-  const data = materiasFiltradas;
-
-  if (data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8">No hay datos</td></tr>`;
-    return;
-  }
-
-  tbody.innerHTML = data.map(m => `
-    <tr>
-      <td>${m.codigo}</td>
-      <td>${m.nombre}</td>
-      <td>${m.docente}</td>
-      <td>${m.horario}</td>
-      <td>${m.aula}</td>
-      <td>${m.creditos}</td>
-      <td>${m.estado}</td>
-      <td>
-        <button onclick="verCalificaciones(${m.id})">📊</button>
-        <button onclick="verHorario(${m.id})">📅</button>
-        <button onclick="abrirMateria(${m.id})">🚀</button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-// ===============================
-// CARDS
-// ===============================
-function renderizarCards() {
-  const container = document.getElementById('materias-cards-container');
-  if (!container) return;
-
-  container.innerHTML = materiasFiltradas.map(m => `
-    <div style="border:1px solid #ddd; padding:1rem; border-radius:10px;">
-      <h3>${m.nombre}</h3>
-      <p>${m.docente}</p>
-      <p>${m.horario}</p>
-    </div>
-  `).join('');
-}
-
-// ===============================
-// HORARIO
-// ===============================
-function generarHorario() {
-  const container = document.getElementById('horarioSemanal');
-  if (!container) return;
-
-  const dias = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-  const horas = ['08:00-10:00','10:30-12:30','14:00-16:00','16:30-18:30'];
-
-  let html = `<div>Hora</div>${dias.map(d => `<div>${d}</div>`).join('')}`;
-
-  horas.forEach(h => {
-    html += `<div>${h}</div>`;
-
-    dias.forEach(d => {
-      const mat = materiasData.find(m => m.horario.includes(d) && m.horario.includes(h));
-      html += `<div style="padding:5px; background:${mat ? mat.color : '#eee'}">
-        ${mat ? mat.nombre : ''}
-      </div>`;
-    });
-  });
-
-  container.innerHTML = html;
-}
-
-// ===============================
-// ACCIONES
-// ===============================
-function verCalificaciones(id) {
-  alert("Calificaciones de " + id);
-}
-
-function verHorario(id) {
-  alert("Horario de " + id);
-}
-
-function abrirMateria(id) {
-  alert("Abriendo materia " + id);
-}

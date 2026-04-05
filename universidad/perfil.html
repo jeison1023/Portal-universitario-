@@ -1,228 +1,351 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- META - PATRÓN DASHBOARD -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Perfil del estudiante - Portal Universitario">
+  <meta name="author" content="Portal Universitario">
 
   <title>Perfil | Portal Universitario</title>
 
-  <link rel="stylesheet" href="styles/perfil.css">
+  <!-- CSS - PATRÓN DASHBOARD -->
+  <link rel="stylesheet" href="styles/dashboard.css">
+
+  <!-- FUENTES - PATRÓN DASHBOARD -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- ICONOS - PATRÓN DASHBOARD -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
+  <!-- =========================
+       APP WRAPPER - IDÉNTICO
+  ========================== -->
+  <div class="app-wrapper">
 
-  <div id="sidebar"></div>
-
-  <main class="main-content">
-    <div id="header"></div>
-
-    <section class="page-content">
-
-      <!-- HERO PERFIL -->
-      <section class="profile-hero">
-        <div class="profile-background"></div>
-
-        <div class="profile-content">
-
-          <!-- AVATAR -->
-          <div class="profile-avatar-section">
-            <div class="profile-avatar-container">
-              <img 
-                id="fotoPerfil" 
-                src="/public/images/default-avatar.jpg" 
-                alt="Foto de perfil"
-                class="avatar-img"
-              >
-
-              <label for="fotoInput" class="edit-btn" title="Cambiar foto">
-                <i class="fas fa-camera"></i>
-              </label>
-
-              <input 
-                type="file" 
-                id="fotoInput" 
-                accept="image/*" 
-                hidden
-              >
-
-              <div class="avatar-status online"></div>
-            </div>
-
-            <div class="profile-level">
-              <i class="fas fa-star"></i>
-              <span>Nivel 3</span>
-            </div>
-          </div>
-
-          <!-- INFO PRINCIPAL -->
-          <div class="profile-main-info">
-
-            <div class="profile-name-section">
-              <h1 id="nombreCompleto">Cargando...</h1>
-
-              <div class="profile-role">
-                <span class="role-badge">Estudiante</span>
-                <span id="programaBadge" class="programa-badge">-</span>
-              </div>
-            </div>
-
-            <div class="profile-stats-grid">
-              <div class="stat-profile">
-                <div id="creditosMatriculados" class="stat-number">-</div>
-                <div class="stat-label">Créditos</div>
-              </div>
-
-              <div class="stat-profile">
-                <div id="semestreActual" class="stat-number">-</div>
-                <div class="stat-label">Semestre</div>
-              </div>
-
-              <div class="stat-profile">
-                <div id="promedioGeneral" class="stat-number gradient-text">-</div>
-                <div class="stat-label">Promedio</div>
-              </div>
-
-              <div class="stat-profile">
-                <div id="asistencia" class="stat-number">-</div>
-                <div class="stat-label">Asistencia</div>
-              </div>
-            </div>
-
-          </div>
+    <!-- =========================
+         SIDEBAR - EXACTAMENTE IGUAL
+    ========================== -->
+    <aside id="sidebar" class="sidebar" aria-label="Menú de navegación principal">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <span>UNI-PORTAL</span>
         </div>
-      </section>
-
-      <!-- TABS -->
-      <nav class="profile-tabs" id="profileTabs">
-        <button class="tab-btn active" data-tab="personal" type="button">
-          <i class="fas fa-user"></i> Personal
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Colapsar menú">
+          <i class="fas fa-bars"></i>
         </button>
+      </div>
 
-        <button class="tab-btn" data-tab="academico" type="button">
-          <i class="fas fa-graduation-cap"></i> Académico
-        </button>
-
-        <button class="tab-btn" data-tab="contacto" type="button">
-          <i class="fas fa-building"></i> Institucional
-        </button>
-
-        <button class="tab-btn" data-tab="historial" type="button">
-          <i class="fas fa-chart-bar"></i> Historial
-        </button>
+      <nav class="sidebar-nav" role="navigation" aria-label="Navegación principal">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="dashboard.html" class="nav-link" data-page="dashboard">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="materias.html" class="nav-link" data-page="materias">
+              <i class="fas fa-book"></i>
+              <span>Materias</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="calificaciones.html" class="nav-link" data-page="calificaciones">
+              <i class="fas fa-chart-bar"></i>
+              <span>Calificaciones</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="horarios.html" class="nav-link" data-page="horarios">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Horarios</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="historial.html" class="nav-link" data-page="historial">
+              <i class="fas fa-history"></i>
+              <span>Historial</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="solicitudes.html" class="nav-link" data-page="solicitudes">
+              <i class="fas fa-file-invoice"></i>
+              <span>Solicitudes</span>
+            </a>
+          </li>
+          <li class="nav-item active">
+            <a href="perfil.html" class="nav-link" data-page="perfil">
+              <i class="fas fa-user-cog"></i>
+              <span>Perfil</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="finanzas.html" class="nav-link" data-page="finanzas">
+              <i class="fas fa-dollar-sign"></i>
+              <span>Finanzas</span>
+            </a>
+          </li>
+        </ul>
       </nav>
 
-      <!-- CONTENIDO -->
-      <section class="profile-tabs-content">
-
-        <!-- PERSONAL -->
-        <article class="tab-content active" id="tab-personal">
-          <div class="card">
-            <div class="card-header">
-              <h3><i class="fas fa-id-card"></i> Información Personal</h3>
-            </div>
-
-            <div class="profile-info-grid">
-              <div class="info-row">
-                <label>Código:</label>
-                <span id="codigoEstudiantil">-</span>
-              </div>
-
-              <div class="info-row">
-                <label>Fecha Nacimiento:</label>
-                <span id="fechaNacimiento">-</span>
-              </div>
-
-              <div class="info-row">
-                <label>Teléfono:</label>
-                <span id="telefono">-</span>
-              </div>
-
-              <div class="info-row">
-                <label>Correo:</label>
-                <span id="correoPersonal">-</span>
-              </div>
-            </div>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <img src="https://via.placeholder.com/40" alt="Foto de perfil" class="user-avatar">
+          <div>
+            <div class="user-name">Juan Pérez</div>
+            <div class="user-role">Estudiante - 2024001</div>
           </div>
-        </article>
+        </div>
+        <a href="#" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Cerrar Sesión</span>
+        </a>
+      </div>
+    </aside>
 
-        <!-- ACADÉMICO -->
-        <article class="tab-content" id="tab-academico">
-          <div class="card">
-            <div class="card-header">
-              <h3><i class="fas fa-graduation-cap"></i> Información Académica</h3>
-            </div>
+    <!-- =========================
+         OVERLAY - IDÉNTICO
+    ========================== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-            <div class="profile-info-grid">
-              <div class="info-row">
-                <label>Programa:</label>
-                <span id="programaAcademico">-</span>
-              </div>
+    <!-- =========================
+         MAIN CONTAINER - PATRÓN EXACTO
+    ========================== -->
+    <div class="main-container">
+      <!-- HEADER - EXACTAMENTE IGUAL -->
+      <header class="main-header" id="header" aria-label="Encabezado del sistema">
+        <div class="header-left">
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="page-title">
+            <i class="fas fa-user-cog"></i>
+            Mi Perfil
+          </h1>
+        </div>
 
-              <div class="info-row">
-                <label>Fecha Ingreso:</label>
-                <span id="fechaIngreso">-</span>
-              </div>
-            </div>
+        <div class="header-right">
+          <div class="header-actions">
+            <button class="header-btn" aria-label="Notificaciones">
+              <i class="fas fa-bell"></i>
+              <span class="badge">3</span>
+            </button>
+            <button class="header-btn" id="btnGuardarCambios" aria-label="Guardar cambios">
+              <i class="fas fa-save"></i>
+              Guardar
+            </button>
           </div>
-        </article>
+        </div>
+      </header>
 
-        <!-- CONTACTO -->
-        <article class="tab-content" id="tab-contacto">
-          <div class="card">
-            <div class="card-header">
-              <h3><i class="fas fa-building"></i> Institucional</h3>
-            </div>
+      <!-- MAIN CONTENT - PATRÓN DASHBOARD -->
+      <main class="main-content" role="main">
+        <section class="page-content" aria-labelledby="perfilTitle">
 
-            <div class="profile-info-grid">
-              <div class="info-row">
-                <label>Correo institucional:</label>
-                <span id="correoInstitucional">-</span>
+          <!-- ===================================
+               WELCOME SECTION - PATRÓN DASHBOARD
+          =================================== -->
+          <section class="welcome-section profile-hero" aria-label="Hero del perfil">
+            <div class="welcome-content">
+              <div class="welcome-greeting profile-main-info">
+                <div class="profile-avatar-section">
+                  <div class="profile-avatar-container">
+                    <img 
+                      id="fotoPerfil" 
+                      src="https://via.placeholder.com/120/667eea/ffffff?text=JP" 
+                      alt="Foto de perfil"
+                      class="avatar-img"
+                    >
+                    <label for="fotoInput" class="edit-btn" title="Cambiar foto">
+                      <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" id="fotoInput" accept="image/*" hidden>
+                    <div class="avatar-status online"></div>
+                  </div>
+                  <div class="profile-level">
+                    <i class="fas fa-star"></i>
+                    <span id="nivelUsuario">Nivel 3</span>
+                  </div>
+                </div>
+
+                <div class="profile-name-section">
+                  <h1 id="nombreCompleto">Juan David Pérez López</h1>
+                  <div class="profile-role">
+                    <span class="role-badge">Estudiante</span>
+                    <span id="programaBadge" class="programa-badge">Ingeniería de Sistemas</span>
+                  </div>
+                </div>
               </div>
 
-              <div class="info-row">
-                <label>Usuario:</label>
-                <span id="usuario">-</span>
+              <div class="welcome-stats profile-stats-grid">
+                <div class="stat-quick stat-profile">
+                  <span id="creditosMatriculados">128</span>
+                  <small>Créditos</small>
+                </div>
+                <div class="stat-quick stat-profile">
+                  <span id="semestreActual">8</span>
+                  <small>Semestre</small>
+                </div>
+                <div class="stat-quick stat-profile">
+                  <span id="promedioGeneral" style="color: var(--success);">4.25</span>
+                  <small>Promedio</small>
+                </div>
+                <div class="stat-quick stat-profile">
+                  <span id="asistencia" style="color: var(--success);">97%</span>
+                  <small>Asistencia</small>
+                </div>
               </div>
             </div>
-          </div>
-        </article>
+          </section>
 
-        <!-- HISTORIAL -->
-        <article class="tab-content" id="tab-historial">
-          <div class="card">
-            <div class="card-header">
-              <h3><i class="fas fa-chart-bar"></i> Historial</h3>
-              <a href="historial-academico.html" class="view-more">Ver completo</a>
-            </div>
+          <!-- ===================================
+               TABS NAV - DASHBOARD STYLE
+          =================================== -->
+          <nav class="quick-actions-grid profile-tabs" id="profileTabs" aria-label="Pestañas del perfil">
+            <button class="quick-action tab-btn active" data-tab="personal" type="button">
+              <i class="fas fa-user"></i>
+              <span>Personal</span>
+            </button>
+            <button class="quick-action tab-btn" data-tab="academico" type="button">
+              <i class="fas fa-graduation-cap"></i>
+              <span>Académico</span>
+            </button>
+            <button class="quick-action tab-btn" data-tab="contacto" type="button">
+              <i class="fas fa-building"></i>
+              <span>Institucional</span>
+            </button>
+            <button class="quick-action tab-btn" data-tab="historial" type="button">
+              <i class="fas fa-chart-bar"></i>
+              <span>Historial</span>
+            </button>
+          </nav>
 
-            <div id="historialPreview" class="academic-history-grid">
-              <p class="empty-state">Cargando historial...</p>
-            </div>
-          </div>
-        </article>
+          <!-- ===================================
+               TABS CONTENT - CARDS DASHBOARD
+          =================================== -->
+          <section class="dashboard-grid profile-tabs-content">
+            
+            <!-- PERSONAL -->
+            <article class="card full-height tab-content active" id="tab-personal">
+              <header class="card-header">
+                <h3><i class="fas fa-id-card"></i> Información Personal</h3>
+              </header>
+              <div class="profile-info-grid">
+                <div class="info-row">
+                  <label>Código Estudiantil:</label>
+                  <span id="codigoEstudiantil">2024001</span>
+                </div>
+                <div class="info-row">
+                  <label>Fecha Nacimiento:</label>
+                  <span id="fechaNacimiento">15/03/2002</span>
+                </div>
+                <div class="info-row">
+                  <label>Teléfono:</label>
+                  <span id="telefono">+57 300 123 4567</span>
+                </div>
+                <div class="info-row">
+                  <label>Correo Personal:</label>
+                  <span id="correoPersonal">juan.perez@email.com</span>
+                </div>
+              </div>
+            </article>
 
-      </section>
+            <!-- ACADÉMICO -->
+            <article class="card tab-content" id="tab-academico">
+              <header class="card-header">
+                <h3><i class="fas fa-graduation-cap"></i> Información Académica</h3>
+              </header>
+              <div class="profile-info-grid">
+                <div class="info-row">
+                  <label>Programa Académico:</label>
+                  <span id="programaAcademico">Ingeniería de Sistemas</span>
+                </div>
+                <div class="info-row">
+                  <label>Fecha de Ingreso:</label>
+                  <span id="fechaIngreso">08/2020</span>
+                </div>
+                <div class="info-row">
+                  <label>Modalidad:</label>
+                  <span id="modalidad">Presencial</span>
+                </div>
+              </div>
+            </article>
 
-      <!-- ACCIONES -->
-      <section class="profile-actions">
-        <button id="btnEditarPerfil" class="btn btn-primary" type="button">
-          <i class="fas fa-edit"></i> Editar
-        </button>
+            <!-- CONTACTO -->
+            <article class="card tab-content" id="tab-contacto">
+              <header class="card-header">
+                <h3><i class="fas fa-building"></i> Datos Institucionales</h3>
+              </header>
+              <div class="profile-info-grid">
+                <div class="info-row">
+                  <label>Correo Institucional:</label>
+                  <span id="correoInstitucional">2024001@uniportal.edu.co</span>
+                </div>
+                <div class="info-row">
+                  <label>Usuario Sistema:</label>
+                  <span id="usuario">juan.perez2024</span>
+                </div>
+                <div class="info-row">
+                  <label>Estado Cuenta:</label>
+                  <span class="status-activa">Activa</span>
+                </div>
+              </div>
+            </article>
 
-        <button id="btnCambiarPassword" class="btn btn-secondary" type="button">
-          <i class="fas fa-lock"></i> Contraseña
-        </button>
+            <!-- HISTORIAL -->
+            <article class="card tab-content" id="tab-historial">
+              <header class="card-header">
+                <h3><i class="fas fa-chart-bar"></i> Historial Académico</h3>
+                <a href="historial.html" class="view-more">Ver completo →</a>
+              </header>
+              <div id="historialPreview" class="classes-list">
+                <div class="class-item">
+                  <div class="class-time">2024-1</div>
+                  <div class="class-info">
+                    <strong>Semestre 2024-1</strong>
+                    <div>4.25 • 18 créditos • 100% asistencia</div>
+                  </div>
+                </div>
+                <div class="class-item">
+                  <div class="class-time">2023-2</div>
+                  <div class="class-info">
+                    <strong>Semestre 2023-2</strong>
+                    <div>4.10 • 20 créditos • 98% asistencia</div>
+                  </div>
+                </div>
+              </div>
+            </article>
 
-        <button id="btnDescargarDatos" class="btn btn-outline" type="button">
-          <i class="fas fa-download"></i> Datos
-        </button>
-      </section>
+          </section>
 
-    </section>
-  </main>
+          <!-- ===================================
+               ACCIONES - QUICK ACTIONS GRID
+          =================================== -->
+          <section class="quick-actions-grid profile-actions">
+            <button id="btnEditarPerfil" class="quick-action btn-primary">
+              <i class="fas fa-edit"></i>
+              <span>Editar Perfil</span>
+            </button>
+            <button id="btnCambiarPassword" class="quick-action btn-secondary">
+              <i class="fas fa-lock"></i>
+              <span>Cambiar Contraseña</span>
+            </button>
+            <button id="btnDescargarDatos" class="quick-action btn-outline">
+              <i class="fas fa-download"></i>
+              <span>Descargar Datos</span>
+            </button>
+          </section>
 
-  <script type="module" src="JS/perfil.js" defer></script>
+        </section>
+      </main>
+    </div>
+  </div>
 
+  <!-- SCRIPT - PATRÓN DASHBOARD -->
+  <script src="./JS/perfil.js" defer></script>
 </body>
 </html>
