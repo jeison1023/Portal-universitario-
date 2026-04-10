@@ -1,2 +1,8 @@
 andry.txt
 este es mi aporte al proyecto Portal Universitario.Realizado por Andry.
+cree una pagina web para el portar universidad donde los estudiantes 
+pueden tomar una encuesta para asi poder ver que tal le parece 
+la pagina y podian recomendarcela a los demas estudiantes y que 
+funcion le gusto mas y cual le agregarian en su opinion si le 
+resulto facil y si la volverian a utilizar en la cual le daba
+una despedida cordial gracias por tu tiempo .
