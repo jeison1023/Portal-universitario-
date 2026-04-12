@@ -1,266 +1,146 @@
-// ========================================
-// JS/solicitudes.js - VERSION PRO COMPLETA
-// ========================================
+// =============================================
+// JS/solicitudes.js - VERSION PRO (CON FORMULARIO)
+// =============================================
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // =============================================
-    // DATA (SIMULADA)
-    // =============================================
+    // DATA INICIAL
     let solicitudes = [
-        {
-            id: 1,
-            tipo: 'certificado',
-            descripcion: 'Certificado de estudios',
-            fecha: '2024-09-01',
-            estado: 'aprobada'
-        },
-        {
-            id: 2,
-            tipo: 'convalidacion',
-            descripcion: 'Convalidación de materias',
-            fecha: '2024-09-10',
-            estado: 'pendiente'
-        },
-        {
-            id: 3,
-            tipo: 'certificado',
-            descripcion: 'Certificado de notas',
-            fecha: '2024-09-15',
-            estado: 'rechazada'
-        },
-        {
-            id: 4,
-            tipo: 'certificado',
-            descripcion: 'Constancia de matrícula',
-            fecha: '2024-09-18',
-            estado: 'pendiente'
-        }
+        { id: 1, tipo: 'Certificado', descripcion: 'Certificado de estudios', fecha: '2024-09-01', estado: 'aprobada' },
+        { id: 2, tipo: 'Convalidación', descripcion: 'Convalidación de materias', fecha: '2024-09-10', estado: 'pendiente' }
     ];
 
-    let filtros = {
-        estado: '',
-        tipo: '',
-        fecha: '',
-        busqueda: ''
-    };
-
+    let filtros = { estado: '', tipo: '', busqueda: '' };
     let vistaTabla = false;
 
-    // =============================================
     // INIT
-    // =============================================
-    initSidebar();
     initEventos();
     renderSolicitudes();
     actualizarStats();
 
-    // =============================================
-    // SIDEBAR (GLOBAL)
-    // =============================================
-    function initSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebarOverlay');
-        const btnDesktop = document.getElementById('sidebarToggle');
-        const btnMobile = document.getElementById('mobileMenuToggle');
-
-        btnDesktop?.addEventListener('click', () => {
-            sidebar.classList.toggle('collapsed');
-        });
-
-        btnMobile?.addEventListener('click', () => {
-            sidebar.classList.add('active');
-            overlay.classList.add('active');
-        });
-
-        overlay?.addEventListener('click', cerrarSidebar);
-
-        function cerrarSidebar() {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        }
-    }
-
-    // =============================================
-    // EVENTOS
-    // =============================================
     function initEventos() {
+        // Botón para abrir el formulario (Asegúrate de tener un <dialog> o modal en tu HTML)
+        document.getElementById('btnNuevaSolicitud').addEventListener('click', abrirModal);
 
-        // Filtros
+        // Evento del formulario de nueva solicitud
+        const form = document.getElementById('formNuevaSolicitud');
+        form?.addEventListener('submit', guardarNuevaSolicitud);
+
+        // Filtros existentes
         document.getElementById('filtroEstadoSolicitud').addEventListener('change', e => {
             filtros.estado = e.target.value;
-            aplicarFiltros();
+            renderSolicitudes();
         });
 
-        document.getElementById('filtroTipoSolicitud').addEventListener('change', e => {
-            filtros.tipo = e.target.value;
-            aplicarFiltros();
-        });
-
-        document.getElementById('buscarSolicitud').addEventListener('input', debounce(e => {
+        document.getElementById('buscarSolicitud').addEventListener('input', e => {
             filtros.busqueda = e.target.value.toLowerCase();
-            aplicarFiltros();
-        }, 300));
+            renderSolicitudes();
+        });
 
-        document.getElementById('btnLimpiarFiltros').addEventListener('click', limpiarFiltros);
-
-        // Nueva solicitud
-        document.getElementById('btnNuevaSolicitud').addEventListener('click', crearSolicitud);
-
-        // Toggle vista
-        document.getElementById('toggleVista').addEventListener('click', toggleVista);
-
-        // Logout
-        document.querySelector('.logout-btn')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (confirm('¿Cerrar sesión?')) {
-                window.location.href = 'login.html';
-            }
+        document.getElementById('toggleVista').addEventListener('click', () => {
+            vistaTabla = !vistaTabla;
+            renderSolicitudes();
         });
     }
 
     // =============================================
-    // RENDER
+    // LÓGICA PARA AÑADIR SOLICITUDES
     // =============================================
-    function renderSolicitudes() {
-        const container = document.getElementById('solicitudesGrid');
-        const data = filtrarSolicitudes();
 
-        if (data.length === 0) {
-            container.innerHTML = `<p style="text-align:center;color:gray;">No hay resultados</p>`;
-            return;
-        }
-
-        if (!vistaTabla) {
-            container.innerHTML = data.map(s => `
-                <div class="lista-clase">
-                    <div class="lista-clase-dia">${s.id}</div>
-                    <div class="lista-clase-info">
-                        <div class="lista-clase-titulo">${s.descripcion}</div>
-                        <div class="lista-clase-detalles">
-                            <span>${s.tipo}</span>
-                            <span>${formatearFecha(s.fecha)}</span>
-                        </div>
-                    </div>
-                    <span class="estado-badge estado-${s.estado}">
-                        ${s.estado}
-                    </span>
-                </div>
-            `).join('');
+    function abrirModal() {
+        // Si usas la etiqueta <dialog> de HTML5 es así de simple:
+        const modal = document.getElementById('modalSolicitud');
+        if (modal) {
+            modal.showModal(); 
         } else {
-            container.innerHTML = `
-                <table style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Descripción</th>
-                            <th>Tipo</th>
-                            <th>Fecha</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${data.map(s => `
-                            <tr>
-                                <td>${s.id}</td>
-                                <td>${s.descripcion}</td>
-                                <td>${s.tipo}</td>
-                                <td>${formatearFecha(s.fecha)}</td>
-                                <td>${s.estado}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
+            // Fallback: Si no tienes modal, un prompt rápido para probar
+            const desc = prompt("Descripción de la solicitud:");
+            if(desc) procesarNuevaSolicitud(desc, "Certificado");
         }
     }
 
-    // =============================================
-    // FILTROS
-    // =============================================
-    function filtrarSolicitudes() {
-        return solicitudes.filter(s => {
-            return (
-                (!filtros.estado || s.estado === filtros.estado) &&
-                (!filtros.tipo || s.tipo === filtros.tipo) &&
-                (!filtros.busqueda || s.descripcion.toLowerCase().includes(filtros.busqueda))
-            );
-        });
+    function guardarNuevaSolicitud(e) {
+        e.preventDefault();
+        
+        const descripcion = document.getElementById('newDesc').value;
+        const tipo = document.getElementById('newTipo').value;
+
+        procesarNuevaSolicitud(descripcion, tipo);
+
+        // Cerrar modal y limpiar
+        e.target.reset();
+        document.getElementById('modalSolicitud').close();
     }
 
-    function aplicarFiltros() {
-        renderSolicitudes();
-    }
-
-    function limpiarFiltros() {
-        filtros = { estado: '', tipo: '', fecha: '', busqueda: '' };
-
-        document.getElementById('filtroEstadoSolicitud').value = '';
-        document.getElementById('filtroTipoSolicitud').value = '';
-        document.getElementById('buscarSolicitud').value = '';
-
-        renderSolicitudes();
-    }
-
-    // =============================================
-    // ACCIONES
-    // =============================================
-    function crearSolicitud() {
+    function procesarNuevaSolicitud(desc, tipo) {
         const nueva = {
             id: solicitudes.length + 1,
-            tipo: 'certificado',
-            descripcion: 'Nueva solicitud',
+            tipo: tipo,
+            descripcion: desc,
             fecha: new Date().toISOString().split('T')[0],
             estado: 'pendiente'
         };
 
+        // Añadir al inicio del array
         solicitudes.unshift(nueva);
+        
+        // Refrescar UI
         renderSolicitudes();
         actualizarStats();
-
-        mostrarToast('📄 Solicitud creada');
-    }
-
-    function toggleVista() {
-        vistaTabla = !vistaTabla;
-        document.getElementById('toggleVista').textContent = vistaTabla ? 'Vista Cards' : 'Vista Tabular';
-        renderSolicitudes();
+        mostrarToast('✅ Solicitud enviada correctamente');
     }
 
     // =============================================
-    // STATS
+    // RENDER Y UTILS (OPTIMIZADOS)
     // =============================================
+
+    function renderSolicitudes() {
+        const container = document.getElementById('solicitudesGrid');
+        const data = solicitudes.filter(s => {
+            return (!filtros.estado || s.estado === filtros.estado) &&
+                   (!filtros.busqueda || s.descripcion.toLowerCase().includes(filtros.busqueda));
+        });
+
+        if (vistaTabla) {
+            renderTabla(container, data);
+        } else {
+            renderCards(container, data);
+        }
+    }
+
+    function renderCards(container, data) {
+        container.innerHTML = data.map(s => `
+            <div class="lista-clase fade-in">
+                <div class="lista-clase-dia">${s.id}</div>
+                <div class="lista-clase-info">
+                    <div class="lista-clase-titulo">${s.descripcion}</div>
+                    <div class="lista-clase-detalles">
+                        <span><i class="fas fa-tag"></i> ${s.tipo}</span>
+                        <span><i class="far fa-calendar"></i> ${formatearFecha(s.fecha)}</span>
+                    </div>
+                </div>
+                <span class="estado-badge estado-${s.estado}">${s.estado}</span>
+            </div>
+        `).join('');
+    }
+
     function actualizarStats() {
-        document.getElementById('totalSolicitudes').textContent = solicitudes.length;
-        document.getElementById('solicitudesPendientes').textContent = solicitudes.filter(s => s.estado === 'pendiente').length;
-        document.getElementById('solicitudesAprobadas').textContent = solicitudes.filter(s => s.estado === 'aprobada').length;
+        setText('totalSolicitudes', solicitudes.length);
+        setText('solicitudesPendientes', solicitudes.filter(s => s.estado === 'pendiente').length);
     }
 
-    // =============================================
-    // UTILIDADES
-    // =============================================
-    function formatearFecha(fecha) {
-        return new Date(fecha).toLocaleDateString('es-ES');
+    function setText(id, val) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
     }
 
-    function debounce(func, wait) {
-        let timeout;
-        return (...args) => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func(...args), wait);
-        };
-    }
+    function formatearFecha(f) { return new Date(f).toLocaleDateString('es-ES'); }
 
     function mostrarToast(msg) {
         const t = document.createElement('div');
+        t.className = 'toast-notif';
         t.textContent = msg;
-        t.style.cssText = `
-            position:fixed;bottom:20px;right:20px;
-            background:#111;color:#fff;padding:10px 16px;
-            border-radius:8px;z-index:9999;
-        `;
         document.body.appendChild(t);
-        setTimeout(() => t.remove(), 2000);
+        setTimeout(() => t.remove(), 3000);
     }
-
 });

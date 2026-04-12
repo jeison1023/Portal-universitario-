@@ -1,265 +1,128 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- META -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Finanzas - Portal Universitario">
-  <meta name="author" content="Portal Universitario">
-
-  <title>Finanzas | UNI-PORTAL</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="styles/finanzas.css">
-
-  <!-- FUENTES -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- ICONOS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-  <!-- CHART.JS -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzas | UNI-PORTAL</title>
+    <link rel="stylesheet" href="styles/finanzas.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
-  <!-- APP WRAPPER -->
-  <div class="app-wrapper">
 
-    <!-- SIDEBAR -->
-    <aside id="sidebar" class="sidebar" aria-label="Menú de navegación principal">
-      <div class="sidebar-header">
-        <div class="logo">
-          <i class="fas fa-graduation-cap"></i>
-          <span>UNI-PORTAL</span>
+<div class="app-wrapper">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>UNI-PORTAL</span>
+            </div>
+            <button class="mobile-close"><i class="fas fa-times"></i></button>
         </div>
-        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Colapsar menú">
-          <i class="fas fa-bars"></i>
-        </button>
-      </div>
 
-      <nav class="sidebar-nav" role="navigation" aria-label="Navegación principal">
-        <ul class="nav-list">
-          <li class="nav-item">
-            <a href="dashboard.html" class="nav-link" data-page="dashboard">
-              <i class="fas fa-tachometer-alt"></i>
-              <span>Dashboard</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="materias.html" class="nav-link" data-page="materias">
-              <i class="fas fa-book"></i>
-              <span>Materias</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="calificaciones.html" class="nav-link" data-page="calificaciones">
-              <i class="fas fa-chart-bar"></i>
-              <span>Calificaciones</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="horario.html" class="nav-link" data-page="horarios">
-              <i class="fas fa-calendar-alt"></i>
-              <span>Horarios</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="historial.html" class="nav-link" data-page="historial">
-              <i class="fas fa-history"></i>
-              <span>Historial</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="solicitudes.html" class="nav-link" data-page="solicitudes">
-              <i class="fas fa-file-invoice"></i>
-              <span>Solicitudes</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="perfil.html" class="nav-link" data-page="perfil">
-              <i class="fas fa-user-cog"></i>
-              <span>Perfil</span>
-            </a>
-          </li>
-          <li class="nav-item active">
-            <a href="finanzas.html" class="nav-link active" data-page="finanzas">
-              <i class="fas fa-dollar-sign"></i>
-              <span>Finanzas</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
+        <nav class="nav-container">
+            <ul class="nav-list">
+                <li><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="materias.html" class="nav-link"><i class="fas fa-book"></i> Materias</a></li>
+                <li><a href="calificaciones.html" class="nav-link"><i class="fas fa-poll-h"></i> Calificaciones</a></li>
+                <li><a href="horarios.html" class="nav-link"><i class="far fa-calendar-alt"></i> Horarios</a></li>
+                <li><a href="historial.html" class="nav-link"><i class="fas fa-history"></i> Historial</a></li>
+                <li><a href="solicitudes.html" class="nav-link"><i class="far fa-file-alt"></i> Solicitudes</a></li>
+                <li><a href="finanzas.html" class="nav-link active"><i class="fas fa-dollar-sign"></i> Finanzas</a></li>
+            </ul>
+        </nav>
 
-      <div class="sidebar-footer">
-        <div class="user-profile">
-          <img src="https://ui-avatars.com/api/?name=Luis+Fernández&background=2563eb&color=fff&size=40" alt="Foto de perfil" class="user-avatar">
-          <div>
-            <div class="user-name">Luis Fernández</div>
-            <div class="user-role">Estudiante - 2024001</div>
-          </div>
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <img src="https://ui-avatars.com/api/?name=Juan+Perez&background=2563eb&color=fff" alt="Perfil" class="user-avatar">
+                <div class="user-info">
+                    <span class="user-name">Juan Pérez</span>
+                    <span class="user-role">ID: 2024-01030</span>
+                </div>
+            </div>
+            <button id="logoutBtn" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+            </button>
         </div>
-        <button id="logoutBtn" class="logout-btn">
-          <i class="fas fa-sign-out-alt"></i>
-          <span>Cerrar Sesión</span>
-        </button>
-      </div>
     </aside>
 
-    <!-- OVERLAY MÓVIL -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <!-- MAIN CONTAINER -->
     <div class="main-container">
-      <!-- HEADER -->
-      <header class="main-header" id="header" aria-label="Encabezado del sistema">
-        <div class="header-left">
-          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
-            <i class="fas fa-bars"></i>
-          </button>
-          <h1 class="page-title" id="pageTitle">
-            <i class="fas fa-dollar-sign"></i>
-            Finanzas
-          </h1>
-        </div>
-
-        <div class="header-right">
-          <div class="header-actions">
-            <button class="header-btn" aria-label="Notificaciones">
-              <i class="fas fa-bell"></i>
-              <span class="badge">2</span>
-            </button>
-            <button class="header-btn" aria-label="Buscar">
-              <i class="fas fa-search"></i>
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <!-- MAIN CONTENT -->
-      <main class="main-content" role="main">
-        <section class="page-content" aria-labelledby="finanzasTitle">
-          
-          <!-- WELCOME SECTION -->
-          <section class="welcome-section" aria-label="Resumen financiero">
-            <div class="welcome-content">
-              <div class="welcome-greeting">
-                <h1 id="finanzasTitle">Situación Financiera</h1>
-                <p>Controla tus pagos y mantén al día tu situación académica</p>
-              </div>
-
-              <div class="welcome-stats" role="group" aria-label="Resumen rápido de finanzas">
-                <div class="stat-quick">
-                  <span>$4,800</span>
-                  <small>Pagados</small>
-                </div>
-                <div class="stat-quick">
-                  <span>$1,250</span>
-                  <small>Pendientes</small>
-                </div>
-                <div class="stat-quick pendiente">
-                  <span>92%</span>
-                  <small>Completado</small>
-                </div>
-              </div>
+        <header class="main-header">
+            <div class="header-left">
+                <button class="mobile-toggle"><i class="fas fa-bars"></i></button>
+                <h1 class="page-title">Módulo de Finanzas</h1>
             </div>
-          </section>
+            <div class="header-right">
+                <span class="current-date"><i class="far fa-calendar"></i> Abril 2026</span>
+            </div>
+        </header>
 
-          <!-- STATS GRID -->
-          <section class="dashboard-stats-grid" aria-label="Estadísticas financieras">
-            <article class="stat-card pendiente">
-              <div class="stat-icon">
-                <i class="fas fa-exclamation-triangle"></i>
-              </div>
-              <div>
-                <h3 id="pendientesCount">3</h3>
-                <p>Pagos Pendientes</p>
-              </div>
-            </article>
-            <article class="stat-card success">
-              <div class="stat-icon">
-                <i class="fas fa-check-circle"></i>
-              </div>
-              <div>
-                <h3 id="pagadosCount">2</h3>
-                <p>Pagados este Semestre</p>
-              </div>
-            </article>
-            <article class="stat-card warning">
-              <div class="stat-icon">
-                <i class="fas fa-clock"></i>
-              </div>
-              <div>
-                <h3 id="proximoVencimiento">15 Oct</h3>
-                <p>Próximo Vencimiento</p>
-              </div>
-            </article>
-            <article class="stat-card primary">
-              <div class="stat-icon">
-                <i class="fas fa-dollar-sign"></i>
-              </div>
-              <div>
-                <h3 id="totalMatricula">$6,050</h3>
-                <p>Total Matrícula 2024-2</p>
-              </div>
-            </article>
-          </section>
-
-          <!-- DASHBOARD GRID -->
-          <section class="dashboard-grid">
-            
-            <!-- HISTORIAL PAGOS - FULL HEIGHT -->
-            <article class="card full-height">
-              <header class="card-header">
-                <h3><i class="fas fa-history"></i> Historial de Pagos</h3>
-                <div class="card-actions">
-                  <select id="filtroEstadoPago" aria-label="Filtrar por estado">
-                    <option value="">Todos los pagos</option>
-                    <option value="pendiente">Pendientes</option>
-                    <option value="pagado">Pagados</option>
-                    <option value="atrasado">Atrasados</option>
-                  </select>
-                  <button class="btn-primary" onclick="exportarPagos()" aria-label="Exportar datos">
-                    <i class="fas fa-download"></i>
-                  </button>
+        <main class="main-content">
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
+                    <div class="stat-data">
+                        <h3 id="pendientesCount">0</h3>
+                        <p>Pendientes</p>
+                    </div>
                 </div>
-              </header>
-              <div class="table-container">
-                <table class="data-table">
-                  <thead>
-                    <tr>
-                      <th>Concepto</th>
-                      <th>Monto</th>
-                      <th>Vencimiento</th>
-                      <th>Estado</th>
-                      <th>Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody id="tablaPagos">
-                    <!-- Datos dinámicos -->
-                  </tbody>
-                </table>
-              </div>
-            </article>
+                <div class="stat-card">
+                    <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-data">
+                        <h3 id="pagadosCount">0</h3>
+                        <p>Pagados</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue"><i class="fas fa-wallet"></i></div>
+                    <div class="stat-data">
+                        <h3 id="totalMatricula">$0</h3>
+                        <p>Balance Total</p>
+                    </div>
+                </div>
+            </section>
 
-            <!-- GRÁFICO FINANCIERO -->
-            <article class="card full-height">
-              <header class="card-header">
-                <h3><i class="fas fa-chart-pie"></i> Resumen Gráfico</h3>
-              </header>
-              <div class="chart-container">
-                <canvas id="finanzasChart"></canvas>
-              </div>
-            </article>
+            <div class="dashboard-grid">
+                <div class="card table-card">
+                    <div class="card-header">
+                        <h3>Historial de Pagos</h3>
+                        <select id="filtroEstadoPago" class="custom-select">
+                            <option value="">Todos los estados</option>
+                            <option value="pendiente">Pendientes</option>
+                            <option value="pagado">Pagados</option>
+                            <option value="atrasado">Atrasados</option>
+                        </select>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th>Monto</th>
+                                    <th>Vencimiento</th>
+                                    <th>Estado</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaPagos"></tbody>
+                        </table>
+                    </div>
+                </div>
 
-          </section>
-
-        </section>
-      </main>
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h3>Distribución</h3>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="finanzasChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-  </div>
+</div>
 
-  <!-- SCRIPTS -->
-  <script src="./JS/finanzas.js" defer></script>
+<script src="JS/finanzas.js"></script>
 </body>
 </html>
